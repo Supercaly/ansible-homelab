@@ -1,0 +1,7 @@
+- name: Test connection
+  hosts: node
+  become: true
+
+  tasks:
+    - name: Ping host
+      ping:
