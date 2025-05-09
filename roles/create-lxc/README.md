@@ -22,7 +22,9 @@ lxc_password: <pwd>       # (Required)
 lxc_appname: lxc_hostname # Human-Readable app name.
 ```
 
-Template image for the container and where it is stored. Check the [official Proxmox repository](http://download.proxmox.com/images/system/) for all the images available.
+Template image for the container and where it is stored.
+
+> Check the [official Proxmox repository](http://download.proxmox.com/images/system/) for the available images.
 
 ```yaml
 lxc_template: "debian-12-standard_12.7-1_amd64.tar.zst"
@@ -44,6 +46,17 @@ Main Disk specs.
 ```yaml
 lxc_disk_storage: "local-lvm"
 lxc_disk_size: 4  # in GB
+```
+
+Additional Mount points.
+
+> Note: At the moment it is only possible to define **bind mounts** to some folder in the host device.
+
+```yaml
+lxc_mounts: []
+# - id: mp0
+#   bind: /mnt/binds
+#   mount: /shared
 ```
 
 Network specs.

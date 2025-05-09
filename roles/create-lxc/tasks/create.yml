@@ -26,7 +26,13 @@
     disk_volume:
       storage: "{{ lxc_disk_storage }}"
       size: "{{ lxc_disk_size }}"
-    # TODO: Add ability to define additional `mount_volumes`
+
+    # Set additional mount points.
+    # TODO: Add more mount types other than bind mounts.
+    mounts: >-
+      { {%- for item in lxc_mounts -%}
+        "{{ item.id }}": "{{ item.bind }},mp={{ item.mount }}",
+      {%- endfor -%} }
 
     # Set network interfaces
     netif: >-
