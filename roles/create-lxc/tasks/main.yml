@@ -1,0 +1,35 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for create-lxc
+- name: Check required variables.
+  ansible.builtin.assert:
+    that:
+      - item in vars
+      - vars[item] is not in [None, '']
+    fail_msg: "Required variable {{ item }} is not defined."
+    quiet: true
+  loop:
+    - proxmox_node
+    - proxmox_api_host
+    - proxmox_api_user
+    - proxmox_api_password
+    - lxc_vmid
+    - lxc_hostname
+    - lxc_password
+    - lxc_appname
+
+- name: Ensure 'proxmoxer' package is present.
+  ansible.builtin.apt:
+    pkg: python3-proxmoxer
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Include template task.
+  ansible.builtin.include_tasks: template.yml
+
+- name: Include create task.
+  ansible.builtin.include_tasks: create.yml
+
+- name: Include start task.
+  ansible.builtin.include_tasks: start.yml

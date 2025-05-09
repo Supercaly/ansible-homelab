@@ -1,0 +1,38 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for create-lxc
+
+# OS Template
+lxc_template: "debian-12-standard_12.7-1_amd64.tar.zst"
+lxc_template_storage: "local"
+lxc_template_timeout: 180
+
+# Human-readable name for the app
+lxc_appname: "{{ lxc_hostname }}"
+
+# Hardware specs
+lxc_unprivileged: true
+lxc_cores: 1
+lxc_memory: 1024
+lxc_swap: 512
+# enable nesting and keyctl for unprivileged lxcs
+lxc_features: "keyctl=1,nesting=1"
+
+# Main disk
+lxc_disk_storage: "local-lvm"
+lxc_disk_size: 4
+
+# Network specs
+lxc_network: []
+
+# Boot options
+lxc_onboot: false
+lxc_startup: ""
+
+# DNS options
+lxc_nameserver: ""
+
+# Public SSH key
+lxc_pubkey: ""
+
+lxc_tags: []

@@ -1,7 +1,14 @@
-- name: Test connection
+- name: Create a test LXC.
   hosts: node
   become: true
 
-  tasks:
-    - name: Ping host
-      ping:
+  roles:
+    - role: roles/create-lxc
+      vars:
+        lxc_vmid: 100
+        lxc_hostname: "test"
+        lxc_password: 123456
+        proxmox_node: pve-test
+        proxmox_api_host: 192.168.1.51
+        proxmox_api_user: root@pam
+        proxmox_api_password: password
