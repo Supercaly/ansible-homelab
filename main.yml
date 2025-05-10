@@ -12,7 +12,23 @@
         proxmox_api_host: 192.168.1.51
         proxmox_api_user: root@pam
         proxmox_api_password: password
+        lxc_pubkey: "~/.ssh/id_rsa.pub"
+        lxc_network:
+          - id: net0
+            name: eth0
+            ip4: 192.168.1.120
+            netmask4: 24
+            gw4: 192.168.1.1
         lxc_mounts:
           - id: mp0
             bind: /mnt/binds
             mount: /shared
+
+- name: Provision test LXC.
+  hosts: lxc
+  become: true
+
+  roles:
+    - role: roles/setup-base-lxc
+      vars:
+        lxc_appname: "test"

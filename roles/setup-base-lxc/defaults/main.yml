@@ -1,0 +1,14 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for setup-base-lxc
+lxc_locale: en_US.UTF-8
+lxc_timezone: Europe/Rome
+
+lxc_test_ping_address: "1.1.1.1"
+lxc_test_dns: "github.com"
+
+lxc_has_shared_user: true
+lxc_shared_user: "shared_data"
+lxc_shared_group: "shared_data"
+lxc_shared_uid: 3500
+lxc_shared_gid: 3500

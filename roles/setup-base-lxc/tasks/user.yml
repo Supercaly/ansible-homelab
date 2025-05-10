@@ -1,0 +1,25 @@
+---
+- name: "Create '{{ lxc_shared_group }}' group with id '{{ lxc_shared_gid }}'."
+  ansible.builtin.group:
+    name: "{{ lxc_shared_group }}"
+    gid: "{{ lxc_shared_gid }}"
+    state: present
+  when: lxc_has_shared_user
+
+- name: "Create '{{ lxc_shared_user }}' user with id '{{ lxc_shared_uid }}'."
+  ansible.builtin.user:
+    name: "{{ lxc_shared_user }}"
+    group: "{{ lxc_shared_group }}"
+    comment: "User accessing shared data between LXCs and host."
+    create_home: false
+    uid: "{{ lxc_shared_uid }}"
+    shell: "/usr/sbin/nologin"
+    state: present
+  when: lxc_has_shared_user
+
+- name: "Add root to '{{ lxc_shared_group }}' group."
+  ansible.builtin.user:
+    name: root
+    groups: "{{ lxc_shared_group }}"
+    append: true
+  when: lxc_has_shared_user

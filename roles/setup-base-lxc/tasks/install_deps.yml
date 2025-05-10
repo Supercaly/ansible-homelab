@@ -1,0 +1,20 @@
+---
+- name: Perform dist-upgrade on the system.
+  ansible.builtin.apt:
+    upgrade: "dist"
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_distribution == "Debian"
+
+# TODO: Perform dist-upgrade for systems other than Debian.
+- name: Fail dist-upgrade if we are not on debian.
+  ansible.builtin.fail:
+    msg: "Cannot perform dist-upgrade on the system (we are not on Debian)."
+  when: ansible_distribution != "Debian"
+
+- name: Install core dependencies.
+  ansible.builtin.package:
+    name:
+      - sudo
+      - curl
+    state: present

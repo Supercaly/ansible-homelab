@@ -1,0 +1,30 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for setup-base-lxc
+- name: Check required variables.
+  ansible.builtin.assert:
+    that:
+      - item in vars
+      - vars[item] is not in [None, '']
+    fail_msg: "Required variable {{ item }} is not defined."
+    quiet: true
+  loop:
+    - lxc_appname
+
+- name: Include locale task.
+  ansible.builtin.include_tasks: locale.yml
+
+- name: Include check_network task.
+  ansible.builtin.include_tasks: check_network.yml
+
+- name: Include install_deps task.
+  ansible.builtin.include_tasks: install_deps.yml
+
+- name: Include motd task.
+  ansible.builtin.include_tasks: motd.yml
+
+- name: Include ssh task.
+  ansible.builtin.include_tasks: ssh.yml
+
+- name: Include user task.
+  ansible.builtin.include_tasks: user.yml

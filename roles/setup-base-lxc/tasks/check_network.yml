@@ -1,0 +1,31 @@
+---
+- name: Check internet connectivity.
+  block:
+    - name: Ping known IP ({{ lxc_test_ping_address }}).
+      ansible.builtin.command: "ping -c 1 -W 1 {{ lxc_test_ping_address }}"
+      register: ping_result
+      ignore_errors: true
+      changed_when: false
+
+    - name: Fail if no internet connection.
+      ansible.builtin.fail:
+        msg: "Internet not reachable (ping of {{ lxc_test_ping_address }} failed)."
+      when: ping_result.rc != 0
+
+- name: Check that the DNS is working.
+  block:
+    - name: Test DNS resolution ({{ lxc_test_dns }}).
+      ansible.builtin.command: "getent hosts {{ lxc_test_dns }}"
+      register: dns_result
+      ignore_errors: true
+      changed_when: false
+
+    - name: Fail if DNS resolution failed.
+      ansible.builtin.fail:
+        msg: "DNS resolution of {{ lxc_test_dns }} failed."
+      when: dns_result.rc != 0
+
+- name: Network OK.
+  ansible.builtin.debug:
+    msg: "Internet and DNS are OK!"
+  when: ping_result.rc == 0 and dns_result.rc == 0

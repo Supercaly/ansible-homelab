@@ -1,0 +1,26 @@
+---
+- name: Set terminal to 256-color mode.
+  ansible.builtin.lineinfile:
+    path: /root/.bashrc
+    line: "export TERM='xterm-256color'"
+    create: yes
+
+- name: Remove default Message Of The Day (MOTD).
+  ansible.builtin.file:
+    path: /etc/motd
+    state: absent
+
+- name: Disable other MOTD scripts.
+  ansible.builtin.file:
+    path: /etc/update-motd.d
+    state: directory
+    recurse: true
+    mode: "0644"
+
+- name: Set custom MOTD.
+  ansible.builtin.template:
+    src: "templates/motd.j2"
+    dest: "/etc/profile.d/00_lxc-details.sh"
+    owner: root
+    group: root
+    mode: "0755"
