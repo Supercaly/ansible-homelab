@@ -1,0 +1,16 @@
+---
+lxc_vmid: 100
+lxc_hostname: "test"
+lxc_password: 123456
+lxc_appname: "Test"
+lxc_pubkey: "~/.ssh/id_rsa.pub"
+lxc_network:
+  - id: net0
+    name: eth0
+    ip4: 192.168.1.120
+    netmask4: 24
+    gw4: 192.168.1.1
+lxc_mounts:
+  - id: mp0
+    bind: /mnt/binds
+    mount: /shared
