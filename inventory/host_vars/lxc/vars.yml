@@ -1,9 +1,9 @@
 ---
 lxc_vmid: 100
 lxc_hostname: "test"
-lxc_password: 123456
+lxc_password: "{{ vault_lxc_password }}"
 lxc_appname: "Test"
-lxc_pubkey: "~/.ssh/id_rsa.pub"
+lxc_pubkey: "{{ vault_lxc_pubkey }}"
 lxc_network:
   - id: net0
     name: eth0
