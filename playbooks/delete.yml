@@ -1,10 +1,14 @@
 - name: Create a test LXC.
   hosts: node
   become: true
-  vars_files:
-    - "{{ inventory_dir }}/host_vars/lxc.yml"
+
   tasks:
     - name: Delete LXC
       include_role:
         name: roles/create-lxc
         tasks_from: delete.yml
+      vars:
+        lxc_vmid: "{{ item }}"
+        lxc_hostname: "UNKNOWN"
+      loop:
+        - 100
