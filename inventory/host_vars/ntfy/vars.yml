@@ -1,0 +1,17 @@
+---
+lxc_vmid: 101
+lxc_hostname: "ntfy"
+lxc_password: "{{ vault_lxc_password }}"
+lxc_appname: "NTFY"
+lxc_pubkey: "{{ vault_lxc_pubkey }}"
+lxc_cores: 1
+lxc_memory: 512
+lxc_disk_size: 4
+lxc_network:
+  - id: net0
+    name: eth0
+    ip4: 192.168.1.121
+    netmask4: 24
+    gw4: 192.168.1.1
+lxc_tags:
+  - "notification"
