@@ -6,8 +6,9 @@
   hosts: node
   become: true
   vars_files:
-    - "{{ inventory_dir }}/host_vars/docker/vars.yml"
-    - "{{ inventory_dir }}/host_vars/docker/vault.yml"
+    - "{{ inventory_dir }}/host_vars/docker.yml"
+    - "{{ inventory_dir }}/group_vars/lxcs/vars.yml"
+    - "{{ inventory_dir }}/group_vars/lxcs/vault.yml"
   roles:
     - role: roles/create-lxc
 

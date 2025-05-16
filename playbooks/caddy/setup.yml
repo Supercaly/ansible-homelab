@@ -6,8 +6,9 @@
   hosts: node
   become: true
   vars_files:
-    - "{{ inventory_dir }}/host_vars/caddy/vars.yml"
-    - "{{ inventory_dir }}/host_vars/caddy/vault.yml"
+    - "{{ inventory_dir }}/host_vars/caddy.yml"
+    - "{{ inventory_dir }}/group_vars/lxcs/vars.yml"
+    - "{{ inventory_dir }}/group_vars/lxcs/vault.yml"
   roles:
     - role: roles/create-lxc
 

@@ -1,0 +1,3 @@
+---
+lxc_password: "{{ vault_lxc_password }}"
+lxc_pubkey: "{{ vault_lxc_pubkey }}"
