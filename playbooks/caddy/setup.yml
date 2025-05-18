@@ -6,7 +6,8 @@
   hosts: node
   become: true
   vars_files:
-    - "{{ inventory_dir }}/host_vars/caddy.yml"
+    - "{{ inventory_dir }}/host_vars/caddy/vars.yml"
+    - "{{ inventory_dir }}/host_vars/caddy/vault.yml"
     - "{{ inventory_dir }}/group_vars/lxcs/vars.yml"
     - "{{ inventory_dir }}/group_vars/lxcs/vault.yml"
   roles:
@@ -72,8 +73,8 @@
             enabled: true
             state: started
 
-    - name: Copy Caddyfile.
-      ansible.builtin.copy:
-        src: Caddyfile
+    - name: Generate Caddyfile from template.
+      ansible.builtin.template:
+        src: Caddyfile.j2
         dest: /etc/caddy/Caddyfile
       notify: restart caddy service

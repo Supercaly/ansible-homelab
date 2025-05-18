@@ -1,0 +1,53 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+# The Caddyfile is an easy way to configure your Caddy web server.
+# For a guide on how to use the Caddyfile check the
+# [official docs](https://caddyserver.com/docs/caddyfile), for a
+# complete list of all the available directives check
+# [this](https://caddyserver.com/docs/caddyfile/directives).
+
+{% macro log_to_file(domain) -%}
+    # Use custom log file
+    log {
+        level INFO
+        output file var/log/caddy/{{ domain | replace('.','_') }}-access.log
+    }
+{%- endmacro -%}
+
+{% macro block_access_outside() -%}
+    # Block access to IPs from the outside world
+    @outside_ip not remote_ip private_ranges
+    respond @outside_ip 403 {
+        close
+    }
+{%- endmacro -%}
+
+#################
+# Global Options.
+#################
+{
+    # Enable admin endpoint
+    admin :2019
+
+    # Email for SSL certificate
+    email {{ caddy_email }}
+}
+
+##########
+# Domains.
+##########
+
+# Main Domain
+https://{{ caddy_base_domain }} {
+    {{ log_to_file(caddy_base_domain) }}
+    encode gzip
+    respond "Hello from Caddy"
+}
+
+# Domain for NTFY
+https://{{ caddy_ntfy_domain }} {
+    {{ log_to_file(caddy_ntfy_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ caddy_ntfy_addr }}
+}

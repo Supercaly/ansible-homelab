@@ -1,4 +1,0 @@
-# Example Caddyfile
-:443 {
-    respond "Hello World"
-}
