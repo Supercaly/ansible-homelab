@@ -29,42 +29,23 @@
     - role: roles/setup-base-lxc
 
   tasks:
-    - name: Install dependencies.
-      ansible.builtin.apt:
-        name:
-          - debian-keyring
-          - debian-archive-keyring
-          - apt-transport-https
-          - gpg
-        update_cache: true
-        cache_valid_time: 3600
-
     - name: Install ntfy.
       block:
-        - name: Download ntfy's gpg key.
-          ansible.builtin.get_url:
-            url: "https://archive.heckel.io/apt/pubkey.txt"
-            dest: /etc/apt/keyrings/ntfy.txt
-            mode: "0644"
-
-        - name: Dearmor gpg key.
-          ansible.builtin.command: sudo gpg --yes --dearmor -o /etc/apt/keyrings/ntfy.gpg /etc/apt/keyrings/ntfy.txt
-          args:
-            creates: /etc/apt/keyrings/ntfy.gpg
-
-        - name: Add ntfy's repository to apt sources.
-          ansible.builtin.apt_repository:
-            repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/ntfy.gpg] https://archive.heckel.io/apt debian main"
-            state: present
-            filename: "ntfy"
-            update_cache: true
+        - name: Add ntfy's repository to apt.
+          ansible.builtin.deb822_repository:
+            name: NTFY
+            architectures: amd64
+            components: main
+            signed_by: https://archive.heckel.io/apt/pubkey.txt
+            suites: debian
+            types: deb
+            uris: https://archive.heckel.io/apt
 
         - name: Insall ntfy from the official repository.
           ansible.builtin.apt:
             name:
               - ntfy
             update_cache: true
-            cache_valid_time: 3600
             state: present
 
         - name: Enable ntfy service on boot.
