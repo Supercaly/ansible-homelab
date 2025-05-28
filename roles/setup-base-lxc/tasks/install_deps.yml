@@ -1,10 +1,16 @@
 ---
-- name: Perform dist-upgrade on the system.
+- name: Update APT cache.
   ansible.builtin.apt:
-    upgrade: "dist"
     update_cache: true
     cache_valid_time: 3600
   when: ansible_distribution == "Debian"
+
+- name: Perform dist-upgrade on the system.
+  ansible.builtin.apt:
+    upgrade: "dist"
+  when:
+    - ansible_distribution == "Debian"
+    - lxc_dist_upgrade is true
 
 # TODO: Perform dist-upgrade for systems other than Debian.
 - name: Fail dist-upgrade if we are not on debian.
@@ -14,7 +20,5 @@
 
 - name: Install core dependencies.
   ansible.builtin.package:
-    name:
-      - sudo
-      - curl
+    name: "{{ lxc_core_deps }}"
     state: present

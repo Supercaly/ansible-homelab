@@ -37,6 +37,18 @@ lxc_shared_group: "shared_data"
 lxc_shared_gid: 3500
 ```
 
+Controls whether a dist-update should be performed and which core packages to install.
+
+```yaml
+lxc_dist_upgrade: true
+lxc_core_deps:
+  - sudo
+  - curl
+```
+
+> To reduce the setup time one could skip perfroming a dist-upgrade.
+To skip the upgrade pass `-e "lxc_dist_upgrade=false"` when calling the ansible-playbook.
+
 This Role also **requires** the following variables to be defined:
 
 ```yaml

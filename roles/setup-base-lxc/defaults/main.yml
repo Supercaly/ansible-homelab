@@ -7,6 +7,11 @@ lxc_timezone: Europe/Rome
 lxc_test_ping_address: "1.1.1.1"
 lxc_test_dns: "github.com"
 
+lxc_dist_upgrade: true
+lxc_core_deps:
+  - sudo
+  - curl
+
 lxc_has_shared_user: true
 lxc_shared_user: "shared_data"
 lxc_shared_group: "shared_data"
