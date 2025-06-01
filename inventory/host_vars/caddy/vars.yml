@@ -15,8 +15,4 @@ lxc_network:
 lxc_tags:
   - "webserver"
 
-caddy_base_domain: "{{ vault_caddy_base_domain }}"
 caddy_email: "{{ vault_caddy_email }}"
-
-caddy_ntfy_domain: "ntfy.{{caddy_base_domain }}"
-caddy_ntfy_addr: 192.168.1.121:8081

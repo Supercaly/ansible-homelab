@@ -54,8 +54,8 @@
             enabled: true
             state: started
 
-    - name: Copy server configuration file.
-      ansible.builtin.copy:
-        src: server.yml
+    - name: Generate server configuration from template.
+      ansible.builtin.template:
+        src: server.j2
         dest: /etc/ntfy/server.yml
       notify: restart ntfy service

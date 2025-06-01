@@ -26,6 +26,9 @@
 # Global Options.
 #################
 {
+    # TODO: This parameter is used only for test
+    local_certs
+
     # Enable admin endpoint
     admin :2019
 
@@ -38,16 +41,16 @@
 ##########
 
 # Main Domain
-https://{{ caddy_base_domain }} {
-    {{ log_to_file(caddy_base_domain) }}
+https://{{ proxy_base_domain }} {
+    {{ log_to_file(proxy_base_domain) }}
     encode gzip
     respond "Hello from Caddy"
 }
 
 # Domain for NTFY
-https://{{ caddy_ntfy_domain }} {
-    {{ log_to_file(caddy_ntfy_domain) }}
+https://{{ proxy_ntfy_domain }} {
+    {{ log_to_file(proxy_ntfy_domain) }}
     {{ block_access_outside() }}
     encode gzip
-    reverse_proxy {{ caddy_ntfy_addr }}
+    reverse_proxy {{ proxy_ntfy_address }}:{{ proxy_ntfy_port }}
 }
