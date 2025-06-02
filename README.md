@@ -30,3 +30,31 @@ Run any of the available playbooks with:
 ```bash
 $ ansible-playbook playbooks/<playbook.yml>
 ```
+
+## Password-protected SSH keys
+
+If you're using an SSH key that's protected by a passphrase, Ansible will prompt for the password every time it establishes an SSH connection. To avoid this, you can use `ssh-agent` to cache your credentials.
+
+> **Note:** You only need to run `ssh-add` once per session. The key will remain loaded until the terminal is closed or the `ssh-agent` process is terminated.
+
+To set it up:
+
+1. Start the SSH agent (if it's not already running):
+
+```bash
+$ ssh-agent -s
+```
+
+2. Add your SSH key to the agent (will prompt for the passphrase):
+
+```bash
+$ ssh-add ~/.ssh/id_rsa
+```
+
+3. Verify that the key was added:
+
+```bash
+$ ssh-add -l
+```
+
+Once your key is loaded, Ansible will be able to connect without prompting for the passphrase on each connection.
