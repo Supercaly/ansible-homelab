@@ -12,8 +12,8 @@ lxc_core_deps:
   - sudo
   - curl
 
-lxc_has_shared_user: true
-lxc_shared_user: "shared_data"
-lxc_shared_group: "shared_data"
-lxc_shared_uid: 3500
-lxc_shared_gid: 3500
+lxc_has_shared_user: false
+lxc_shared_user: "shared"
+lxc_shared_group: "shared"
+lxc_shared_uid: 1001
+lxc_shared_gid: 1001

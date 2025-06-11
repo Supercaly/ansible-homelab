@@ -11,5 +11,9 @@ lxc_network:
     ip4: 192.168.1.122
     netmask4: 24
     gw4: 192.168.1.1
+lxc_mounts:
+  - id: mp0
+    bind: "/mnt/shared"
+    mount: "/srv/shared"
 lxc_tags:
   - "docker"
