@@ -85,3 +85,11 @@ https://{{ proxy_portainer_domain }} {
     encode gzip
     reverse_proxy {{ proxy_portainer_address }}:{{ proxy_portainer_port }}
 }
+
+# Domain for ddns
+https://{{ proxy_ddns_domain }} {
+    {{ log_to_file(proxy_ddns_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ proxy_ddns_address }}:{{ proxy_ddns_port }}
+}

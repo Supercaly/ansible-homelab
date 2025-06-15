@@ -1,0 +1,20 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+services:
+  ddns-updater:
+    image: qmcgaw/ddns-updater
+    container_name: ddns
+    restart: always
+    ports:
+      - "{{ proxy_ddns_port }}:8000"
+    volumes:
+      - "data:/updater/data"
+      - "{{ ddns_config_dir }}:/updater/config"
+    environment:
+        TZ: "{{ docker_timezone }}"
+        CONFIG_FILEPATH: "/updater/config/config.json"
+        # TODO: Add support for notifications
+        # SHOUTRRR_ADDRESSES:
+        # SHOUTRRR_DEFAULT_TITLE:
+volumes:
+    data:
