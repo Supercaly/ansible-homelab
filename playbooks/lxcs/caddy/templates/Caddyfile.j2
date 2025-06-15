@@ -54,3 +54,11 @@ https://{{ proxy_ntfy_domain }} {
     encode gzip
     reverse_proxy {{ proxy_ntfy_address }}:{{ proxy_ntfy_port }}
 }
+
+# Domain for influxdb
+https://{{ proxy_influxdb_domain }} {
+    {{ log_to_file(proxy_influxdb_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ proxy_influxdb_address }}:{{ proxy_influxdb_port }}
+}

@@ -5,6 +5,6 @@ proxy_ntfy_domain: "ntfy.{{ proxy_base_domain }}"
 proxy_ntfy_address: 192.168.1.121
 proxy_ntfy_port: 8081
 
-proxy_homepage_domain: "homepage.{{ proxy_base_domain }}"
-proxy_homepage_address: 192.168.1.122
-proxy_homepage_port: 3000
+proxy_influxdb_domain: "influxdb.{{ proxy_base_domain }}"
+proxy_influxdb_address: 192.168.1.123
+proxy_influxdb_port: 8086
