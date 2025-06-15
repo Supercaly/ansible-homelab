@@ -1,0 +1,35 @@
+---
+- name: Setup ddns-updater docker stack.
+  hosts: docker
+  become: true
+  vars:
+    compose_dir: "{{ docker_base_path }}/ddns"
+    ddns_config_dir: "{{ compose_dir }}/config"
+
+  tasks:
+    - name: "Ensure working directory exists '{{ compose_dir }}'."
+      ansible.builtin.file:
+        path: "{{ compose_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Generate compose from template.
+      ansible.builtin.template:
+        src: compose.j2
+        dest: "{{ compose_dir }}/compose.yml"
+
+    - name: "Ensure config directory exists '{{ ddns_config_dir }}'."
+      ansible.builtin.file:
+        path: "{{ ddns_config_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Generate config file from template.
+      ansible.builtin.template:
+        src: config.j2
+        dest: "{{ ddns_config_dir }}/config.json"
+
+    - name: Start ddns-updater stack.
+      community.docker.docker_compose_v2:
+        project_src: "{{ compose_dir }}"
+        state: present
