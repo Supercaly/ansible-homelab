@@ -48,6 +48,18 @@
             update_cache: true
             state: present
 
+        - name: Create ntfy directories and set permissions.
+          ansible.builtin.file:
+            path: "{{ item }}"
+            state: directory
+            owner: "{{ ntfy_system_user }}"
+            group: "{{ ntfy_system_group }}"
+            mode: "0700"
+          loop:
+            - "{{ ntfy_dirs_data }}"
+            - "{{ ntfy_dirs_cache }}"
+            - "{{ ntfy_dirs_log }}"
+
         - name: Enable ntfy service on boot.
           ansible.builtin.service:
             name: ntfy
@@ -59,3 +71,11 @@
         src: server.j2
         dest: /etc/ntfy/server.yml
       notify: restart ntfy service
+
+    - name: Add admin user to the ntfy user database.
+      ansible.builtin.command:
+        cmd: "ntfy user add --role=admin --ignore-exists {{ ntfy_admin_user }}"
+      environment:
+        NTFY_PASSWORD: "{{ ntfy_admin_password }}"
+      register: ntfy_add_user_result
+      changed_when: "'added' in ntfy_add_user_result.stderr"

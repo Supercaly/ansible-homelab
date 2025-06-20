@@ -1,0 +1,3 @@
+---
+ntfy_admin_user: "{{ vault_ntfy_admin_user }}"
+ntfy_admin_password: "{{ vault_ntfy_admin_password }}"

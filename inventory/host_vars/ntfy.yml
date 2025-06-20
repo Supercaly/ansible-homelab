@@ -13,3 +13,10 @@ lxc_network:
     gw4: 192.168.1.1
 lxc_tags:
   - "notification"
+
+ntfy_system_user: ntfy
+ntfy_system_group: ntfy
+
+ntfy_dirs_cache: /var/cache/ntfy
+ntfy_dirs_data: /var/lib/ntfy
+ntfy_dirs_log: /var/log/ntfy
