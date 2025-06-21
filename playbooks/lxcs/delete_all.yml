@@ -1,0 +1,22 @@
+- name: Delete all LXCs.
+  hosts: node
+  become: true
+
+  tasks:
+    - name: Delete all LXCs.
+      include_role:
+        name: roles/create-lxc
+        tasks_from: delete.yml
+      vars:
+        lxc_vmid: "{{ item }}"
+        lxc_hostname: "UNKNOWN"
+      loop: >-
+        {{
+          groups['lxcs']
+          | map('extract', hostvars)
+          | selectattr('lxc_vmid', 'defined')
+          | map(attribute='lxc_vmid')
+          | list
+          | sort
+          | unique
+        }}
