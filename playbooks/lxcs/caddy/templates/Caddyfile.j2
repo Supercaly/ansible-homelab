@@ -62,6 +62,14 @@ https://{{ proxy_influxdb_domain }} {
     reverse_proxy {{ proxy_influxdb_address }}:{{ proxy_influxdb_port }}
 }
 
+# Domain for portfolio
+https://{{ proxy_portfolio_domain }} {
+    {{ log_to_file(proxy_portfolio_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ proxy_portfolio_address }}:{{ proxy_portfolio_port }}
+}
+
 # Domain for filebrowser
 https://{{ proxy_filebrowser_domain }} {
     {{ log_to_file(proxy_filebrowser_domain) }}

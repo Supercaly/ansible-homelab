@@ -23,5 +23,7 @@ docker_base_path: /compose
 docker_timezone: Europe/Rome
 docker_shared_data_dir: "/srv/shared"
 
+portfolio_git_repo: "https://github.com/Supercaly/portfolio-svelte.git"
+
 filebrowser_admin_user: "{{ vault_filebrowser_admin_user }}"
 filebrowser_admin_pwd: "{{ vault_filebrowser_admin_pwd }}"
