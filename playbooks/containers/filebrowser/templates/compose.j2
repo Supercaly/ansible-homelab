@@ -1,0 +1,18 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+services:
+  filebrowser:
+    image: filebrowser/filebrowser
+    container_name: filebrowser
+    restart: always
+    ports:
+      - "{{ proxy_filebrowser_port }}:80"
+    # TODO: Use shared user instead of docker's root user.
+    user: "0:{{ lxc_shared_gid }}"
+    volumes:
+      - "{{ docker_shared_data_dir }}:/data"
+    environment:
+        TZ: "{{ docker_timezone }}"
+        FB_USERNAME: "{{ filebrowser_admin_user }}"
+        FB_PASSWORD: "{{ filebrowser_admin_pwd }}"
+        FB_ROOT: "/data"

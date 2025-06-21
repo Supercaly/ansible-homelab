@@ -1,0 +1,23 @@
+---
+- name: Setup filebrowser docker stack.
+  hosts: docker
+  become: true
+  vars:
+    compose_dir: "{{ docker_base_path }}/filebrowser"
+
+  tasks:
+    - name: "Ensure working directory exists '{{ compose_dir }}'."
+      ansible.builtin.file:
+        path: "{{ compose_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Generate compose from template.
+      ansible.builtin.template:
+        src: compose.j2
+        dest: "{{ compose_dir }}/compose.yml"
+
+    - name: Start filebrowser stack.
+      community.docker.docker_compose_v2:
+        project_src: "{{ compose_dir }}"
+        state: present
