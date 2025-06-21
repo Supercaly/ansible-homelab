@@ -1,0 +1,17 @@
+---
+- name: Setup portfolio docker stack.
+  hosts: docker
+  become: yes
+  vars:
+    compose_dir: "{{ docker_base_path }}/portfolio"
+
+  tasks:
+    - name: Clone portfolio repository.
+      ansible.builtin.git:
+        repo: "{{ portfolio_git_repo }}"
+        dest: "{{ compose_dir }}"
+
+    - name: Start portfolio stack.
+      community.docker.docker_compose_v2:
+        project_src: "{{ compose_dir }}"
+        state: present

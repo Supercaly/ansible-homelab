@@ -9,6 +9,10 @@ proxy_influxdb_domain: "influxdb.{{ proxy_base_domain }}"
 proxy_influxdb_address: 192.168.1.123
 proxy_influxdb_port: 8086
 
+proxy_portfolio_domain: "portfolio.{{ proxy_base_domain }}"
+proxy_portfolio_address: 192.168.1.122
+proxy_portfolio_port: 8085
+
 proxy_filebrowser_domain: "filebrowser.{{ proxy_base_domain }}"
 proxy_filebrowser_address: 192.168.1.122
 proxy_filebrowser_port: 8081
