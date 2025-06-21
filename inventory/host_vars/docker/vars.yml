@@ -1,0 +1,27 @@
+---
+lxc_vmid: 102
+lxc_hostname: "docker"
+lxc_appname: "Docker"
+lxc_cores: 2
+lxc_memory: 2048
+lxc_disk_size: 4
+lxc_network:
+  - id: net0
+    name: eth0
+    ip4: 192.168.1.122
+    netmask4: 24
+    gw4: 192.168.1.1
+lxc_mounts:
+  - id: mp0
+    bind: "{{ lxc_shared_folder_host_path }}"
+    mount: "/srv/shared"
+lxc_tags:
+  - "docker"
+
+# TODO: Move all docker related variables in a dedicated group_vars
+docker_base_path: /compose
+docker_timezone: Europe/Rome
+docker_shared_data_dir: "/srv/shared"
+
+filebrowser_admin_user: "{{ vault_filebrowser_admin_user }}"
+filebrowser_admin_pwd: "{{ vault_filebrowser_admin_pwd }}"
