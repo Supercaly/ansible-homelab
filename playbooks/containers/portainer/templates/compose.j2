@@ -1,0 +1,18 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+services:
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: always
+    ports:
+      - 8000:8000
+      - "{{ proxy_portainer_port }}:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - data:/data
+    environment:
+      TZ: "{{ docker_timezone }}"
+
+volumes:
+  data:

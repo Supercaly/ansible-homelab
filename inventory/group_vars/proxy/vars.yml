@@ -12,3 +12,7 @@ proxy_influxdb_port: 8086
 proxy_filebrowser_domain: "filebrowser.{{ proxy_base_domain }}"
 proxy_filebrowser_address: 192.168.1.122
 proxy_filebrowser_port: 8081
+
+proxy_portainer_domain: "portainer.{{ proxy_base_domain }}"
+proxy_portainer_address: 192.168.1.122
+proxy_portainer_port: 9000
