@@ -1,0 +1,43 @@
+---
+lxc_vmid: 104
+lxc_hostname: "grafana"
+lxc_appname: "Grafana"
+lxc_cores: 1
+lxc_memory: 512
+lxc_disk_size: 2
+lxc_network:
+  - id: net0
+    name: eth0
+    ip4: 192.168.1.124
+    netmask4: 24
+    gw4: 192.168.1.1
+lxc_tags:
+  - "monitoring"
+  - "visualization"
+
+grafana_admin_user: "{{ vault_grafana_admin_user }}"
+grafana_admin_password: "{{ vault_grafana_admin_password }}"
+
+grafana_allow_embedding: true
+grafana_allow_sign_up: false
+grafana_allow_org_create: false
+grafana_auto_assign_org_role: Viewer
+
+grafana_enable_metrics: false
+
+# Datasources from https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources
+grafana_datasources:
+  - name: Influxdb_v2_Flux
+    type: influxdb
+    access: proxy
+    url: "http://{{ proxy_influxdb_address }}:{{ proxy_influxdb_port }}"
+    jsonData:
+      version: Flux
+      organization: "{{ influxdb_primary_org }}"
+      defaultBucket: "{{ influxdb_primary_bucket }}"
+      tlsSkipVerify: true
+    secureJsonData:
+      token: "{{ influxdb_admin_token }}"
+
+# Plugins to install from https://grafana.com/plugins
+grafana_plugins: []
