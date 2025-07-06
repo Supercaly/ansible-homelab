@@ -27,14 +27,14 @@ grafana_enable_metrics: false
 
 # Datasources from https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources
 grafana_datasources:
-  - name: Influxdb_v2_Flux
+  - name: Influxdb_v2_Flux_proxmox_metrics
     type: influxdb
     access: proxy
     url: "http://{{ proxy_influxdb_address }}:{{ proxy_influxdb_port }}"
     jsonData:
       version: Flux
       organization: "{{ influxdb_primary_org }}"
-      defaultBucket: "{{ influxdb_primary_bucket }}"
+      defaultBucket: "{{ proxmox_metrics_bucket }}"
       tlsSkipVerify: true
     secureJsonData:
       token: "{{ influxdb_admin_token }}"
