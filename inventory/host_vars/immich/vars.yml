@@ -1,0 +1,34 @@
+---
+lxc_vmid: 105
+lxc_hostname: "immich"
+lxc_appname: "Immich"
+lxc_cores: 4
+lxc_memory: 4096
+lxc_disk_size: 10
+lxc_network:
+  - id: net0
+    name: eth0
+    ip4: 192.168.1.125
+    netmask4: 24
+    gw4: 192.168.1.1
+lxc_mounts:
+  - id: mp0
+    bind: "{{ lxc_shared_folder_host_path }}/immich"
+    mount: "/srv/shared"
+lxc_tags:
+  - "photos"
+
+# TODO: Move timezone variable in group_vars/all to be accessible by all hosts
+immich_timezone: "Europe/Rome"
+
+immich_version: "release"
+
+immich_upload_location: "/srv/shared"
+immich_data_location: "./postgres"
+
+immich_db_database_name: "{{ vault_immich_db_database_name }}"
+immich_db_password: "{{ vault_immich_db_password }}"
+immich_db_username: "{{ vault_immich_db_username }}"
+
+immich_redis_image: "docker.io/valkey/valkey:8-bookworm@sha256:fec42f399876eb6faf9e008570597741c87ff7662a54185593e74b09ce83d177"
+immich_postgres_image: "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0"

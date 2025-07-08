@@ -92,4 +92,11 @@ https://{{ proxy_ddns_domain }} {
     {{ block_access_outside() }}
     encode gzip
     reverse_proxy {{ proxy_ddns_address }}:{{ proxy_ddns_port }}
+
+# Domain for immich
+https://{{ proxy_immich_domain }} {
+    {{ log_to_file(proxy_immich_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ proxy_immich_address }}:{{ proxy_immich_port }}
 }

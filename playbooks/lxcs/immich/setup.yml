@@ -1,0 +1,55 @@
+---
+#########################################
+# Play that creates the LXC on the node.
+#########################################
+- name: Create immich LXC.
+  hosts: node
+  become: true
+  vars_files:
+    - "{{ inventory_dir }}/host_vars/immich/vars.yml"
+    - "{{ inventory_dir }}/host_vars/immich/vault.yml"
+    - "{{ inventory_dir }}/group_vars/lxcs/vars.yml"
+    - "{{ inventory_dir }}/group_vars/lxcs/vault.yml"
+  roles:
+    - role: roles/create-lxc
+
+#############################
+# Play that sets up the host.
+#############################
+- name: Provision immich LXC.
+  hosts: immich
+  become: true
+  vars:
+    compose_dir: "/immich-app"
+
+  roles:
+    - role: roles/setup-base-lxc
+    - role: geerlingguy.docker
+
+  tasks:
+    - name: Setup docker compose stack for immich.
+      block:
+        - name: "Ensure compose directory exists '{{ compose_dir }}'."
+          ansible.builtin.file:
+            path: "{{ compose_dir }}"
+            state: directory
+            mode: "0755"
+
+        - name: Generate compose from template.
+          ansible.builtin.template:
+            src: compose.j2
+            dest: "{{ compose_dir }}/compose.yml"
+
+        - name: Generate .env from template.
+          ansible.builtin.template:
+            src: env.j2
+            dest: "{{ compose_dir }}/.env"
+
+    - name: Pull stack images.
+      community.docker.docker_compose_v2_pull:
+        project_src: "{{ compose_dir }}"
+
+    - name: Start immich stack.
+      community.docker.docker_compose_v2:
+        project_src: "{{ compose_dir }}"
+        state: present

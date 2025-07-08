@@ -24,3 +24,7 @@ proxy_portainer_port: 9000
 proxy_ddns_domain: "ddns.{{ proxy_base_domain }}"
 proxy_ddns_address: 192.168.1.122
 proxy_ddns_port: 8001
+
+proxy_immich_domain: "immich.{{ proxy_base_domain }}"
+proxy_immich_address: 192.168.1.125
+proxy_immich_port: 2283
