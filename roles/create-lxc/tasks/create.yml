@@ -1,33 +1,33 @@
 ---
-- name: "Create LXC '{{ lxc_hostname }}' ({{ lxc_vmid }})."
-  community.general.proxmox:
-    # Specify the API info for the proxmox node
+# NOTE: Parts of this task are inspired by these roles:
+#   - https://github.com/UdelaRInterior/ansible-role-proxmox-create-lxc/blob/master/tasks/main.yml
+#   - https://github.com/maxhoesel-ansible/ansible-collection-proxmox
+- name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is present."
+  community.proxmox.proxmox:
     node: "{{ proxmox_node }}"
     api_host: "{{ proxmox_api_host }}"
     api_user: "{{ proxmox_api_user }}"
     api_password: "{{ proxmox_api_password }}"
 
-    # Specify main info about the LXC
+    # Set main LXC info
+    state: present
     vmid: "{{ lxc_vmid }}"
     hostname: "{{ lxc_hostname }}"
     password: "{{ lxc_password }}"
     ostemplate: "{{ lxc_template_storage }}:vztmpl/{{ lxc_template }}"
-
-    # Create privileged/unprivileged LXC
     unprivileged: "{{ lxc_unprivileged }}"
+    update: true
 
     # Set hardware info
     cores: "{{ lxc_cores }}"
     memory: "{{ lxc_memory }}"
     swap: "{{ lxc_swap }}"
-    features: "{{ lxc_features | default(omit) }}"
+    features: "{{ lxc_features }}"
 
-    # Set main disk
+    # Set disk info
     disk_volume:
       storage: "{{ lxc_disk_storage }}"
       size: "{{ lxc_disk_size }}"
-
-    # Set additional mount points.
     # TODO: Add more mount types other than bind mounts.
     mounts: >-
       { {%- for item in lxc_mounts -%}
@@ -45,12 +45,13 @@
     # TODO: Change lxc_startup option to lxc_boot_order
     startup: "{{ lxc_startup if (lxc_startup is defined and lxc_startup | length > 0) else omit }}"
 
-    # Set DNS nameserver
-    nameserver: "{{ lxc_nameserver if (lxc_nameserver is defined and lxc_nameserver | length > 0) else omit }}"
-
     # Set SSH pubkey for remote access
     # TODO: Add SSH key of the proxmox node for future management
     pubkey: "{{ lookup('file', lxc_pubkey) if (lxc_pubkey is defined and lxc_pubkey | length > 0) else omit }}"
+
+    # Set additional info
+    nameserver: "{{ lxc_nameserver if (lxc_nameserver is defined and lxc_nameserver | length > 0) else omit }}"
+    tags: "{{ lxc_tags + ['ansible'] }}"
 
     # Set the description
     # TODO: Include all IPs in the description.
@@ -72,12 +73,28 @@
         </ul>
       </div>
 
-    # Set tags
-    tags: "{{ lxc_tags + ['ansible'] }}"
+- name: Ensure LXC exists after its creation.
+  block:
+    - name: "Get status of LXC '{{ lxc_vmid }}'."
+      community.proxmox.proxmox_vm_info:
+        node: "{{ proxmox_node }}"
+        api_host: "{{ proxmox_api_host }}"
+        api_user: "{{ proxmox_api_user }}"
+        api_password: "{{ proxmox_api_password }}"
+        vmid: "{{ lxc_vmid }}"
+      register: _proxmox_lxc_status
+      changed_when: false
 
-    # If the LXC already exsists no need to update it
-    # TODO: Bug when using `update` parameter with `ostemplate`, they are mutually exclusive.
-    # update: false
+    - name: "Fail if the LXC does not exists after its creation."
+      ansible.builtin.fail:
+        msg: "LXC {{ lxc_vmid }} does not exists after its creation."
+      when: "_proxmox_lxc_status.proxmox_vms | length == 0 | bool"
 
-    # Ensure the LXC is created
-    state: present
+- name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is running."
+  community.proxmox.proxmox:
+    node: "{{ proxmox_node }}"
+    api_host: "{{ proxmox_api_host }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_password: "{{ proxmox_api_password }}"
+    vmid: "{{ lxc_vmid }}"
+    state: started

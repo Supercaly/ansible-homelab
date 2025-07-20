@@ -31,5 +31,3 @@
 - name: Include create task.
   ansible.builtin.include_tasks: create.yml
 
-- name: Include start task.
-  ansible.builtin.include_tasks: start.yml
