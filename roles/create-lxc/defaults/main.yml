@@ -2,6 +2,9 @@
 ---
 # defaults file for create-lxc
 
+# Delete the LXC instead of creating it.
+lxc_delete: false
+
 # OS Template
 lxc_template: "debian-12-standard_12.7-1_amd64.tar.zst"
 lxc_template_storage: "local"
