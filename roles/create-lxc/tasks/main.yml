@@ -6,7 +6,12 @@
 
 - name: Include template task.
   ansible.builtin.include_tasks: template.yml
+  when: not lxc_delete
 
 - name: Include create task.
   ansible.builtin.include_tasks: create.yml
+  when: not lxc_delete
 
+- name: Include delete task.
+  ansible.builtin.include_tasks: delete.yml
+  when: lxc_delete
