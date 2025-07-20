@@ -11,50 +11,25 @@ None.
 Role Variables
 --------------
 
-Available variables are listed below, along with default values (see 'defaults/main.yml'):
+Available variables are listed below, along with default values (see 'defaults/main.yml' for a complete list):
 
-Set locale and timezone.
+| Name | Required | Type | Default | Description |
+| - | - | - | - | - |
+| `lxc_appname` | Yes | string | | Human-Readable app name. |
+| `lxc_locale` | | string | `en_US.UTF-8` | LXC Locale. |
+| `lxc_timezone` | | string | `Europe/Rome` | LXC Timezone. |
+| `lxc_test_ping_address` | | string | `"1.1.1.1"` | IP address used to test ping. |
+| `lxc_test_dns` | | string | `"github.com"` | Domain name used to test DNS resolution. |
+| `lxc_has_shared_user` | | bool | `true` | Control if the LXC has the shared user/group. |
+| `lxc_shared_user` | | string | `"shared"` | LXC shared user name. |
+| `lxc_shared_group` | | string | `"shared"` | LXC shared group name. |
+| `lxc_shared_uid` | | int | `1001` | LXC shared uid. |
+| `lxc_shared_gid` | | int | `1001` | LXC shared gid. |
+| `lxc_dist_upgrade` | | bool | `true` | Controls whether a dist-update should be performed. |
+| `lxc_core_deps` | | list | `["sudo", "curl"]` | Control which core dependencies to install. |
 
-```yaml
-lxc_locale: en_US.UTF-8
-lxc_timezone: Europe/Rome
-```
-
-Test network connection and DNS resulution.
-
-```yaml
-lxc_test_ping_address: "1.1.1.1"
-lxc_test_dns: "github.com"
-```
-
-Setup shared data user and group.
-
-```yaml
-lxc_has_shared_user: true # control if the shared user/group is set.
-lxc_shared_user: "shared_data"
-lxc_shared_uid: 3500
-lxc_shared_group: "shared_data"
-lxc_shared_gid: 3500
-```
-
-Controls whether a dist-update should be performed and which core packages to install.
-
-```yaml
-lxc_dist_upgrade: true
-lxc_core_deps:
-  - sudo
-  - curl
-```
-
-> To reduce the setup time one could skip perfroming a dist-upgrade.
+> To reduce setup time one could skip perfroming a dist-upgrade.
 To skip the upgrade pass `-e "lxc_dist_upgrade=false"` when calling the ansible-playbook.
-
-This Role also **requires** the following variables to be defined:
-
-```yaml
-lxc_appname: <human_app_name> # (Required) Human-Readable app name.
-
-```
 
 Dependencies
 ------------
