@@ -1,12 +1,10 @@
 ---
-- name: "Ensure container template '{{ lxc_template }}' is present."
-  community.general.proxmox_template:
-    # Specify the API info for the proxmox node
+- name: "Ensure template '{{ lxc_template }}' is present."
+  community.proxmox.proxmox_template:
     node: "{{ proxmox_node }}"
     api_host: "{{ proxmox_api_host }}"
     api_user: "{{ proxmox_api_user }}"
     api_password: "{{ proxmox_api_password }}"
-
     storage: "{{ lxc_template_storage }}"
     content_type: vztmpl
     template: "{{ lxc_template }}"
