@@ -99,6 +99,8 @@ proxmox_node: <node_name>           # (Required)
 proxmox_api_host: <node_ip>         # (Required)
 proxmox_api_user: <node_user@realm> # (Required)
 proxmox_api_password: <pwd>         # (Required)
+proxmox_api_token_id: <id>          # (Required)
+proxmox_api_token_secret: <secret>  # (Required)
 ```
 
 Dependencies

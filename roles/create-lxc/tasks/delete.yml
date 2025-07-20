@@ -1,43 +1,47 @@
 ---
-- name: Get status of LXC.
-  block:
-    - name: "Get status of LXC '{{ lxc_vmid }}'."
-      community.proxmox.proxmox_vm_info:
-        node: "{{ proxmox_node }}"
-        api_host: "{{ proxmox_api_host }}"
-        api_user: "{{ proxmox_api_user }}"
-        api_password: "{{ proxmox_api_password }}"
-        vmid: "{{ lxc_vmid }}"
-      register: _proxmox_lxc_status
-      changed_when: false
-
-    - name: "Set fact if LXC '{{ lxc_vmid }}' exists."
-      ansible.builtin.set_fact:
-        lxc_exists: "{{ _proxmox_lxc_status.proxmox_vms | length > 0 | bool }}"
-
-    - name: "Set fact if LXC '{{ lxc_vmid }}' is running."
-      ansible.builtin.set_fact:
-        lxc_is_running: "{{ _proxmox_lxc_status.proxmox_vms[0].status == 'running' }}"
-      when: lxc_exists
+- name: "Get status of LXC '{{ lxc_vmid }}'."
+  ansible.builtin.import_tasks: get_lxc_status.yml
 
 - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is stopped."
-  community.proxmox.proxmox:
-    node: "{{ proxmox_node }}"
-    api_host: "{{ proxmox_api_host }}"
-    api_user: "{{ proxmox_api_user }}"
-    api_password: "{{ proxmox_api_password }}"
-    vmid: "{{ lxc_vmid }}"
-    state: stopped
+  block:
+    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is stopped via password."
+      community.proxmox.proxmox:
+        api_password: "{{ proxmox_api_password }}"
+      when: "proxmox_is_password_setup"
+
+    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is stopped via token."
+      community.proxmox.proxmox:
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+      when: "proxmox_is_token_setup"
+  module_defaults:
+    community.proxmox.proxmox:
+      node: "{{ proxmox_node }}"
+      api_host: "{{ proxmox_api_host }}"
+      api_user: "{{ proxmox_api_user }}"
+      vmid: "{{ lxc_vmid }}"
+      state: stopped
   when:
-    - lxc_exists
-    - lxc_is_running
+    - lxc_status.exists
+    - lxc_status.status == "running"
 
 - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is deleted."
-  community.proxmox.proxmox:
-    node: "{{ proxmox_node }}"
-    api_host: "{{ proxmox_api_host }}"
-    api_user: "{{ proxmox_api_user }}"
-    api_password: "{{ proxmox_api_password }}"
-    vmid: "{{ lxc_vmid }}"
-    state: absent
-  when: lxc_exists
+  block:
+    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is deleted via password."
+      community.proxmox.proxmox:
+        api_password: "{{ proxmox_api_password }}"
+      when: "proxmox_is_password_setup"
+
+    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is deleted via token."
+      community.proxmox.proxmox:
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+      when: "proxmox_is_token_setup"
+  module_defaults:
+    community.proxmox.proxmox:
+      node: "{{ proxmox_node }}"
+      api_host: "{{ proxmox_api_host }}"
+      api_user: "{{ proxmox_api_user }}"
+      vmid: "{{ lxc_vmid }}"
+      state: absent
+  when: lxc_status.exists
