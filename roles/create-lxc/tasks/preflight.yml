@@ -1,0 +1,29 @@
+---
+- name: Check required variables.
+  ansible.builtin.assert:
+    that:
+      - item in vars
+      - vars[item] is not in [None, '']
+    fail_msg: "Required variable {{ item }} is not defined."
+    quiet: true
+  loop:
+    - proxmox_node
+    - proxmox_api_host
+    - proxmox_api_user
+    - proxmox_api_password
+    - lxc_vmid
+    - lxc_hostname
+    - lxc_password
+    - lxc_appname
+
+- name: Ensure pip is present.
+  ansible.builtin.package:
+    name: python3-pip
+    state: present
+
+- name: Ensure proxmox dependencies are present.
+  ansible.builtin.pip:
+    name:
+      - proxmoxer>=2.0
+      - requests
+    break_system_packages: true
