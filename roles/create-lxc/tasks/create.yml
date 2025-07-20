@@ -51,6 +51,7 @@
 
     # Set additional info
     nameserver: "{{ lxc_nameserver if (lxc_nameserver is defined and lxc_nameserver | length > 0) else omit }}"
+    timezone: "{{ lxc_timezone if (lxc_timezone is defined and lxc_timezone | length > 0) else omit }}"
     tags: "{{ lxc_tags + ['ansible'] }}"
 
     # Set the description

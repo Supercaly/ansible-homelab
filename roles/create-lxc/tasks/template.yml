@@ -6,7 +6,7 @@
     api_user: "{{ proxmox_api_user }}"
     api_password: "{{ proxmox_api_password }}"
     storage: "{{ lxc_template_storage }}"
-    content_type: vztmpl
+    content_type: "{{ lxc_template_content_type }}"
     template: "{{ lxc_template }}"
     timeout: "{{ lxc_template_timeout }}"
     state: present

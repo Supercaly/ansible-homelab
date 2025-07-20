@@ -5,6 +5,7 @@
 # OS Template
 lxc_template: "debian-12-standard_12.7-1_amd64.tar.zst"
 lxc_template_storage: "local"
+lxc_template_content_type: "vztmpl"
 lxc_template_timeout: 180
 
 # Human-readable name for the app
@@ -23,9 +24,23 @@ lxc_disk_storage: "local-lvm"
 lxc_disk_size: 4
 
 # Additional mount points
+# - id: mp0
+#   bind: /mnt/binds
+#   mount: /shared
 lxc_mounts: []
 
 # Network specs
+# - id: net0
+#   name: eth0
+#   ip4: 192.168.1.10 # Optional. Available options: valid IPv4 address (to use static) - dhcp (to use DHCP).
+#   netmask4: 24      # Optional if IPv4 not indicated.
+#   gw4: 192.168.1.1  # Optional.
+#   ip6: 200:db8::10  # Optional. Available options: valid IPv6 address (to use static) - dhcp (to use DHCP) - auto (to use SLAAC).
+#   netmask6: 64      # Optional if IPv6 not indicated.
+#   gw6: 200:db8::1   # Optional.
+#   bridge: vmbr0     # Default 'vmbr0'.
+#   firewall: false   # Optional.
+#   vlan_tag: 200     # Optional.
 lxc_network: []
 
 # Boot options
@@ -35,7 +50,11 @@ lxc_startup: ""
 # DNS options
 lxc_nameserver: ""
 
+# Timezone
+lxc_timezone: ""
+
 # Public SSH key
 lxc_pubkey: ""
 
+# Tags
 lxc_tags: []
