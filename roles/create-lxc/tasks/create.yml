@@ -1,9 +1,11 @@
 ---
 - name: Ensure bind mount folders exist on the host.
   ansible.builtin.file:
-    # TODO: Determine the correct owner/group for the mounts
     path: "{{ item.bind }}"
-    state: directory
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    state: "directory"
   loop: "{{ lxc_mounts }}"
   loop_control:
     label: "{{ item.bind }}"
