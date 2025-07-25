@@ -1,0 +1,42 @@
+---
+# This task checks the status of a given LXC and sets
+# the variable lxc_status with the result.
+# The result variable contains a dictionary with the following fields:
+# - lxc_status:
+#   exists: If the LXC is present.
+#   status: String with the statis of the LXC; empty if it doesn't exist.
+- name: "Get status of LXC '{{ lxc_vmid }}'."
+  block:
+    - name: "Get status of LXC '{{ lxc_vmid }}' via password."
+      community.proxmox.proxmox_vm_info:
+        api_password: "{{ proxmox_api_password }}"
+      register: _proxmox_lxc_status_pwd
+      when: "proxmox_is_password_setup"
+
+    - name: "Get status of LXC '{{ lxc_vmid }}' via token."
+      community.proxmox.proxmox_vm_info:
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+      register: _proxmox_lxc_status_token
+      when: "proxmox_is_token_setup"
+  module_defaults:
+    community.proxmox.proxmox_vm_info:
+      node: "{{ proxmox_node }}"
+      api_host: "{{ proxmox_api_host }}"
+      api_user: "{{ proxmox_api_user }}"
+      vmid: "{{ lxc_vmid }}"
+
+- name: Set '_proxmox_vm_info_result' variable from retrieved state.
+  ansible.builtin.set_fact:
+    _proxmox_vm_info_result: "{{ (not (_proxmox_lxc_status_token.skipped | default(false))) | ternary(_proxmox_lxc_status_token, _proxmox_lxc_status_pwd) }}"
+
+- name: Fail if the status is not defined.
+  ansible.builtin.fail:
+    msg: "Error retrieving status of LXC '{{ lxc_vmid }}'."
+  when: "_proxmox_vm_info_result.proxmox_vms is not defined"
+
+- name: Set 'lxc_status' variable with the state.
+  set_fact:
+    lxc_status:
+      exists: "{{ _proxmox_vm_info_result.proxmox_vms | length > 0 | bool }}"
+      status: "{{ _proxmox_vm_info_result.proxmox_vms[0].status if _proxmox_vm_info_result.proxmox_vms | length > 0 else '' }}"

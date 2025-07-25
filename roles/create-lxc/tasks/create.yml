@@ -88,32 +88,12 @@
 - name: Ensure LXC exists after its creation.
   block:
     - name: "Get status of LXC '{{ lxc_vmid }}'."
-      block:
-        - name: "Get status of LXC '{{ lxc_vmid }}' via password."
-          community.proxmox.proxmox_vm_info:
-            api_password: "{{ proxmox_api_password }}"
-          register: _proxmox_lxc_status
-          changed_when: false
-          when: "proxmox_is_password_setup"
-
-        - name: "Get status of LXC '{{ lxc_vmid }}' via token."
-          community.proxmox.proxmox_vm_info:
-            api_token_id: "{{ proxmox_api_token_id }}"
-            api_token_secret: "{{ proxmox_api_token_secret }}"
-          register: _proxmox_lxc_status
-          changed_when: false
-          when: "proxmox_is_token_setup"
-      module_defaults:
-        community.proxmox.proxmox_vm_info:
-          node: "{{ proxmox_node }}"
-          api_host: "{{ proxmox_api_host }}"
-          api_user: "{{ proxmox_api_user }}"
-          vmid: "{{ lxc_vmid }}"
+      ansible.builtin.import_tasks: get_lxc_status.yml
 
     - name: "Fail if the LXC does not exists after its creation."
       ansible.builtin.fail:
         msg: "LXC {{ lxc_vmid }} does not exists after its creation."
-      when: "_proxmox_lxc_status.proxmox_vms | length == 0 | bool"
+      when: "not lxc_status.exists"
 
 - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is running."
   block:
