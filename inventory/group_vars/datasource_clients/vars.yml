@@ -1,0 +1,4 @@
+---
+influxdb_primary_org: "{{ vault_influxdb_primary_org }}"
+influxdb_primary_bucket: "{{ vault_influxdb_primary_bucket }}"
+influxdb_admin_token: "{{ vault_influxdb_admin_token }}"
