@@ -1,0 +1,5 @@
+---
+influxdb_primary_org: "test-org"
+influxdb_admin_token: "{{ vault_influxdb_admin_token }}"
+
+proxmox_metrics_bucket: "proxmox-metrics"

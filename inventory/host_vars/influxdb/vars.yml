@@ -14,9 +14,11 @@ lxc_network:
 lxc_tags:
   - "database"
 
-influxdb_host: http://localhost:8086
-influxdb_primary_org: "{{ vault_influxdb_primary_org }}"
-influxdb_primary_bucket: "{{ vault_influxdb_primary_bucket }}"
+influxdb_host: "http://localhost:8086"
 influxdb_primary_username: "{{ vault_influxdb_primary_username }}"
 influxdb_primary_password: "{{ vault_influxdb_primary_password }}"
-influxdb_admin_token: "{{ vault_influxdb_admin_token }}"
+influxdb_primary_bucket: "default_bucket"
+
+influxdb_buckets:
+  - name: "{{ proxmox_metrics_bucket }}"
+    description: "Bucket containing metrics related to the Proxmox hosts."
