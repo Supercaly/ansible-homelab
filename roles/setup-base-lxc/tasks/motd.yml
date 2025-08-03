@@ -19,7 +19,7 @@
 
 - name: Set custom MOTD.
   ansible.builtin.template:
-    src: "templates/motd.j2"
+    src: "templates/motd.sh.j2"
     dest: "/etc/profile.d/00_lxc-details.sh"
     owner: root
     group: root
