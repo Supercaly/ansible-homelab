@@ -68,7 +68,7 @@
 
     - name: Generate server configuration from template.
       ansible.builtin.template:
-        src: server.j2
+        src: server.yml.j2
         dest: /etc/ntfy/server.yml
       notify: restart ntfy service
 
