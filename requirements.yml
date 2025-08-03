@@ -1,4 +1,8 @@
 ---
+roles:
+  - name: geerlingguy.docker
+
 collections:
-  - community.general
-  - community.proxmox
+  - name: community.general
+  - name: community.proxmox
+  - name: community.docker
