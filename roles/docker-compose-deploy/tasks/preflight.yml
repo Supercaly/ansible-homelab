@@ -1,0 +1,11 @@
+---
+- name: Check required variables.
+  ansible.builtin.assert:
+    that:
+      - item in vars
+      - vars[item] is not in [None, '']
+    fail_msg: "Required variable {{ item }} is not defined."
+    quiet: true
+  loop:
+    - compose_project_name
+# TODO: Ensure docker and compose are present
