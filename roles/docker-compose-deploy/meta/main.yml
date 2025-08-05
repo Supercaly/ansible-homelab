@@ -1,0 +1,9 @@
+#SPDX-License-Identifier: MIT-0
+galaxy_info:
+  author: Lorenzo Calisti
+  description: Ansible Role that deploy a Docker Compose stack.
+  license: "license MIT"
+  min_ansible_version: "2.1"
+  galaxy_tags:
+    - docker
+    - compose

@@ -1,0 +1,30 @@
+---
+- name: Check required variables.
+  ansible.builtin.assert:
+    that:
+      - item in vars
+      - vars[item] is not in [None, '']
+    fail_msg: "Required variable {{ item }} is not defined."
+    quiet: true
+  loop:
+    - compose_project_name
+
+- name: Ensure Docker is present.
+  block:
+    - name: Get Docker version.
+      ansible.builtin.command: "docker --version"
+      changed_when: false
+  rescue:
+    - name: Fail if Docker is not present.
+      ansible.builtin.fail:
+        msg: "Docker Engine is not present in the host."
+
+- name: Ensure Docker Compose is present.
+  block:
+    - name: Get Docker Compose version.
+      ansible.builtin.command: "docker compose version"
+      changed_when: false
+  rescue:
+    - name: Fail if Docker Compose is not present.
+      ansible.builtin.fail:
+        msg: "Docker Compose is not present in the host."

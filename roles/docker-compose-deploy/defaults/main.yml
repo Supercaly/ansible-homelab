@@ -1,0 +1,41 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for roles/docker-compose-deploy
+# Root directory where all compose project are stored in the host node
+compose_base_dir: "/compose"
+
+# Path to the sources on the control node
+compose_src_dir: "{{ playbook_dir }}"
+compose_files_dir: "{{ [compose_src_dir, 'files'] | ansible.builtin.path_join }}"
+compose_templates_dir: "{{ [compose_src_dir, 'templates'] | ansible.builtin.path_join }}"
+
+# List of files to exclude when copying from the control
+# node to the host node
+compose_exclude_files:
+  - ".gitignore"
+  - ".gitkeep"
+
+# Control the pull and prune of Docker Images
+compose_pull_images: false
+compose_prune_images: true
+compose_prune_dangling_images: true
+
+# owner/group/mode of the target directory
+compose_target_owner: "root"
+compose_target_group: "root"
+compose_target_mode: "0755"
+
+# Default owner/group/mode for all files and directories
+# copied from the control node to the host node
+compose_default_owner: "root"
+compose_default_group: "root"
+compose_default_mode: "0755"
+
+# Specify custom user/group/mode per singular file/directory
+# copied from the control node to the host node
+# compose_files:
+#   file.ext:
+#     user: "user"
+#     group: "group"
+#     mode: "mode"
+compose_files: {}
