@@ -1,0 +1,14 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    restart: unless-stopped
+    ports:
+      - "{{ proxy_filebrowser_port }}:80"
+    user: "0:{{ lxc_shared_gid }}"
+    volumes:
+      - "{{ docker_shared_data_dir }}:/data"
+    env_file:
+      - ".env"
