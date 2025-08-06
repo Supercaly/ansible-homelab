@@ -16,7 +16,7 @@ Available variables are listed below, along with default values (see 'defaults/m
 | Name | Required | Type | Default | Description |
 | - | - | - | - | - |
 | `compose_project_name` | Yes | string | | Name of the compose project. |
-| `compose_target_dir` | | string | `"/compose/{{ compose_project_name }}"` | Path to the project root directory on the host node. |
+| `compose_base_dir` | | string | `"/compose"` | Root directory on the host node where all compose projects are stored. |
 | `compose_src_dir` | | string | `"{{ playbook_dir }}"` | Path to the root directory on the control node. |
 | `compose_files_dir` | | string | `"{{ compose_src_dir }}/files"` | Path to the files directory on the control node. |
 | `compose_templates_dir` | | string | `"{{ compose_src_dir }}/templates"` | Path to the templates directory on the control node. |

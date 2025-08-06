@@ -1,5 +1,5 @@
 ---
-- name: Pull latest version of images in the compose stack.
+- name: Pull latest images in the compose stack.
   community.docker.docker_compose_v2_pull:
     project_src: "{{ compose_target_dir }}"
   when: "compose_pull_images | bool"

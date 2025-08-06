@@ -1,11 +1,10 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # defaults file for roles/docker-compose-deploy
-compose_target_dir: "/compose/{{ compose_project_name }}"
-
+compose_base_dir: "/compose"
 compose_src_dir: "{{ playbook_dir }}"
-compose_files_dir: "{{ compose_src_dir }}/files"
-compose_templates_dir: "{{ compose_src_dir }}/templates"
+compose_files_dir: "{{ [compose_src_dir, 'files'] | ansible.builtin.path_join }}"
+compose_templates_dir: "{{ [compose_src_dir, 'templates'] | ansible.builtin.path_join }}"
 
 compose_exclude_files:
   - ".gitignore"

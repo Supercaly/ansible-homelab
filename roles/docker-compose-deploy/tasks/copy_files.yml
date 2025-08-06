@@ -11,7 +11,7 @@
 #   Add a `compose_files` variable that maps file names
 #   to owner/group/mode that will be used to override
 #   the default value per file.
-- name: Ensure directories from files exist.
+- name: Ensure files sub-directories exist.
   ansible.builtin.file:
     path: "{{ compose_target_dir }}/{{ item.path }}"
     state: directory
@@ -38,7 +38,7 @@
   loop_control:
     label: "{{ item.path }}"
 
-- name: Ensure directories from templates exist.
+- name: Ensure templates sub-directories exist.
   ansible.builtin.file:
     path: "{{ compose_target_dir }}/{{ item.path }}"
     state: directory

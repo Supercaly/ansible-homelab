@@ -1,3 +1,4 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # vars file for roles/docker-compose-deploy
+compose_target_dir: "{{ [compose_base_dir, compose_project_name] | ansible.builtin.path_join }}"
