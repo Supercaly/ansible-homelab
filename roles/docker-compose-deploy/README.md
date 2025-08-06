@@ -15,18 +15,22 @@ Available variables are listed below, along with default values (see 'defaults/m
 
 | Name | Required | Type | Default | Description |
 | - | - | - | - | - |
-| `compose_project_name` | Yes | string | | Name of the compose project. |
-| `compose_base_dir` | | string | `"/compose"` | Root directory on the host node where all compose projects are stored. |
-| `compose_src_dir` | | string | `"{{ playbook_dir }}"` | Path to the root directory on the control node. |
-| `compose_files_dir` | | string | `"{{ compose_src_dir }}/files"` | Path to the files directory on the control node. |
-| `compose_templates_dir` | | string | `"{{ compose_src_dir }}/templates"` | Path to the templates directory on the control node. |
-| `compose_exclude_files` | | list | `[".gitignore", ".gitkeep"]` | List of files to exclude when copying files and templates from the control node to the host node. |
-| `compose_pull_images` | | bool | `false` | Pull the latest version of all images defined in the compose stack. <br/>Note: This will pull all the images every time this role is called. Set it to `true` only if you are ok with not updating your images manually. |
-| `compose_prune_images` | | bool | `true` | Prune all unused images. <br/>Note: This will prune all Docker images, not only the ones related to this stack. |
-| `compose_prune_dangling_images` | | bool | `true` | When `compose_prune_images` is set to `true` will also prune all the dangling images. |
-| `compose_owner` | | string | `"root"` | User that owns all files and directories inside the compose project. |
-| `compose_group` | | string | `"root"` | Group that owns all files and directories inside the compose project. |
-| `compose_mode` | | string | `"0755"` | Mode applied to every file and directory inside the compose project. |
+| `compose_project_name` | Yes | string | | Name of the compose project. Used to create a project directory on the host node. |
+| `compose_base_dir` | | string | `"/compose"` | Base directory on the host node where all compose projects are stored. |
+| `compose_src_dir` | | string | `"{{ playbook_dir }}"` | Base directory on the control node containing the source files. |
+| `compose_files_dir` | | string | `"{{ compose_src_dir }}/files"` | Directory with files to copy from the control node. |
+| `compose_templates_dir` | | string | `"{{ compose_src_dir }}/templates"` | Directory with templates to copy from the control node. |
+| `compose_exclude_files` | | list | `[".gitignore", ".gitkeep"]` | List of files to exclude during copy operations. |
+| `compose_pull_images` | | bool | `false` | Pull the latest version of all images defined in the stack.<br/>Note: This will pull all images every time the role is called. Set it to `true` only if you are ok with not updating your images manually. |
+| `compose_prune_images` | | bool | `true` | Prune all unused Docker images. <br/>Note: This will prune all Docker images, not only the ones related to this stack. |
+| `compose_prune_dangling_images` | | bool | `true` | When pruning, also remove dangling images. |
+| `compose_target_owner` | | string | `"root"` | Owner of the project directory on the host. |
+| `compose_target_group` | | string | `"root"` | Group of the project directory on the host. |
+| `compose_target_mode` | | string | `"0755"` | Mode of the project directory on the host. |
+| `compose_default_owner` | | string | `"root"` | Default owner of copied files and directories. |
+| `compose_default_group` | | string | `"root"` | Default group of copied files and directories. |
+| `compose_default_mode` | | string | `"0755"` | Default mode of copied files and directories. |
+| `compose_files` | | object | `{}` | Dictionary that override ownership or mode per file or directory. |
 
 Dependencies
 ------------
