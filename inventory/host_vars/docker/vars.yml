@@ -17,3 +17,10 @@ lxc_mounts:
     mount: "/srv/shared"
 lxc_tags:
   - "docker"
+
+docker_timezone: "Europe/Rome"
+
+ddns_domain: "{{ proxy_base_domain}}"
+ddns_provider: "{{ vault_ddns_provider }}"
+ddns_username: "{{ vault_ddns_username }}"
+ddns_password: "{{ vault_ddns_password }}"
