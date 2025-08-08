@@ -86,3 +86,11 @@ https://{{ proxy_portainer_domain }} {
     encode gzip
     reverse_proxy {{ proxy_portainer_address }}:{{ proxy_portainer_port }}
 }
+
+# Domain for portfolio
+https://{{ proxy_portfolio_domain }} {
+    {{ log_to_file(proxy_portfolio_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ proxy_portfolio_address }}:{{ proxy_portfolio_port }}
+}

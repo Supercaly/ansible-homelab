@@ -20,3 +20,7 @@ proxy_ddns_port: 8001
 proxy_portainer_domain: "portainer.{{ proxy_base_domain }}"
 proxy_portainer_address: 192.168.1.122
 proxy_portainer_port: 9000
+
+proxy_portfolio_domain: "portfolio.{{ proxy_base_domain }}"
+proxy_portfolio_address: 192.168.1.122
+proxy_portfolio_port: 8085
