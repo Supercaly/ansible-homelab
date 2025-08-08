@@ -1,0 +1,9 @@
+---
+- name: Setup portainer docker stack.
+  hosts: docker
+  become: true
+
+  roles:
+    - role: roles/docker-compose-deploy
+      vars:
+        compose_project_name: "portainer"
