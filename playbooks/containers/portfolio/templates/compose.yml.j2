@@ -1,0 +1,11 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+services:
+  portfolio:
+    image: ghcr.io/supercaly/portfolio-svelte:main
+    container_name: portfolio
+    restart: unless-stopped
+    ports:
+      - "{{ proxy_portfolio_port }}:3000"
+    environment:
+      TZ: "{{ docker_timezone }}"
