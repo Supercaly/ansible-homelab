@@ -24,3 +24,7 @@ proxy_portainer_port: 9000
 proxy_portfolio_domain: "portfolio.{{ proxy_base_domain }}"
 proxy_portfolio_address: 192.168.1.122
 proxy_portfolio_port: 8085
+
+proxy_vaultwarden_domain: "vaultwarden.{{ proxy_base_domain }}"
+proxy_vaultwarden_address: 192.168.1.122
+proxy_vaultwarden_port: 8086

@@ -94,3 +94,13 @@ https://{{ proxy_portfolio_domain }} {
     encode gzip
     reverse_proxy {{ proxy_portfolio_address }}:{{ proxy_portfolio_port }}
 }
+
+# Domain for vaultwarden
+https://{{ proxy_vaultwarden_domain }} {
+    {{ log_to_file(proxy_vaultwarden_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ proxy_vaultwarden_address }}:{{ proxy_vaultwarden_port }} {
+        header_up X-Real-IP {remote_host}
+    }
+}

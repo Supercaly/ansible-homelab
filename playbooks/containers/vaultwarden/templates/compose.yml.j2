@@ -1,0 +1,27 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    env_file:
+      - ".vaultwarden.env"
+    volumes:
+      - data:/data
+    ports:
+      - "{{ proxy_vaultwarden_port }}:80"
+
+  backup:
+      image: ttionya/vaultwarden-backup:latest
+      container_name: vaultwarden-backup
+      restart: unless-stopped
+      env_file:
+        - ".backup.env"
+      volumes:
+        - "data:/bitwarden/data"
+        - "./rclone:/config/rclone"
+        - "{{ vaultwarden_backup_dir }}:/BitwardenBackup"
+
+volumes:
+  data:
