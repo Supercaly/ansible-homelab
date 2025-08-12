@@ -1,0 +1,38 @@
+---
+lxc_vmid: 102
+lxc_hostname: "docker"
+lxc_appname: "Docker"
+lxc_cores: 2
+lxc_memory: 2048
+lxc_disk_size: 4
+lxc_network:
+  - id: net0
+    name: eth0
+    ip4: 192.168.1.122
+    netmask4: 24
+    gw4: 192.168.1.1
+lxc_mounts:
+  - id: mp0
+    bind: "/mnt/shared"
+    mount: "/srv/shared"
+lxc_tags:
+  - "docker"
+
+docker_shared_data_dir: "/srv/shared"
+docker_timezone: "Europe/Rome"
+
+filebrowser_admin_user: "{{ vault_filebrowser_admin_user }}"
+filebrowser_admin_pwd: "{{ vault_filebrowser_admin_pwd }}"
+
+ddns_domain: "{{ proxy_base_domain}}"
+ddns_provider: "{{ vault_ddns_provider }}"
+ddns_username: "{{ vault_ddns_username }}"
+ddns_password: "{{ vault_ddns_password }}"
+
+vaultwarden_admin_token: "{{ vault_vaultwarden_admin_token }}"
+vaultwarden_backup_dir: "{{ docker_shared_data_dir }}/vaultwarden"
+vaultwarden_backup_remote_name: "LocalBackup"
+vaulutwarden_backup_notification_topic: "backup"
+vaultwarden_backup_cron: "0 0 * * *"
+vaultwarden_backup_zip_pwd: "{{ vault_vaultwarden_backup_zip_pwd }}"
+vaultwarden_backup_keep_days: 0

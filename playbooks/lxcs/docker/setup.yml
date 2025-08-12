@@ -6,7 +6,8 @@
   hosts: node
   become: true
   vars_files:
-    - "{{ inventory_dir }}/host_vars/docker.yml"
+    - "{{ inventory_dir }}/host_vars/docker/vars.yml"
+    - "{{ inventory_dir }}/host_vars/docker/vault.yml"
     - "{{ inventory_dir }}/group_vars/lxcs/vars.yml"
     - "{{ inventory_dir }}/group_vars/lxcs/vault.yml"
   roles:
@@ -21,33 +22,4 @@
 
   roles:
     - role: roles/setup-base-lxc
-
-  tasks:
-    - name: Install docker.
-      block:
-        - name: Add docker's repository to apt.
-          ansible.builtin.deb822_repository:
-            name: Docker
-            architectures: amd64
-            components: stable
-            signed_by: https://download.docker.com/linux/debian/gpg
-            suites: bookworm
-            types: deb
-            uris: https://download.docker.com/linux/debian
-
-        - name: Install docker from the official repository.
-          ansible.builtin.apt:
-            name:
-              - docker-ce
-              - docker-ce-cli
-              - containerd.io
-              - docker-buildx-plugin
-              - docker-compose-plugin
-            update_cache: true
-            state: present
-
-        - name: Enable docker service on boot.
-          ansible.builtin.service:
-            name: docker
-            enabled: true
-            state: started
+    - role: geerlingguy.docker
