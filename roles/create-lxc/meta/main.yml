@@ -1,9 +1,17 @@
-#SPDX-License-Identifier: MIT-0
+---
+dependencies: []
+
 galaxy_info:
+  role_name: create_lxc
   author: Lorenzo Calisti
-  description: An Ansible Role that creates a Proxmox LXC.
-  license: "license (MIT)"
+  description: Create and manage a Proxmox LXC.
+  license: "MIT"
   min_ansible_version: "2.1"
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
   galaxy_tags:
     - proxmox
     - lxc

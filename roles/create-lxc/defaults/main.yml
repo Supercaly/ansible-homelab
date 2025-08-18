@@ -1,7 +1,4 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# defaults file for create-lxc
-
 # Delete the LXC instead of creating it.
 lxc_delete: false
 

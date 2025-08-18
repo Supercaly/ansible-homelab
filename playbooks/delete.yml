@@ -4,7 +4,7 @@
 
   tasks:
     - name: Delete LXC
-      include_role:
+      ansible.builtin.include_role:
         name: roles/create-lxc
         tasks_from: delete.yml
       vars:

@@ -20,7 +20,7 @@
   become: true
 
   handlers:
-    - name: restart ntfy service
+    - name: restart ntfy service # noqa: name[casing]
       ansible.builtin.service:
         name: ntfy
         state: restarted
@@ -70,6 +70,7 @@
       ansible.builtin.template:
         src: server.yml.j2
         dest: /etc/ntfy/server.yml
+        mode: "0644"
       notify: restart ntfy service
 
     - name: Add admin user to the ntfy user database.

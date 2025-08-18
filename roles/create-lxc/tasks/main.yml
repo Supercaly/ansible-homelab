@@ -1,10 +1,8 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# tasks file for create-lxc
 - name: Run preflight checks.
   ansible.builtin.import_tasks: preflight.yml
 
-- name: Ensure the template is present.
+- name: Ensure the LXC template is present.
   ansible.builtin.include_tasks: template.yml
   when: not lxc_delete
 
