@@ -1,16 +1,5 @@
 ---
-- name: "Ensure template '{{ lxc_template }}' is present."
-  block:
-    - name: "Ensure template '{{ lxc_template }}' is present via password."
-      community.proxmox.proxmox_template:
-        api_password: "{{ proxmox_api_password }}"
-      when: "proxmox_is_password_setup"
-
-    - name: "Ensure template '{{ lxc_template }}' is present via token."
-      community.proxmox.proxmox_template:
-        api_token_id: "{{ proxmox_api_token_id }}"
-        api_token_secret: "{{ proxmox_api_token_secret }}"
-      when: "proxmox_is_token_setup"
+- name: Ensure LXC template is present.
   module_defaults:
     community.proxmox.proxmox_template:
       node: "{{ proxmox_node }}"
@@ -21,3 +10,14 @@
       template: "{{ lxc_template }}"
       timeout: "{{ lxc_template_timeout }}"
       state: present
+  block:
+    - name: Ensure LXC template is present via password.
+      community.proxmox.proxmox_template: # noqa: args[module]
+        api_password: "{{ proxmox_api_password }}"
+      when: "proxmox_is_password_setup"
+
+    - name: Ensure LXC template is present via token.
+      community.proxmox.proxmox_template: # noqa: args[module]
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+      when: "proxmox_is_token_setup"

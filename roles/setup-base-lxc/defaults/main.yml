@@ -1,6 +1,4 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# defaults file for setup-base-lxc
 lxc_locale: en_US.UTF-8
 lxc_timezone: Europe/Rome
 

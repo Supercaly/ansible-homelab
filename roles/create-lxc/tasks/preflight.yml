@@ -19,10 +19,19 @@
   block:
     - name: Register password setup.
       ansible.builtin.set_fact:
-        proxmox_is_password_setup: "{{ proxmox_api_password is defined and proxmox_api_password is string and proxmox_api_password | length > 0 }}"
+        proxmox_is_password_setup: >-
+          {{ proxmox_api_password is defined
+          and proxmox_api_password is string
+          and proxmox_api_password | length > 0 }}
     - name: Register token setup.
       ansible.builtin.set_fact:
-        proxmox_is_token_setup: "{{ proxmox_api_token_id is defined and proxmox_api_token_id is string and proxmox_api_token_id | length > 0 and proxmox_api_token_secret is defined and proxmox_api_token_secret is string and proxmox_api_token_secret | length > 0 }}"
+        proxmox_is_token_setup: >-
+          {{ proxmox_api_token_id is defined
+          and proxmox_api_token_id is string
+          and proxmox_api_token_id | length > 0
+          and proxmox_api_token_secret is defined
+          and proxmox_api_token_secret is string
+          and proxmox_api_token_secret | length > 0 }}
     - name: Check conflict between password and token setup.
       ansible.builtin.assert:
         that: "(not proxmox_is_password_setup and proxmox_is_token_setup) or (proxmox_is_password_setup and not proxmox_is_token_setup)"

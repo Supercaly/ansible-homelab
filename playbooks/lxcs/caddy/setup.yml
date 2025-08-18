@@ -21,7 +21,7 @@
   become: true
 
   handlers:
-    - name: restart caddy service
+    - name: restart caddy service # noqa: name[casing]
       ansible.builtin.service:
         name: caddy
         state: restarted
@@ -61,4 +61,5 @@
       ansible.builtin.template:
         src: Caddyfile.j2
         dest: /etc/caddy/Caddyfile
+        mode: "0644"
       notify: restart caddy service

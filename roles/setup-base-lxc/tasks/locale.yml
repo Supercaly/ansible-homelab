@@ -18,6 +18,7 @@
     - name: "Set locale to '{{ lxc_locale }}'."
       ansible.builtin.command: "localectl set-locale LANG={{ lxc_locale }}"
       when: locale_lang != lxc_locale
+      changed_when: locale_lang != lxc_locale
 
 - name: "Set system timezone to '{{ lxc_timezone }}'."
   community.general.timezone:

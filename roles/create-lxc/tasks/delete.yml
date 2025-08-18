@@ -2,18 +2,7 @@
 - name: "Get status of LXC '{{ lxc_vmid }}'."
   ansible.builtin.import_tasks: get_lxc_status.yml
 
-- name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is stopped."
-  block:
-    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is stopped via password."
-      community.proxmox.proxmox:
-        api_password: "{{ proxmox_api_password }}"
-      when: "proxmox_is_password_setup"
-
-    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is stopped via token."
-      community.proxmox.proxmox:
-        api_token_id: "{{ proxmox_api_token_id }}"
-        api_token_secret: "{{ proxmox_api_token_secret }}"
-      when: "proxmox_is_token_setup"
+- name: Ensure LXC is stopped.
   module_defaults:
     community.proxmox.proxmox:
       node: "{{ proxmox_node }}"
@@ -24,19 +13,19 @@
   when:
     - lxc_status.exists
     - lxc_status.status == "running"
-
-- name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is deleted."
   block:
-    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is deleted via password."
-      community.proxmox.proxmox:
+    - name: Ensure LXC is stopped via password.
+      community.proxmox.proxmox: # noqa: args[module]
         api_password: "{{ proxmox_api_password }}"
       when: "proxmox_is_password_setup"
 
-    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is deleted via token."
-      community.proxmox.proxmox:
+    - name: Ensure LXC is stopped via token.
+      community.proxmox.proxmox: # noqa: args[module]
         api_token_id: "{{ proxmox_api_token_id }}"
         api_token_secret: "{{ proxmox_api_token_secret }}"
       when: "proxmox_is_token_setup"
+
+- name: Ensure LXC is deleted.
   module_defaults:
     community.proxmox.proxmox:
       node: "{{ proxmox_node }}"
@@ -45,3 +34,14 @@
       vmid: "{{ lxc_vmid }}"
       state: absent
   when: lxc_status.exists
+  block:
+    - name: Ensure LXC is deleted via password.
+      community.proxmox.proxmox: # noqa: args[module]
+        api_password: "{{ proxmox_api_password }}"
+      when: "proxmox_is_password_setup"
+
+    - name: Ensure LXC is deleted via token.
+      community.proxmox.proxmox: # noqa: args[module]
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+      when: "proxmox_is_token_setup"

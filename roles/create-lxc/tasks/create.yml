@@ -2,18 +2,7 @@
 # NOTE: Parts of this task are inspired by these roles:
 #   - https://github.com/UdelaRInterior/ansible-role-proxmox-create-lxc/blob/master/tasks/main.yml
 #   - https://github.com/maxhoesel-ansible/ansible-collection-proxmox
-- name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is present."
-  block:
-    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is present via password."
-      community.proxmox.proxmox:
-        api_password: "{{ proxmox_api_password }}"
-      when: "proxmox_is_password_setup"
-
-    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is present via token."
-      community.proxmox.proxmox:
-        api_token_id: "{{ proxmox_api_token_id }}"
-        api_token_secret: "{{ proxmox_api_token_secret }}"
-      when: "proxmox_is_token_setup"
+- name: Ensure LXC is present.
   module_defaults:
     community.proxmox.proxmox:
       node: "{{ proxmox_node }}"
@@ -48,7 +37,7 @@
       # Set network interfaces
       netif: >-
         { {%- for item in lxc_network -%}
-          "{{ item.id }}":"name={{ item.name }},bridge={{ item.bridge | default('vmbr0') }},{% if (item.ip4 is defined) %}ip={{ item.ip4 }}{% endif %}{% if (item.netmask4 is defined) %}/{{ item.netmask4 }},{% else %},{% endif %}{% if (item.gw4 is defined) %}gw={{ item.gw4 }},{% endif %}{% if (item.ip6 is defined) %}ip6={{ item.ip6 }}{% endif %}{% if (item.netmask6 is defined) %}/{{ item.netmask6 }},{% else %},{% endif %}{% if (item.gw6 is defined) %}gw6={{ item.gw6 }},{% endif %}{% if (item.firewall is defined and item.firewall) %}firewall=1,{% endif %}{% if (item.vlan_tag is defined) %}tag={{ item.vlan_tag }}{% endif %}",
+        "{{ item.id }}":"name={{ item.name }},bridge={{ item.bridge | default('vmbr0') }},{% if (item.ip4 is defined) %}ip={{ item.ip4 }}{% endif %}{% if (item.netmask4 is defined) %}/{{ item.netmask4 }},{% else %},{% endif %}{% if (item.gw4 is defined) %}gw={{ item.gw4 }},{% endif %}{% if (item.ip6 is defined) %}ip6={{ item.ip6 }}{% endif %}{% if (item.netmask6 is defined) %}/{{ item.netmask6 }},{% else %},{% endif %}{% if (item.gw6 is defined) %}gw6={{ item.gw6 }},{% endif %}{% if (item.firewall is defined and item.firewall) %}firewall=1,{% endif %}{% if (item.vlan_tag is defined) %}tag={{ item.vlan_tag }}{% endif %}",
         {%- endfor -%} }
 
       # Set boot options
@@ -84,6 +73,17 @@
             <li><strong>Storage: </strong>{{ lxc_disk_size }}GB</li>
           </ul>
         </div>
+  block:
+    - name: Ensure LXC is present via password.
+      community.proxmox.proxmox: # noqa: args[module]
+        api_password: "{{ proxmox_api_password }}"
+      when: "proxmox_is_password_setup"
+
+    - name: Ensure LXC is present via token.
+      community.proxmox.proxmox: # noqa: args[module]
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+      when: "proxmox_is_token_setup"
 
 - name: Ensure LXC exists after its creation.
   block:
@@ -95,18 +95,7 @@
         msg: "LXC {{ lxc_vmid }} does not exists after its creation."
       when: "not lxc_status.exists"
 
-- name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is running."
-  block:
-    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is running via password."
-      community.proxmox.proxmox:
-        api_password: "{{ proxmox_api_password }}"
-      when: "proxmox_is_password_setup"
-
-    - name: "Ensure LXC '{{ lxc_hostname }}' ({{ lxc_vmid }}) is running via token."
-      community.proxmox.proxmox:
-        api_token_id: "{{ proxmox_api_token_id }}"
-        api_token_secret: "{{ proxmox_api_token_secret }}"
-      when: "proxmox_is_token_setup"
+- name: Ensure LXC is running.
   module_defaults:
     community.proxmox.proxmox:
       node: "{{ proxmox_node }}"
@@ -114,3 +103,14 @@
       api_user: "{{ proxmox_api_user }}"
       vmid: "{{ lxc_vmid }}"
       state: started
+  block:
+    - name: Ensure LXC is running via password.
+      community.proxmox.proxmox: # noqa: args[module]
+        api_password: "{{ proxmox_api_password }}"
+      when: "proxmox_is_password_setup"
+
+    - name: Ensure LXC is running via token.
+      community.proxmox.proxmox: # noqa: args[module]
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+      when: "proxmox_is_token_setup"

@@ -3,7 +3,8 @@
   ansible.builtin.lineinfile:
     path: /root/.bashrc
     line: "export TERM='xterm-256color'"
-    create: yes
+    mode: "0644"
+    create: true
 
 - name: Remove default Message Of The Day (MOTD).
   ansible.builtin.file:
