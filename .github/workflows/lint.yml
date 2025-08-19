@@ -1,0 +1,66 @@
+---
+name: Lint
+
+on:
+  pull_request:
+  push:
+
+# Cancel previous runs when a new commit is started
+concurrency:
+  group: ${{ github.workflow }} - ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ansible-lint:
+    name: Perform Ansible Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout latest version of the project.
+        uses: actions/checkout@v4
+
+      - name: Create fake vault password file.
+        run: >-
+          echo "fake" > .vault-password
+
+      - name: Run ansible-lint.
+        uses: ansible/ansible-lint@main
+        with:
+          setup_python: true
+          requirements_file: requirements.yml
+          args: --exclude .ansible
+
+      - name: Clear fake vault password file.
+        if: ${{ always() }}
+        run: >-
+          rm -f .vault-password
+
+  encrypted-vaults:
+    name: Ensure vault files are encrypted
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout latest version of the project.
+        uses: actions/checkout@v4
+
+      - name: Ensure all *.vault.yml files are encrypted.
+        run: |
+          export fail="$(mktemp)"
+
+          must-be-encrypted() {
+              local file="${1?Need file}"
+              if [[ "$(head -n1 "$file")" != \$ANSIBLE_VAULT\;* ]]; then
+                  >&2 printf 'Unencrypted vault file: %s\n' "$file"
+                  echo 1 > "$fail"
+              fi
+          }
+
+          export -f must-be-encrypted
+
+          find . -type f -name '*vault.yml' -exec bash -c 'must-be-encrypted "{}"' \;
+
+          failed="$(wc -c < "$fail")"
+          if (( failed > 0 )); then
+              >&2 printf 'Found unencrypted vault files\n'
+              exit 1
+          fi
