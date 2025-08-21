@@ -1,0 +1,6 @@
+---
+- name: Test ntfy role.
+  hosts: localhost
+  remote_user: root
+  roles:
+    - ntfy

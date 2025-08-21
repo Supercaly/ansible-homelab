@@ -1,0 +1,18 @@
+---
+ntfy_service_name: "ntfy"
+
+ntfy_config_file: "/etc/ntfy/server.yml"
+ntfy_config: {}
+
+ntfy_user: "ntfy"
+ntfy_group: "ntfy"
+
+ntfy_repo_url: "https://archive.heckel.io"
+
+ntfy_apt_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'armhf' if ansible_architecture == 'armv7l' else 'amd64' }}"
+ntfy_apt_components: "main"
+ntfy_apt_suites: "debian"
+ntfy_apt_types: "deb"
+ntfy_apt_gpg_key: "{{ ntfy_repo_url }}/apt/pubkey.txt"
+ntfy_apt_uris: "{{ ntfy_repo_url }}/apt"
+ntfy_apt_name: "NTFY"
