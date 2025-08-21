@@ -1,0 +1,17 @@
+---
+# TODO: Ensure all paths defined in the configuration have the correct ownership and permissions.
+# Affected variables:
+# - cache-file
+# - attachment-cache-dir
+# - auth-file
+# - log-file
+# TODO: Create firebase file if firebase-key-file is defined.
+# TODO: Copy templates from control node if template-dir is defined.
+- name: Ensure config file exists.
+  ansible.builtin.copy:
+    dest: "{{ ntfy_config_file }}"
+    content: "{{ ntfy_config | to_nice_yaml }}"
+    owner: "{{ ntfy_user }}"
+    group: "{{ ntfy_group }}"
+    mode: "0600"
+  notify: restart ntfy service
