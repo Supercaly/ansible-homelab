@@ -40,7 +40,7 @@ Example Playbook
 ```yaml
 - hosts: all
   roles:
-    - role: setup-base-lxc
+    - role: ntfy
 ```
 
 License
