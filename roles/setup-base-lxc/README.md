@@ -1,4 +1,4 @@
-Role Name
+Ansible Role ntfy
 =========
 
 An Ansible Role that setup a base LXC.
