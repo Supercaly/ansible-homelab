@@ -1,0 +1,17 @@
+---
+- name: Ensure additional buckets exist.
+  ansible.builtin.command: >-
+    influx bucket create
+    --host "{{ influxdb2_host }}"
+    --name "{{ item.name | ansible.builtin.mandatory }}"
+    --description "{{ item.description | default('') }}"
+    --org "{{ item.org | default(influxdb2_primary_org) }}" \
+    --retention "{{ item.retention | default(0) }}"
+  loop: "{{ influxdb2_buckets }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: _influxdb2_bucket_result
+  failed_when:
+    - _influxdb2_bucket_result.rc != 0
+    - '"already exists" not in _influxdb2_bucket_result.stderr'
+  changed_when: _influxdb2_bucket_result.rc == 0

@@ -1,0 +1,24 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Lorenzo Calisti
+  description: Install and setup InfluxDB v2 on Linux
+  license: license (MIT)
+  min_ansible_version: "2.1"
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+  galaxy_tags:
+    - influxdata
+    - influxdb
+    - influxdb2
+    - database
+    - timeseries

@@ -1,0 +1,34 @@
+---
+- name: Ensure InfluxDB is up and running.
+  ansible.builtin.command: >-
+    influx ping --host "{{ influxdb2_host }}"
+  retries: "{{ influxdb2_ping_retries }}"
+  delay: "{{ influxdb2_ping_delay }}"
+  register: _influxdb2_ping_result
+  until: _influxdb2_ping_result.rc == 0
+  changed_when: false
+
+- name: Setup InfluxDB default username, password, org, buket.
+  ansible.builtin.command: >-
+    influx setup
+    --host "{{ influxdb2_host }}"
+    --org {{ influxdb2_primary_org }}
+    --bucket {{ influxdb2_primary_bucket }}
+    --username {{ influxdb2_primary_username }}
+    --password {{ influxdb2_primary_password }}
+    --token {{ influxdb2_admin_token }}
+    --force
+  register: _influxdb2_setup_result
+  failed_when:
+    - _influxdb2_setup_result.rc != 0
+    - '"has already been set up" not in _influxdb2_setup_result.stderr'
+  changed_when: _influxdb2_setup_result.rc == 0
+
+- name: Organizations.
+  ansible.builtin.import_tasks: organizations.yml
+
+- name: Users.
+  ansible.builtin.import_tasks: users.yml
+
+- name: Buckets.
+  ansible.builtin.import_tasks: buckets.yml

@@ -1,0 +1,25 @@
+---
+- name: Add InfluxDB repository to APT.
+  ansible.builtin.deb822_repository:
+    name: "{{ influxdb2_apt_name }}"
+    architectures: "{{ influxdb2_apt_arch }}"
+    components: "{{ influxdb2_apt_components }}"
+    signed_by: "{{ influxdb2_apt_gpg_key }}"
+    suites: "{{ influxdb2_apt_suites }}"
+    types: "{{ influxdb2_apt_types }}"
+    uris: "{{ influxdb2_apt_uri }}"
+
+- name: Update APT cache.
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install InfluxDB packages.
+  ansible.builtin.package:
+    name: "{{ influxdb2_apt_packages }}"
+    state: present
+
+- name: Enable InfluxDB service on boot.
+  ansible.builtin.service:
+    name: influxdb
+    enabled: true
+    state: started
