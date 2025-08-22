@@ -1,0 +1,53 @@
+---
+# URL of the InfluxDB APIs
+influxdb2_host: "http://localhost:8086"
+
+# Primary user, organization, and bucket
+influxdb2_primary_org: "example-org"
+influxdb2_primary_bucket: "example-bucket"
+influxdb2_primary_username: "example-user"
+influxdb2_primary_password: "password123"
+
+# Admin operator token
+influxdb2_admin_token: "ExampleToken"
+
+# Additional organizations
+# influxdb2_orgs:
+#   - name: org1
+#     description: An organization
+influxdb2_orgs: []
+
+# Additional users
+# influxdb2_users:
+#   - name: user1
+#     password: changeme
+#     org: org1
+influxdb2_users: []
+
+# Additional buckets
+# influxdb2_buckets:
+#   - name: bucket1
+#     decription: A bucket
+#     org: org1
+#     retention: 0
+influxdb2_buckets: []
+
+# Max number of retries and delay when testing API connection
+influxdb2_ping_retries: 5
+influxdb2_ping_delay: 5
+
+# URL of InfluxDB repository
+influxdb2_repo_url: "https://repos.influxdata.com"
+
+# APT-related variables
+influxdb2_apt_name: "InfluxDB"
+influxdb2_apt_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'armhf' if ansible_architecture == 'armv7l' else 'amd64' }}"
+influxdb2_apt_components: "main"
+influxdb2_apt_suites: "stable"
+influxdb2_apt_types: "deb"
+influxdb2_apt_uri: "{{ influxdb2_repo_url }}/debian"
+influxdb2_apt_gpg_key: "{{ influxdb2_repo_url }}/influxdata-archive.key"
+
+influxdb2_apt_packages:
+  - influxdb2
+  - telegraf
