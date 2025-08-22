@@ -1,0 +1,16 @@
+---
+- name: Ensure additional users exist.
+  ansible.builtin.command: >-
+    influx user create
+    --host "{{ influxdb2_host }}"
+    --name "{{ item.name | ansible.builtin.mandatory }}"
+    --password "{{ item.password | ansible.builtin.mandatory }}"
+    --org "{{ item.org | default(influxdb2_primary_org) }}"
+  loop: "{{ influxdb2_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: _influxdb2_user_result
+  failed_when:
+    - _influxdb2_user_result.rc != 0
+    - '"already exists" not in _influxdb2_user_result.stderr'
+  changed_when: _influxdb2_user_result.rc == 0

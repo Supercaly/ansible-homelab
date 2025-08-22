@@ -1,0 +1,8 @@
+---
+# Part of the code in this role was taken from
+# https://github.com/buluma/ansible-role-influxdb2/blob/master/tasks/configure.yml
+- name: Install InfluxDB.
+  ansible.builtin.import_tasks: setup.yml
+
+- name: Configure InfluxDB.
+  ansible.builtin.import_tasks: configure.yml

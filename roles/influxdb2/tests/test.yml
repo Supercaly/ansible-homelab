@@ -1,0 +1,6 @@
+---
+- name: Test role influxdb2.
+  hosts: test
+  remote_user: root
+  roles:
+    - role: influxdb2
