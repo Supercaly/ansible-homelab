@@ -14,9 +14,13 @@ lxc_network:
 lxc_tags:
   - "notification"
 
-ntfy_system_user: ntfy
-ntfy_system_group: ntfy
-
-ntfy_dirs_cache: /var/cache/ntfy
-ntfy_dirs_data: /var/lib/ntfy
-ntfy_dirs_log: /var/log/ntfy
+ntfy_config:
+  base-url: "https://{{ proxy_ntfy_domain }}"
+  behind-proxy: true
+  listen-http: ":{{ proxy_ntfy_port }}"
+  cache-file: "/var/cache/ntfy/cache.db"
+  attachment-cache-dir: "/var/cache/ntfy/attachments"
+  auth-file: "/var/lib/ntfy/user.db"
+  auth-default-access: "deny-all"
+  auth-users:
+    - "{{ ntfy_admin_user }}:{{ ntfy_admin_password }}:admin"

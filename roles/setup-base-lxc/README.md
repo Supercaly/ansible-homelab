@@ -1,7 +1,7 @@
-Role Name
+Ansible Role: setup-base-lxc
 =========
 
-An Ansible Role that setup a base LXC.
+An Ansible Role that sets up a base Linux LXC.
 
 Requirements
 ------------
@@ -40,7 +40,8 @@ Example Playbook
 ----------------
 
 ```yaml
-- hosts: all
+- name: Setup base LXC
+  hosts: all
   roles:
     - role: setup-base-lxc
 ```

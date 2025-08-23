@@ -1,0 +1,30 @@
+---
+- name: Add NTFY APT repository.
+  ansible.builtin.deb822_repository:
+    name: "{{ ntfy_apt_name }}"
+    architectures: "{{ ntfy_apt_arch }}"
+    components: "{{ ntfy_apt_components }}"
+    signed_by: "{{ ntfy_apt_gpg_key }}"
+    suites: "{{ ntfy_apt_suites }}"
+    types: "{{ ntfy_apt_types }}"
+    uris: "{{ ntfy_apt_uris }}"
+    state: "present"
+
+- name: Update APT cache.
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install NTFY packages.
+  ansible.builtin.package:
+    name: "{{ ntfy_service_name }}"
+    state: "present"
+  notify: restart ntfy service
+
+- name: Ensure NTFY is started and enabled at boot.
+  ansible.builtin.service:
+    name: "{{ ntfy_service_name }}"
+    enabled: true
+    state: "started"
+
+- name: Ensure all handlers are notified.
+  ansible.builtin.meta: flush_handlers

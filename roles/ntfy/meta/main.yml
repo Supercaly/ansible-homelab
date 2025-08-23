@@ -1,0 +1,19 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Lorenzo Calisti
+  description: Install and configure NTFY on Linux.
+  license: "license (MIT)"
+  min_ansible_version: "2.1"
+  platforms:
+    # TODO: Add RetHat support
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+        - bookworm
+  galaxy_tags:
+    - ntfy
+    - ntfysh
+    - notification

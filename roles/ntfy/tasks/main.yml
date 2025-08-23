@@ -1,0 +1,6 @@
+---
+- name: Install NTFY.
+  ansible.builtin.import_tasks: setup.yml
+
+- name: Configure NTFY.
+  ansible.builtin.import_tasks: configure.yml
