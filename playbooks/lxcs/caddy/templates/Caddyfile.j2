@@ -62,3 +62,45 @@ https://{{ proxy_influxdb_domain }} {
     encode gzip
     reverse_proxy {{ proxy_influxdb_address }}:{{ proxy_influxdb_port }}
 }
+
+# Domain for filebrowser
+https://{{ proxy_filebrowser_domain }} {
+    {{ log_to_file(proxy_filebrowser_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ proxy_filebrowser_address }}:{{ proxy_filebrowser_port }}
+}
+
+# Domain for ddns
+https://{{ proxy_ddns_domain }} {
+    {{ log_to_file(proxy_ddns_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ proxy_ddns_address }}:{{ proxy_ddns_port }}
+}
+
+# Domain for portainer
+https://{{ proxy_portainer_domain }} {
+    {{ log_to_file(proxy_portainer_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ proxy_portainer_address }}:{{ proxy_portainer_port }}
+}
+
+# Domain for portfolio
+https://{{ proxy_portfolio_domain }} {
+    {{ log_to_file(proxy_portfolio_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ proxy_portfolio_address }}:{{ proxy_portfolio_port }}
+}
+
+# Domain for vaultwarden
+https://{{ proxy_vaultwarden_domain }} {
+    {{ log_to_file(proxy_vaultwarden_domain) }}
+    {{ block_access_outside() }}
+    encode gzip
+    reverse_proxy {{ proxy_vaultwarden_address }}:{{ proxy_vaultwarden_port }} {
+        header_up X-Real-IP {remote_host}
+    }
+}

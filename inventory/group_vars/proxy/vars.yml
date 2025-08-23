@@ -8,3 +8,23 @@ proxy_ntfy_port: 8081
 proxy_influxdb_domain: "influxdb.{{ proxy_base_domain }}"
 proxy_influxdb_address: 192.168.1.123
 proxy_influxdb_port: 8086
+
+proxy_filebrowser_domain: "filebrowser.{{ proxy_base_domain }}"
+proxy_filebrowser_address: 192.168.1.122
+proxy_filebrowser_port: 8081
+
+proxy_ddns_domain: "ddns.{{ proxy_base_domain }}"
+proxy_ddns_address: 192.168.1.122
+proxy_ddns_port: 8001
+
+proxy_portainer_domain: "portainer.{{ proxy_base_domain }}"
+proxy_portainer_address: 192.168.1.122
+proxy_portainer_port: 9000
+
+proxy_portfolio_domain: "portfolio.{{ proxy_base_domain }}"
+proxy_portfolio_address: 192.168.1.122
+proxy_portfolio_port: 8085
+
+proxy_vaultwarden_domain: "vaultwarden.{{ proxy_base_domain }}"
+proxy_vaultwarden_address: 192.168.1.122
+proxy_vaultwarden_port: 8086

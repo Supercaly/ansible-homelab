@@ -1,0 +1,62 @@
+---
+- name: Ensure compose target directory exists.
+  ansible.builtin.file:
+    path: "{{ compose_target_dir }}"
+    state: directory
+    owner: "{{ compose_target_owner }}"
+    group: "{{ compose_target_group }}"
+    mode: "{{ compose_target_mode }}"
+
+- name: Ensure files sub-directories exist.
+  ansible.builtin.file:
+    path: "{{ compose_target_dir }}/{{ item.path }}"
+    state: directory
+    owner: "{{ compose_files[item.path].owner | default(compose_default_owner) }}"
+    group: "{{ compose_files[item.path].group | default(compose_default_group) }}"
+    mode: "{{ compose_files[item.path].mode | default(compose_default_mode) }}"
+  when: item.state == 'directory'
+  with_community.general.filetree: "{{ compose_files_dir }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: Deploy static (non-template) files.
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ compose_target_dir }}/{{ item.path }}"
+    owner: "{{ compose_files[item.path].owner | default(compose_default_owner) }}"
+    group: "{{ compose_files[item.path].group | default(compose_default_group) }}"
+    mode: "{{ compose_files[item.path].mode | default(compose_default_mode) }}"
+  when: >-
+    item.state == 'file' and
+    (not item.path.endswith('.j2')) and
+    (not item.path | basename in compose_exclude_files)
+  with_community.general.filetree: "{{ compose_files_dir }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: Ensure templates sub-directories exist.
+  ansible.builtin.file:
+    path: "{{ compose_target_dir }}/{{ item.path }}"
+    state: directory
+    owner: "{{ compose_files[item.path].owner | default(compose_default_owner) }}"
+    group: "{{ compose_files[item.path].group | default(compose_default_group) }}"
+    mode: "{{ compose_files[item.path].mode | default(compose_default_mode) }}"
+  when: item.state == 'directory'
+  with_community.general.filetree: "{{ compose_templates_dir }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: Deploy template files.
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ compose_target_dir }}/{{ item.path | regex_replace('.j2','') }}"
+    owner: "{{ compose_files[item.path].owner | default(compose_default_owner) }}"
+    group: "{{ compose_files[item.path].group | default(compose_default_group) }}"
+    mode: "{{ compose_files[item.path].mode | default(compose_default_mode) }}"
+  when: >-
+    item.state == 'file' and
+    item.path.endswith('.j2') and
+    (not item.path | basename in compose_exclude_files)
+  with_community.general.filetree: "{{ compose_templates_dir }}"
+  loop_control:
+    label: "{{ item.path }}"
