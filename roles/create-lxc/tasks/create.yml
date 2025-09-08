@@ -1,4 +1,15 @@
 ---
+- name: Ensure bind mount folders exist on the host.
+  ansible.builtin.file:
+    path: "{{ item.bind }}"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    state: directory
+  loop: "{{ lxc_mounts }}"
+  loop_control:
+    label: "{{ item.bind }}"
+
 # NOTE: Parts of this task are inspired by these roles:
 #   - https://github.com/UdelaRInterior/ansible-role-proxmox-create-lxc/blob/master/tasks/main.yml
 #   - https://github.com/maxhoesel-ansible/ansible-collection-proxmox
