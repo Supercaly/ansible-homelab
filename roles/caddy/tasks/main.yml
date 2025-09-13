@@ -1,0 +1,12 @@
+---
+- name: Install Caddy.
+  ansible.builtin.import_role:
+    name: maxhoesel.caddy.caddy_server
+  vars:
+    caddy_apply_config: false
+
+- name: Ensure handlers are notified now to avoid conflicts.
+  ansible.builtin.meta: flush_handlers
+
+- name: Configure Caddy.
+  ansible.builtin.import_tasks: configure.yml

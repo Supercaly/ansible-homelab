@@ -1,0 +1,17 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Lorenzo Calisti
+  description: Install and sets up Caddy on Linux
+  license: license (MIT)
+  min_ansible_version: "2.1"
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+  galaxy_tags:
+    - caddy
+    - reverse
+    - proxy

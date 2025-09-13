@@ -16,3 +16,4 @@ lxc_tags:
   - "webserver"
 
 caddy_email: "{{ vault_caddy_email }}"
+caddy_local_certs: true

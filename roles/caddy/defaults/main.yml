@@ -1,0 +1,58 @@
+---
+# Caddy system user
+caddy_user: "caddy"
+caddy_group: "caddy"
+
+# Name of the caddy service
+caddy_service_name: caddy
+
+# Path to caddy config dir
+caddy_config_dir: "/etc/caddy"
+
+# Path to caddy logs dir
+caddy_log_dir: "/var/log/caddy"
+
+# Path to the Caddyfile
+caddy_caddyfile_file: "{{ caddy_config_dir }}/Caddyfile"
+
+# Path to the sites dir
+caddy_sites_dir: "{{ caddy_config_dir }}/sites"
+
+# Remove all old sites not in the current config
+caddy_rm_unmanaged_sites: true
+
+# ---------------------------
+# Caddyfile-related variables
+# ---------------------------
+
+# Enable debug mode
+caddy_debug: false
+
+# Customize the admin API endpoint
+# If set to `off` the admin endpoint is disabled
+caddy_admin: "localhost:2019"
+
+# Email address used when creating an ACME account with the CA
+caddy_email: ""
+
+# Issue all certificates internally, rather than through a public ACME CA
+caddy_local_certs: false
+
+# ACME endpoint to use
+# Possible values: [default, staging]
+caddy_ca: "default"
+# Default ACME API endpoint
+caddy_default_ca: "https://acme-v02.api.letsencrypt.org/directory"
+# Staging ACME API endpoint
+caddy_staging_ca: "https://acme-staging-v02.api.letsencrypt.org/directory"
+
+# List of sites to manage
+# caddy_sites:
+#   - hostname: my.domain.com
+#     protocol: 'https'
+#     public: false
+#     www_redir: false
+#     header_up: []
+#     proxies:
+#       - 172.0.0.10:8080
+caddy_sites: []
