@@ -1,0 +1,24 @@
+---
+- name: Find all Caddy sites files.
+  ansible.builtin.find:
+    paths: "{{ caddy_sites_dir }}"
+  register: _caddy_existing_sites
+
+- name: Build list of valid site filenames.
+  ansible.builtin.set_fact:
+    _caddy_valid_sites: >-
+      {{ caddy_sites
+         | map(attribute='hostname')
+         | map('replace', '.', '_')
+         | map('regex_replace', '$', '.caddy')
+         | list }}
+
+- name: Delete unmanaged Caddy sites files.
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: "absent"
+  notify: restart caddy service
+  loop: "{{ _caddy_existing_sites.files | default([]) }}"
+  loop_control:
+    label: "{{ item.path }}"
+  when: "(item.path | basename) not in _caddy_valid_sites"

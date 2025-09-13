@@ -1,0 +1,40 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+# --------------
+# Global Options
+# --------------
+{
+{% if caddy_debug %}
+    # Enable debug mode.
+    debug
+{% endif %}
+
+    # Manage admin API endpoint.
+    admin {{ caddy_admin }}
+
+    # Configure `default` logger.
+    log default {
+        output stderr
+        format json
+    }
+
+{% if caddy_email is defined and caddy_email | length > 0 %}
+    # Your email address. Mainly used when creating an ACME account with your CA.
+    email "{{ caddy_email }}"
+{% endif %}
+
+{% if caddy_local_certs %}
+    # Causes all certificates to be issued internally by default.
+    local_certs
+{% else %}
+    # Specify the URL to the ACME CA's directory.
+    acme_ca "{{ (caddy_ca == 'staging') | ansible.builtin.ternary(caddy_staging_ca, caddy_default_ca) }}"
+{% endif %}
+}
+
+# -----
+# Sites
+# -----
+
+# Import sites files.
+import sites/*

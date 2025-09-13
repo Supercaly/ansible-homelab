@@ -1,0 +1,9 @@
+---
+- name: restart caddy service # noqa: name[casing]
+  # TODO: Reload caddy instead of restarting it on configuration changes.
+  #   To avoid downtime, the [docs](https://caddyserver.com/docs/running#using-the-service) suggest to
+  #   reload the caddy service instead of restarting it.
+  #   This could be a problem when the admin API are turned off because they are required for reloading.
+  ansible.builtin.service:
+    name: "{{ caddy_service_name }}"
+    state: restarted

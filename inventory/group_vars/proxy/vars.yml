@@ -8,3 +8,14 @@ proxy_ntfy_port: 8081
 proxy_influxdb_domain: "influxdb.{{ proxy_base_domain }}"
 proxy_influxdb_address: 192.168.1.123
 proxy_influxdb_port: 8086
+
+caddy_sites:
+  - hostname: "{{ proxy_base_domain }}"
+    public: true
+    www_redir: true
+  - hostname: "{{ proxy_ntfy_domain }}"
+    proxies:
+      - "{{ proxy_ntfy_address }}:{{ proxy_ntfy_port }}"
+  - hostname: "{{ proxy_influxdb_domain }}"
+    proxies:
+      - "{{ proxy_influxdb_address }}:{{ proxy_influxdb_port }}"
