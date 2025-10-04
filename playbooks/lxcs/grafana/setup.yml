@@ -1,0 +1,25 @@
+---
+#########################################
+# Play that creates the LXC on the node.
+#########################################
+- name: Create grafana LXC.
+  hosts: node
+  become: true
+  vars_files:
+    - "{{ inventory_dir }}/host_vars/grafana/vars.yml"
+    - "{{ inventory_dir }}/host_vars/grafana/vault.yml"
+    - "{{ inventory_dir }}/group_vars/lxcs/vars.yml"
+    - "{{ inventory_dir }}/group_vars/lxcs/vault.yml"
+  roles:
+    - role: roles/create-lxc
+
+#############################
+# Play that sets up the host.
+#############################
+- name: Provision grafana LXC.
+  hosts: grafana
+  become: true
+
+  roles:
+    - role: roles/setup-base-lxc
+    - role: grafana.grafana.grafana

@@ -3,3 +3,4 @@ collections:
   - community.general
   - community.proxmox
   - maxhoesel.caddy
+  - grafana.grafana
