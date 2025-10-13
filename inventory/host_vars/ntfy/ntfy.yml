@@ -1,0 +1,11 @@
+---
+ntfy_config:
+  base-url: "https://{{ ntfy_domain }}"
+  behind-proxy: true
+  listen-http: ":{{ ntfy_port }}"
+  cache-file: "/var/cache/ntfy/cache.db"
+  attachment-cache-dir: "/var/cache/ntfy/attachments"
+  auth-file: "/var/lib/ntfy/user.db"
+  auth-default-access: "deny-all"
+  auth-users:
+    - "{{ vault_ntfy_admin_user }}:{{ vault_ntfy_admin_password }}:admin"

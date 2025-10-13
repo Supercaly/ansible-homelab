@@ -6,9 +6,7 @@
   hosts: node
   become: true
   vars_files:
-    - "{{ inventory_dir }}/host_vars/ntfy.yml"
-    - "{{ inventory_dir }}/group_vars/lxcs/vars.yml"
-    - "{{ inventory_dir }}/group_vars/lxcs/vault.yml"
+    - "{{ inventory_dir }}/host_vars/ntfy/proxmox.yml"
   roles:
     - role: roles/create-lxc
 

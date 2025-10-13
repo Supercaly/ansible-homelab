@@ -1,0 +1,17 @@
+---
+caddy_email: "{{ vault_caddy_email }}"
+caddy_local_certs: true
+
+caddy_sites:
+  - hostname: "{{ network.domain }}"
+    public: true
+    www_redir: true
+  - hostname: "{{ ntfy_domain }}"
+    proxies:
+      - "{{ ntfy_address }}:{{ ntfy_port }}"
+  - hostname: "{{ influxdb_domain }}"
+    proxies:
+      - "{{ influxdb_address }}:{{ influxdb_port }}"
+  - hostname: "{{ grafana_domain }}"
+    proxies:
+      - "{{ grafana_address }}:{{ influxdb_port }}"

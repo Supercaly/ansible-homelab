@@ -1,0 +1,16 @@
+---
+lxc_vmid: 104
+lxc_hostname: "grafana"
+lxc_appname: "Grafana"
+lxc_cores: 1
+lxc_memory: 512
+lxc_disk_size: 2
+lxc_network:
+  - id: net0
+    name: eth0
+    ip4: 192.168.1.124
+    netmask4: 24
+    gw4: "{{ network.gw4 }}"
+lxc_tags:
+  - "monitoring"
+  - "visualization"
