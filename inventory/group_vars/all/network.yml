@@ -1,0 +1,5 @@
+---
+network:
+  domain: "example.com"
+  ip4: "192.168.1.0/24"
+  gw4: "192.168.1.1"

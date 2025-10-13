@@ -2,18 +2,12 @@
 lxc_vmid: 100
 lxc_hostname: "caddy"
 lxc_appname: "Caddy"
-
 lxc_memory: 512
-
 lxc_network:
   - id: net0
     name: eth0
     ip4: 192.168.1.120
     netmask4: 24
-    gw4: 192.168.1.1
-
+    gw4: "{{ network.gw4 }}"
 lxc_tags:
   - "webserver"
-
-caddy_email: "{{ vault_caddy_email }}"
-caddy_local_certs: true

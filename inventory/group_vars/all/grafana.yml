@@ -1,0 +1,4 @@
+---
+grafana_domain: "grafana.{{ network.domain }}"
+grafana_address: 192.168.1.124
+grafana_port: 3000

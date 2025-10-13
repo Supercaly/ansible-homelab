@@ -1,0 +1,15 @@
+---
+lxc_vmid: 103
+lxc_hostname: "influxdb"
+lxc_appname: "InfluxDB"
+lxc_cores: 2
+lxc_memory: 2048
+lxc_disk_size: 8
+lxc_network:
+  - id: net0
+    name: eth0
+    ip4: 192.168.1.123
+    netmask4: 24
+    gw4: "{{ network.gw4 }}"
+lxc_tags:
+  - "database"

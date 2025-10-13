@@ -1,20 +1,4 @@
 ---
-lxc_vmid: 104
-lxc_hostname: "grafana"
-lxc_appname: "Grafana"
-lxc_cores: 1
-lxc_memory: 512
-lxc_disk_size: 2
-lxc_network:
-  - id: net0
-    name: eth0
-    ip4: 192.168.1.124
-    netmask4: 24
-    gw4: 192.168.1.1
-lxc_tags:
-  - "monitoring"
-  - "visualization"
-
 # Configure Grafana https://github.com/grafana/grafana-ansible-collection/tree/main/roles/grafana
 # Grafana init from https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/
 grafana_ini:
@@ -24,8 +8,8 @@ grafana_ini:
     admin_email: "{{ vault_grafana_admin_email }}"
     allow_embedding: false
   server:
-    http_port: "{{ proxy_grafana_port }}"
-    root_path: "https://{{ proxy_grafana_domain }}"
+    http_port: "{{ grafana_port }}"
+    root_path: "https://{{ grafana_domain }}"
   users:
     allow_sign_up: false
     allow_org_create: false
