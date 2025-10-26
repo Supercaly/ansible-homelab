@@ -1,0 +1,9 @@
+---
+- name: Get current config.
+  ansible.builtin.import_tasks: current_config.yml
+
+- name: Set features.
+  ansible.builtin.import_tasks: features.yml
+
+- name: Set mount volumes.
+  ansible.builtin.import_tasks: mount_volumes.yml

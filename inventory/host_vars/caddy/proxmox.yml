@@ -1,13 +1,25 @@
 ---
-lxc_vmid: 100
-lxc_hostname: "caddy"
 lxc_appname: "Caddy"
-lxc_memory: 512
-lxc_network:
-  - id: net0
-    name: eth0
-    ip4: 192.168.1.120
-    netmask4: 24
-    gw4: "{{ network.gw4 }}"
-lxc_tags:
-  - "webserver"
+proxmox_lxc:
+  vmid: 100
+  hostname: "caddy"
+  password: "{{ lxc_default_password }}"
+  template:
+    name: "debian-12-standard_12.7-1_amd64.tar.zst"
+    timeout: 180
+  disk_volume:
+    storage: "local-lvm"
+    size: 4
+  cores: 1
+  memory: 512
+  netif:
+    net0: >-
+      name=eth0,ip=192.168.1.120/24,gw={{
+        network.gw4
+      }},bridge=vmbr0
+  features:
+    - "keyctl=1"
+    - "nesting=1"
+  pubkey: "{{ lxc_default_pubkey }}"
+  tags:
+    - "webserver"

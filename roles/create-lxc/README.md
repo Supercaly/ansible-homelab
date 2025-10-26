@@ -13,38 +13,46 @@ Role Variables
 
 Available variables are listed below, along with default values (see 'defaults/main.yml' for a complete list):
 
+### Proxmox API variables
+
 | Name | Required | Type | Default | Description |
 | - | - | - | - | - |
 | `proxmox_node` | Yes | string | | Proxmox host node. |
-| `proxmox_api_host` | Yes | string | | Address of the Proxmox API host. |
+| `proxmox_api_host` | | string | `"localhost"` | Address of the Proxmox API host. |
 | `proxmox_api_user` | Yes | string | | Proxmox API user. |
 | `proxmox_api_password` | Yes | string | | Password for Proxmox API. <br/>This option is mutually exclusive with `proxmox_api_token_id` and `proxmox_api_token_secret`. |
 | `proxmox_api_token_id` | Yes | string | | Token ID for Proxmox API. <br/>This option is mutually exclusive with `proxmox_api_password`. |
 | `proxmox_api_token_secret` | Yes | string | | Token secret for Proxmox API. <br/>This option is mutually exclusive with `proxmox_api_password`. |
-| `lxc_vmid` | Yes | int | | LXC ID. |
-| `lxc_hostname` | Yes | string | | LXC hostname. |
-| `lxc_password` | Yes | string | | LXC password. |
-| `lxc_appname` | | string |  `"{{ lxc_hostname }}"` | Human-readable app name.|
-| `lxc_delete` | | bool | `false` | Delete the LXC insted of creating it. |
-| `lxc_template` | | string | `"debian-12-standard_12.7-1_amd64.tar.zst"` | Name of Template image to download. <br/> Check the [official Proxmox repository](http://download.proxmox.com/images/system/) for the available images. |
-| `lxc_template_storage` | | string | `"local"` | Storage where the Template is downloaded.|
-| `lxc_template_content_type` | | string | `"vztmpl"` | Template contenty type. |
-| `lxc_template_timeout` | | int | `180` | Timeout when downloading LXC template image. <br/>Increese this value based on your internet connection speed. |
-| `lxc_unprivileged` | | bool | `true` | Create an unprivileged LXC. If `false` a privileged LXC will be created instead. |
-| `lxc_cores` | | `1` | int | Number of cores for the LXC CPU. |
-| `lxc_memory` | | `1024` | int | Amount of RAM in MB for the LXC. |
-| `lxc_swap` | | `512` | int | Size of the swap in MB for the LCX. |
-| `lxc_disk_storage` | | string | `"local-lvm"` | Storage for the LXC main disk. |
-| `lxc_disk_size` | | int | `4` | Size in GB of the LXC main disk. |
-| `lxc_mounts` | | list | `[]` | Additional mount points for the LXC. <br/>Note: At the moment it is only possible to define **bind mounts** to some folder in the Proxmox host. |
-| `lxc_network` | | list | `[]` | LXC network interfaces. |
-| `lxc_onboot` | | bool | `false` | Start the LXC at host's bootup. |
-| `lxc_startup` | | string | `""` | LXC startup options. |
-| `lxc_nameserver` | | string | `""` | DNS nameserver. |
-| 'lxc_timezone` | | string | `"host"` | LXC Timezone. |
-| `lxc_pubkey` | | string | `""` | Path to an SSH key to use for secure connection to the LXC. |
-| `lxc_features` | | string | `"keyctl=1,nesting=1"` | Additional LXC features. |
-| `lxc_tags` | | list | `["ansible"]` | LXC Tags. |
+
+### LXC guest variables
+
+Variables related to the guest LXC are defined as fields of the `proxmox_lxc` dictionary:
+
+| Name | Required | Type | Default | Description |
+| - | - | - | - | - |
+| `vmid` | Yes | int | | LXC container ID. |
+| `hostname` | Yes | string | | Hostname of the container. |
+| `password` | Yes | string | | Password of the container. |
+| `unprivileged` | | bool | `true` | Create a privileged/unprivileged LXC. |
+| `template.name` | Yes | string | | Template image name. <br/> See the [official Proxmox repository](http://download.proxmox.com/images/system). |
+| `template.storage` | | string | `"local"` | Storage where the Template is downloaded.|
+| `template.content_type` | | string | `"vztmpl"` | Template content type. |
+| `template.timeout` | | int |  | Timeout for template download (in seconds). |
+| `cpus` | | int | | Number of allocated cpus. |
+| `cores` | | int | | Number of cores per socket. |
+| `memory` | | int | | Amount of RAM in MB. |
+| `swap` | | int | | Size of the swap memory in MB. |
+| `disk_volume` | Yes | dict | | Main disk configuration (same syntax as `community.general.proxmox`). |
+| `mount_volumes` | | dict | `{}` | Additional mount points for the LXC. |
+| `netif` | | dict | `{}` | Network interfaces of the LXC (same syntax as `community.general.proxmox`). |
+| `ostype` | | string | | OS type. |
+| `onboot` | | bool | `false` | Start container on host boot. |
+| `startup` | | string | | Startup options. |
+| `pubkey` | | string | | SSH public key for root access to the LXC. |
+| `nameserver` | | string | | DNS nameserver. |
+| `timezone` | | string | `"host"` | Container Timezone. |
+| `features` | | list | `[]` | Additional LXC features. |
+| `tags` | | list | `["ansible"]` | Container Tags. |
 
 Dependencies
 ------------

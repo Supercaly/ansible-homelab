@@ -1,0 +1,28 @@
+---
+# Set mount volumes manually because token-based auth can't do it.
+- name: Set mount volumes.
+  when: lxc_config[item.key] | default('') != options_string
+  ansible.builtin.command:
+    argv:
+      - pct
+      - set
+      - "{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}"
+      - "-{{ item.key }}"
+      - "{{ options_string }}"
+  loop: >-
+    {{
+      proxmox_lxc.mount_volumes |
+      default({}) |
+      ansible.builtin.dict2items
+    }}
+  loop_control:
+    label: "{{ item.key }}={{ options_string }}"
+  changed_when: true
+  vars:
+    options_string: >-
+      {{
+        [
+          item.value.host_path | ansible.builtin.mandatory,
+          'mp=' ~ item.value.mountpoint | ansible.builtin.mandatory
+        ] | join(',')
+      }}
