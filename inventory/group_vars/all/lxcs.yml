@@ -1,3 +1,3 @@
 ---
-lxc_password: "{{ vault_lxc_password }}"
-lxc_pubkey: "{{ vault_lxc_pubkey }}"
+lxc_default_password: "{{ vault_lxc_default_password }}"
+lxc_default_pubkey: "{{ lookup('ansible.builtin.file', '~/.ssh/id_rsa.pub') }}"

@@ -1,78 +1,57 @@
 ---
-# NOTE: Parts of this task are inspired by these roles:
-#   - https://github.com/UdelaRInterior/ansible-role-proxmox-create-lxc/blob/master/tasks/main.yml
-#   - https://github.com/maxhoesel-ansible/ansible-collection-proxmox
 - name: Ensure LXC is present.
   module_defaults:
+    # Token-based auth cannot set features, mount_volumes and hookscript,
+    # even if the token is for the root user.
     community.proxmox.proxmox:
-      node: "{{ proxmox_node }}"
-      api_host: "{{ proxmox_api_host }}"
-      api_user: "{{ proxmox_api_user }}"
+      node: "{{ proxmox_node | ansible.builtin.mandatory }}"
+      api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+      api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
 
-      # Set main LXC info
       state: present
-      vmid: "{{ lxc_vmid }}"
-      hostname: "{{ lxc_hostname }}"
-      password: "{{ lxc_password }}"
-      ostemplate: "{{ lxc_template_storage }}:vztmpl/{{ lxc_template }}"
-      unprivileged: "{{ lxc_unprivileged }}"
       update: true
 
+      # Set main LXC info
+      vmid: "{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}"
+      hostname: "{{ proxmox_lxc.hostname | ansible.builtin.mandatory }}"
+      password: "{{ proxmox_lxc.password | ansible.builtin.mandatory }}"
+      unprivileged: "{{ proxmox_lxc.unprivileged | default(true) }}"
+      ostemplate: >-
+        {{ proxmox_lxc.template.storage | default('local') ~ ':' ~
+           proxmox_lxc.template.content_type | default('vztmpl') ~ '/' ~
+           proxmox_lxc.template.name | ansible.builtin.mandatory }}
+
       # Set hardware info
-      cores: "{{ lxc_cores }}"
-      memory: "{{ lxc_memory }}"
-      swap: "{{ lxc_swap }}"
-      features: "{{ lxc_features }}"
+      cpus: "{{ proxmox_lxc.cpus | default(omit) }}"
+      cores: "{{ proxmox_lxc.cores | default(omit) }}"
+      memory: "{{ proxmox_lxc.memory | default(omit) }}"
+      swap: "{{ proxmox_lxc.swap | default(omit) }}"
 
       # Set disk info
-      disk_volume:
-        storage: "{{ lxc_disk_storage }}"
-        size: "{{ lxc_disk_size }}"
-      # TODO: Add more mount types other than bind mounts.
-      mounts: >-
-        { {%- for item in lxc_mounts -%}
-          "{{ item.id }}": "{{ item.bind }},mp={{ item.mount }}",
-        {%- endfor -%} }
+      disk_volume: "{{ proxmox_lxc.disk_volume | ansible.builtin.mandatory }}"
 
       # Set network interfaces
-      netif: >-
-        { {%- for item in lxc_network -%}
-        "{{ item.id }}":"name={{ item.name }},bridge={{ item.bridge | default('vmbr0') }},{% if (item.ip4 is defined) %}ip={{ item.ip4 }}{% endif %}{% if (item.netmask4 is defined) %}/{{ item.netmask4 }},{% else %},{% endif %}{% if (item.gw4 is defined) %}gw={{ item.gw4 }},{% endif %}{% if (item.ip6 is defined) %}ip6={{ item.ip6 }}{% endif %}{% if (item.netmask6 is defined) %}/{{ item.netmask6 }},{% else %},{% endif %}{% if (item.gw6 is defined) %}gw6={{ item.gw6 }},{% endif %}{% if (item.firewall is defined and item.firewall) %}firewall=1,{% endif %}{% if (item.vlan_tag is defined) %}tag={{ item.vlan_tag }}{% endif %}",
-        {%- endfor -%} }
+      netif: "{{ proxmox_lxc.netif | default(omit) }}"
 
       # Set boot options
-      onboot: "{{ lxc_onboot }}"
-      # TODO: Change lxc_startup option to lxc_boot_order
-      startup: "{{ lxc_startup if (lxc_startup is defined and lxc_startup | length > 0) else omit }}"
+      ostype: "{{ proxmox_lxc.ostype | default(omit) }}"
+      onboot: "{{ proxmox_lxc.onboot | default(false) }}"
+      startup: "{{ proxmox_lxc.startup | default(omit) }}"
 
       # Set SSH pubkey for remote access
-      # TODO: Add SSH key of the proxmox node for future management
-      pubkey: "{{ lookup('file', lxc_pubkey) if (lxc_pubkey is defined and lxc_pubkey | length > 0) else omit }}"
+      pubkey: "{{ proxmox_lxc.pubkey | default(omit) }}"
 
       # Set additional info
-      nameserver: "{{ lxc_nameserver if (lxc_nameserver is defined and lxc_nameserver | length > 0) else omit }}"
-      timezone: "{{ lxc_timezone if (lxc_timezone is defined and lxc_timezone | length > 0) else omit }}"
-      tags: "{{ lxc_tags + ['ansible'] }}"
+      nameserver: "{{ proxmox_lxc.nameserver | default(omit) }}"
+      searchdomain: "{{ proxmox_lxc.searchdomain | default(omit) }}"
+      timezone: "{{ proxmox_lxc.timezone | default('host') }}"
+      tags: "{{ proxmox_lxc.tags | default([]) | union(['ansible']) }}"
+      description: >-
+        # ({{ proxmox_lxc.vmid }}) {{ proxmox_lxc.hostname }} LXC
 
-      # Set the description
-      # TODO: Include all IPs in the description.
-      description: |
-        <div>
-          <h2 align="center" style="font-size: 24px; margin: 20px 0">
-              {{ lxc_appname }} LXC
-          </h2>
-          <p style="margin: 16px 0">
-              <strong>Note: </strong>This Proxmox LXC container is managed by Ansible.
-              Please contact your system administrators to ensure that any changes you
-              make here are not lost.
-          </p>
-          <ul>
-            <li><strong>Hostname: </strong>{{ lxc_hostname }}</li>
-            <li><strong>CPUs: </strong>{{ lxc_cores }}</li>
-            <li><strong>RAM: </strong>{{ lxc_memory }}MB</li>
-            <li><strong>Storage: </strong>{{ lxc_disk_size }}GB</li>
-          </ul>
-        </div>
+        **Note:** This Proxmox LXC container is managed by Ansible.
+        Please contact your system administrators to ensure that any changes you
+        make here are not lost.
   block:
     - name: Ensure LXC is present via password.
       community.proxmox.proxmox: # noqa: args[module]
@@ -87,30 +66,10 @@
 
 - name: Ensure LXC exists after its creation.
   block:
-    - name: "Get status of LXC '{{ lxc_vmid }}'."
-      ansible.builtin.import_tasks: get_lxc_status.yml
+    - name: Retrieve LXC status.
+      ansible.builtin.import_tasks: lxc_exists.yml
 
-    - name: "Fail if the LXC does not exists after its creation."
+    - name: Fail if the LXC does not exists after its creation.
       ansible.builtin.fail:
-        msg: "LXC {{ lxc_vmid }} does not exists after its creation."
-      when: "not lxc_status.exists"
-
-- name: Ensure LXC is running.
-  module_defaults:
-    community.proxmox.proxmox:
-      node: "{{ proxmox_node }}"
-      api_host: "{{ proxmox_api_host }}"
-      api_user: "{{ proxmox_api_user }}"
-      vmid: "{{ lxc_vmid }}"
-      state: started
-  block:
-    - name: Ensure LXC is running via password.
-      community.proxmox.proxmox: # noqa: args[module]
-        api_password: "{{ proxmox_api_password }}"
-      when: "proxmox_is_password_setup"
-
-    - name: Ensure LXC is running via token.
-      community.proxmox.proxmox: # noqa: args[module]
-        api_token_id: "{{ proxmox_api_token_id }}"
-        api_token_secret: "{{ proxmox_api_token_secret }}"
-      when: "proxmox_is_token_setup"
+        msg: "LXC {{ proxmox_lxc.vmid }} does not exists after its creation."
+      when: "not lxc_exists"

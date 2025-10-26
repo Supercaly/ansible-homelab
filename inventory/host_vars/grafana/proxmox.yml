@@ -1,16 +1,26 @@
 ---
-lxc_vmid: 104
-lxc_hostname: "grafana"
 lxc_appname: "Grafana"
-lxc_cores: 1
-lxc_memory: 512
-lxc_disk_size: 2
-lxc_network:
-  - id: net0
-    name: eth0
-    ip4: 192.168.1.124
-    netmask4: 24
-    gw4: "{{ network.gw4 }}"
-lxc_tags:
-  - "monitoring"
-  - "visualization"
+proxmox_lxc:
+  vmid: 104
+  hostname: "grafana"
+  password: "{{ lxc_default_password }}"
+  template:
+    name: "debian-12-standard_12.7-1_amd64.tar.zst"
+    timeout: 180
+  disk_volume:
+    storage: "local-lvm"
+    size: 2
+  cores: 1
+  memory: 512
+  netif:
+    net0: >-
+      name=eth0,ip=192.168.1.124/24,gw={{
+        network.gw4
+      }},bridge=vmbr0
+  features:
+    - "keyctl=1"
+    - "nesting=1"
+  pubkey: "{{ lxc_default_pubkey }}"
+  tags:
+    - "monitoring"
+    - "visualization"

@@ -1,25 +1,21 @@
 ---
 # This task checks the status of a given LXC and sets
-# the variable lxc_status with the result.
-# The result variable contains a dictionary with the following fields:
-# - lxc_status:
-#   exists: If the LXC is present.
-#   status: String with the statis of the LXC; empty if it doesn't exist.
-- name: "Get status of LXC '{{ lxc_vmid }}'."
+# the variable lxc_exist if it is present.
+- name: Retrieve LXC status.
   module_defaults:
     community.proxmox.proxmox_vm_info:
-      node: "{{ proxmox_node }}"
-      api_host: "{{ proxmox_api_host }}"
-      api_user: "{{ proxmox_api_user }}"
-      vmid: "{{ lxc_vmid }}"
+      node: "{{ proxmox_node | ansible.builtin.mandatory }}"
+      api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+      api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+      vmid: "{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}"
   block:
-    - name: Get status of LXC via password.
+    - name: Retrieve LXC status via password.
       community.proxmox.proxmox_vm_info: # noqa: args[module]
         api_password: "{{ proxmox_api_password }}"
       register: _proxmox_lxc_status_pwd
       when: "proxmox_is_password_setup"
 
-    - name: Get status of LXC via token.
+    - name: Retrieve LXC status via token.
       community.proxmox.proxmox_vm_info: # noqa: args[module]
         api_token_id: "{{ proxmox_api_token_id }}"
         api_token_secret: "{{ proxmox_api_token_secret }}"
@@ -32,11 +28,9 @@
 
 - name: Fail if the status is not defined.
   ansible.builtin.fail:
-    msg: "Error retrieving status of LXC '{{ lxc_vmid }}'."
+    msg: "Error retrieving status of LXC '{{ proxmox_lxc.vmid }}'."
   when: "_proxmox_vm_info_result.proxmox_vms is not defined"
 
-- name: Set 'lxc_status' variable with the state.
+- name: Set 'lxc_exists' variable.
   ansible.builtin.set_fact:
-    lxc_status:
-      exists: "{{ _proxmox_vm_info_result.proxmox_vms | length > 0 | bool }}"
-      status: "{{ _proxmox_vm_info_result.proxmox_vms[0].status if _proxmox_vm_info_result.proxmox_vms | length > 0 else '' }}"
+    lxc_exists: "{{ _proxmox_vm_info_result.proxmox_vms | length > 0 | bool }}"

@@ -1,0 +1,20 @@
+---
+# Set features manually because token-based auth can't do it.
+- name: Set features.
+  when: >-
+    (
+      lxc_config.features |
+      default('') |
+      trim
+    ) != features
+  ansible.builtin.command:
+    argv:
+      - pct
+      - set
+      - "{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}"
+      - --features
+      - "{{ features }}"
+  changed_when: true
+  vars:
+    features: >-
+      {{ proxmox_lxc.features | default([]) | join(',') }}
