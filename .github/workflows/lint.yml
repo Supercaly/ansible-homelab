@@ -23,10 +23,17 @@ jobs:
         run: >-
           echo "fake" > .vault-password
 
+      # Due to [this issue](https://github.com/ansible/ansible-lint/issues/4830#issuecomment-3466653235)
+      # we need to setup python manually for the moment.
+      - name: Setup python.
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
       - name: Run ansible-lint.
         uses: ansible/ansible-lint@main
         with:
-          setup_python: true
+          setup_python: false
           requirements_file: requirements.yml
           args: --exclude .ansible
 
