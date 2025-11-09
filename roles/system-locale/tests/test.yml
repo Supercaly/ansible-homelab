@@ -1,0 +1,6 @@
+---
+- name: Test system-locale Role.
+  hosts: localhost
+  remote_user: root
+  roles:
+    - system-locale
