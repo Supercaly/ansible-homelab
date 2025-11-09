@@ -1,0 +1,42 @@
+---
+- name: Load OS-specific vars.
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+        - main.yml
+      paths:
+        - "vars"
+
+- name: Ensure locale packages are present.
+  ansible.builtin.package:
+    name: "{{ system_locale_packages }}"
+    state: present
+
+- name: Generate locale.
+  when: ansible_os_family == 'Debian'
+  community.general.locale_gen:
+    name: "{{ system_locale_lang }}"
+
+- name: Get current locale.
+  block:
+    - name: Query current locale.
+      ansible.builtin.command: "localectl status"
+      register: _system_locale_status
+      changed_when: false
+
+    - name: Set '_current_locale_lang' with current locale.
+      ansible.builtin.set_fact:
+        _current_locale_lang: "{{ _system_locale_status.stdout | regex_search('LANG=([^\n]+)', '\\1') | first }}"
+
+- name: Set locale.
+  ansible.builtin.command: >-
+    localectl set-locale {{ system_locale_lang }}
+  when: system_locale_lang != _current_locale_lang
+  changed_when: true
+
+- name: Set timezone.
+  community.general.timezone:
+    name: "{{ system_locale_timezone }}"
