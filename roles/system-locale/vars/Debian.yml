@@ -1,0 +1,4 @@
+---
+system_locale_packages:
+  - locales
+  - tzdata
