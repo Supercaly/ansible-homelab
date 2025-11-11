@@ -1,0 +1,19 @@
+---
+motd_content: |
+
+  --------------------------------------------------------------------------
+                      This system is managed by Ansible
+  --------------------------------------------------------------------------
+
+  NOTE: System and application configuration for this host is managed by
+  automated systems. To ensure that any changes you make here are not lost,
+  please contact your system administrators.
+
+  FQDN:     {{ ansible_fqdn }}
+  Distro:   {{ ansible_distribution }} {{ ansible_distribution_version }} {{ ansible_distribution_release }}
+  Virtual:  {{ 'YES (' ~ ansible_virtualization_type ~ ')' if ansible_virtualization_role == 'guest' else 'NO' }}
+  CPUs:     {{ ansible_processor_vcpus }}
+  RAM:      {{ (ansible_memtotal_mb / 1000) | round(1) }} GB
+  Timezone: {{ ansible_date_time.tz }}({{ ansible_date_time.tz_offset }})
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
