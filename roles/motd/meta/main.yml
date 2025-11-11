@@ -1,0 +1,23 @@
+dependencies: []
+
+galaxy_info:
+  role_name: motd
+  author: Lorenzo Calisti
+  description: Set Message of the Day (MOTD) on Linux.
+  license: MIT
+  min_ansible_version: "2.1"
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+    - name: Fedora
+      versions:
+        - all
+  galaxy_tags:
+    - motd

@@ -1,0 +1,6 @@
+---
+- name: Test motd Role.
+  hosts: localhost
+  remote_user: root
+  roles:
+    - motd
