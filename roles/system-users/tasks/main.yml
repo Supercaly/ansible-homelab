@@ -1,0 +1,15 @@
+---
+# Inspired by [this role](https://github.com/robertdebock/ansible-role-users/tree/master)
+- name: Ensure system packages are present.
+  ansible.builtin.package:
+    name: "{{ system_users_packages }}"
+    state: present
+
+- name: Ensure groups exists.
+  ansible.builtin.import_tasks: groups.yml
+
+- name: Ensure users exists.
+  ansible.builtin.import_tasks: users.yml
+
+- name: Set sudoers options.
+  ansible.builtin.import_tasks: sudoers.yml

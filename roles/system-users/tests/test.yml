@@ -1,0 +1,5 @@
+---
+- name: Test system-users role.
+  hosts: localhost
+  roles:
+    - system-users
