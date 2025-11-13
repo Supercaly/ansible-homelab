@@ -1,0 +1,5 @@
+{% for group in system_groups | selectattr('sudo_options','defined') %}
+{% for option in group.sudo_options %}
+%{{ group.name }} {{ option }}
+{% endfor %}
+{% endfor %}

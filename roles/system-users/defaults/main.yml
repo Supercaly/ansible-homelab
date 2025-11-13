@@ -1,0 +1,34 @@
+---
+# System groups.
+# system_groups:
+#   - name: group1
+#     gid: 1000
+#     state: present
+#     system: true
+#     sudo_options
+system_groups: []
+
+# System users.
+# system_users:
+#   - name: user1
+#     uid: 1000
+#     comment: A default user
+#     group: group1
+#     groups:
+#       - group2
+#       - group3
+#     state: present
+#     sudo_options
+system_users: []
+
+# Default shell for new users.
+system_users_default_shell: "/bin/bash"
+
+# Includedir command for sudoers file.
+system_users_sudo_includedir: "@includedir /etc/sudoers.d"
+# Command used to validate the sodoers file.
+system_users_sudo_validate_cmd: "/usr/sbin/visudo -cf %s"
+system_users_sudo_mode: "0440"
+
+system_users_packages:
+  - sudo
