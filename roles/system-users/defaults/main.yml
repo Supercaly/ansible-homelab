@@ -1,0 +1,9 @@
+---
+system_groups: []
+system_users: []
+
+system_users_default_shell: "/bin/bash"
+system_users_sudo_includedir: "@includedir /etc/sudoers.d"
+
+system_users_packages:
+  - sudo
