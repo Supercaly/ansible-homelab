@@ -1,0 +1,5 @@
+{{ ansible_managed | comment }}
+
+{% for sudo_option in item.sudo_options %}
+{{ sudoers_prefix }}{{ item.name }} {{ sudo_option }}
+{% endfor %}

@@ -1,0 +1,39 @@
+---
+- name: Ensure the /etc/sudoers.d direcotry is present.
+  ansible.builtin.file:
+    name: /etc/sudoers.d
+    state: directory
+    mode: "0755"
+
+- name: Ensure directory is included in sudoers.
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    line: "{{ system_users_sudo_includedir }}"
+    regexp: "^(@|#)includedir"
+    validate: "/usr/bin/visudo -cf %s"
+
+- name: Set sudo options for groups.
+  ansible.builtin.template:
+    src: sudoers.j2
+    dest: "/etc/sudoers.d/{{ item.name | ansible.builtin.mandatory | replace('.', 'dot') }}"
+    mode: "0640"
+    validate: "/usr/sbin/visudo -cf %s"
+  when: item.sudo_options is defined
+  vars:
+    sudoers_prefix: "%"
+  loop: "{{ system_groups }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Set sudo options for users.
+  ansible.builtin.template:
+    src: sudoers.j2
+    dest: "/etc/sudoers.d/{{ item.name | ansible.builtin.mandatory | replace('.', 'dot') }}"
+    mode: "0640"
+    validate: "/usr/sbin/visudo -cf %s"
+  vars:
+    sudoers_prefix: ""
+  when: item.sudo_options is defined
+  loop: "{{ system_users }}"
+  loop_control:
+    label: "{{ item.name }}"
