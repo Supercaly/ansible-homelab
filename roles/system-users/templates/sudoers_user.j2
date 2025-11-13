@@ -1,0 +1,5 @@
+{% for user in system_users | selectattr('sudo_options','defined') %}
+{% for option in user.sudo_options %}
+{{ user.name }} {{ option }}
+{% endfor %}
+{% endfor %}

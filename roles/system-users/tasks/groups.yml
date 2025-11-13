@@ -1,0 +1,17 @@
+---
+- name: Manage system groups.
+  ansible.builtin.group:
+    name: "{{ item.name | ansible.builtin.mandatory }}"
+    gid: "{{ item.gid | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+    system: "{{ item.system | default(false) }}"
+  loop: "{{ system_groups }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Add sudo options for groups.
+  ansible.builtin.template:
+    src: sudoers_group.j2
+    dest: "/etc/sudoers.d/groups"
+    mode: "{{ system_users_sudo_mode }}"
+    validate: "{{ system_users_sudo_validate_cmd }}"

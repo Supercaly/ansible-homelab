@@ -1,0 +1,27 @@
+---
+# Inspired by [this role](https://github.com/robertdebock/ansible-role-users/tree/master)
+- name: Ensure system packages are present.
+  ansible.builtin.package:
+    name: "{{ system_users_packages }}"
+    state: present
+
+- name: Prepare sudoers config files.
+  block:
+    - name: Ensure the /etc/sudoers.d direcotry is present.
+      ansible.builtin.file:
+        name: /etc/sudoers.d
+        state: directory
+        mode: "0755"
+
+    - name: Ensure directory is included in sudoers.
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        line: "{{ system_users_sudo_includedir }}"
+        regexp: "^(@|#)includedir"
+        validate: "/usr/bin/visudo -cf %s"
+
+- name: Ensure groups exists.
+  ansible.builtin.import_tasks: groups.yml
+
+- name: Ensure users exists.
+  ansible.builtin.import_tasks: users.yml
