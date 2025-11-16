@@ -1,0 +1,12 @@
+---
+- name: Configure automatic updates on Debian.
+  ansible.builtin.include_tasks: autoupdate-Debian.yml
+  when:
+    - ansible_facts.os_family == 'Debian'
+    - update_autoupdate_enabled | bool
+
+- name: Configure automatic updates on RedHat.
+  ansible.builtin.include_tasks: autoupdate-RedHat.yml
+  when:
+    - ansible_facts.os_family == 'RedHat'
+    - update_autoupdate_enabled | bool
