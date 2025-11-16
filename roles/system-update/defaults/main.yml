@@ -1,0 +1,18 @@
+---
+update_reboot: false
+
+update_network_check: true
+update_network_dns_domains:
+  - "github.com"
+update_network_http_timeout: 5
+update_network_http_status_codes:
+  - 200
+  - 204
+update_network_http_urls:
+  - "https://google.com/generate_204"
+
+update_print_upgradable: true
+update_autoremove: true
+update_install_packages: []
+
+update_apt_upgrade_type: "safe"
