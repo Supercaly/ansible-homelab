@@ -1,0 +1,21 @@
+---
+- name: Load Package manager-specific vars.
+  ansible.builtin.include_vars: "{{ ansible_pkg_mgr }}.yml"
+
+- name: Check network connectivity.
+  ansible.builtin.include_tasks: network_check.yml
+  when: update_network_check | bool
+
+- name: Update system.
+  ansible.builtin.import_tasks: update.yml
+
+- name: Flush handlers before installing dependencies.
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure dependencies are present.
+  ansible.builtin.package:
+    name: "{{ update_install_packages }}"
+    state: present
+
+- name: Configure automatic updates.
+  ansible.builtin.import_tasks: autoupdate.yml
