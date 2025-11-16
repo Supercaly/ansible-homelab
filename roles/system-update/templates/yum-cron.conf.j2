@@ -1,0 +1,13 @@
+[commands]
+update_cmd = {{ update_autoupdate_type }}
+download_updates = yes
+apply_updates = yes
+reboot = {{ 'when-needed' if update_autoupdate_reboot else 'never' }}
+
+[emitters]
+emit_via = {{ 'email,stdio' if update_autoupdate_mail_to else 'stdio' }}
+
+{% if update_autoupdate_mail_to %}
+[email]
+email_to = {{ update_autoupdate_mail_to }}
+{% endif %}

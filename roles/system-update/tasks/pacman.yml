@@ -1,0 +1,24 @@
+---
+- name: Update repository cache.
+  community.general.pacman:
+    update_cache: true
+
+- name: List upgradable packages.
+  when: update_print_upgradable | bool
+  block:
+    - name: Retrieve upgradable packages.
+      ansible.builtin.command:
+        cmd: "{{ update_list_upgradable_cmd }}"
+      register: _update_upgradable_result
+      changed_when: false
+      failed_when: false
+
+    - name: List upgradable packages.
+      when: _update_upgradable_result.stdout_lines[1] is defined
+      ansible.builtin.debug:
+        msg: "{{ _update_upgradable_result.stdout }}"
+
+- name: Upgrade packages.
+  community.general.pacman:
+    upgrade: true
+  notify: reboot system

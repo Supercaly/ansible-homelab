@@ -1,0 +1,16 @@
+---
+- name: Update system with APT.
+  ansible.builtin.include_tasks: apt.yml
+  when: ansible_facts.pkg_mgr == 'apt'
+
+- name: Update system with APK.
+  ansible.builtin.include_tasks: apk.yml
+  when: ansible_facts.pkg_mgr == 'apk'
+
+- name: Update system with DNF.
+  ansible.builtin.include_tasks: dnf.yml
+  when: ansible_facts.pkg_mgr in ['yum', 'dnf', 'dnf5']
+
+- name: Update system with Pacman.
+  ansible.builtin.include_tasks: pacman.yml
+  when: ansible_facts.pkg_mgr == 'pacman'
