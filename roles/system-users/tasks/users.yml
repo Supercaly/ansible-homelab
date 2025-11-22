@@ -1,0 +1,18 @@
+---
+- name: Manage system users.
+  ansible.builtin.user:
+    name: "{{ item.name | ansible.builtin.mandatory }}"
+    uid: "{{ item.uid | default(omit) }}"
+    comment: "{{ item.comment | default(omit) }}"
+    group: "{{ item.group | default(omit) }}"
+    groups: "{{ item.groups | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+    home: "{{ item.home | default(omit) }}"
+    create_home: "{{ item.create_home | default(omit) }}"
+    shell: "{{ item.shell | default(system_users_default_shell) }}"
+    system: "{{ item.system | default(omit) }}"
+    password: "{{ item.password | default(omit) }}"
+    expires: "{{ item.expires | default(omit) }}"
+  loop: "{{ system_users }}"
+  loop_control:
+    label: "{{ item.name }}"
