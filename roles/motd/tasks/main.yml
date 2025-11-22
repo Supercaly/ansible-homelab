@@ -1,0 +1,25 @@
+---
+- name: Load OS-specific vars.
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+        - main.yml
+      paths:
+        - "vars"
+
+- name: Remove dynamic MOTD.
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ motd_remove_dynamic }}"
+
+- name: Configure static MOTD file.
+  ansible.builtin.copy:
+    dest: "/etc/motd"
+    content: "{{ motd_content }}"
+    owner: "root"
+    group: "root"
+    mode: "0755"
