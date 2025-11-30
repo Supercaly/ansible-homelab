@@ -1,0 +1,7 @@
+---
+# TODO: Disable root login on LXCs. Replace with ansible user.
+# Currently, we need root access via passkey in order for
+# ansible to access the LXCs.
+# When we create a dedicated ansible user we will finally
+# disable root access.
+ssh_permit_root_login: "prohibit-password"

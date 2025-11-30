@@ -18,5 +18,9 @@
   become: true
 
   roles:
-    - role: roles/setup-base-lxc
+    - role: roles/system-locale
+    - role: roles/system-update
+    - role: roles/system-users
+    - role: roles/ssh
+    - role: roles/motd
     - role: grafana.grafana.grafana
