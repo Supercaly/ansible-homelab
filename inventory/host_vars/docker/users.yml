@@ -1,0 +1,15 @@
+---
+system_groups:
+  - name: "shared_data"
+    gid: 2000
+
+system_users:
+  - name: "shared_data"
+    uid: 2000
+    group: "shared_data"
+    comment: "User used to access shared data."
+    system: true
+    create_home: false
+  - name: "root"
+    groups:
+      - "shared_data"

@@ -1,8 +1,0 @@
----
-lxc_has_shared_user: true
-lxc_shared_user: "shared_data"
-lxc_shared_group: "shared_data"
-lxc_shared_uid: 2000
-lxc_shared_gid: 2000
-
-lxc_shared_folder_host_path: "/mnt/shared"
