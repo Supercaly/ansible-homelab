@@ -18,7 +18,9 @@
   become: true
 
   roles:
-    - role: roles/setup-base-lxc
+    - role: roles/system-locale
+    - role: roles/motd
+    - role: roles/system-users
 
   tasks:
     - name: Install docker.

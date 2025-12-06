@@ -1,9 +1,0 @@
----
-# TODO: Add more options for securing SSH (like fail2ban, firewall, ...)
-- name: Copy custom SSH file.
-  ansible.builtin.copy:
-    src: "ssh_custom.conf"
-    dest: "/etc/ssh/sshd_config.d/custom.conf"
-    owner: root
-    group: root
-    mode: "0755"
