@@ -1,0 +1,70 @@
+---
+# Inspired by https://github.com/geerlingguy/ansible-role-security/blob/master/tasks/ssh.yml
+- name: Load OS-specific vars.
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+        - main.yml
+      paths:
+        - "vars"
+
+- name: Ensure SSH daemon is running.
+  ansible.builtin.service:
+    name: "{{ ssh_sshd_name }}"
+    state: "started"
+
+- name: Update SSH configuration to be more secure.
+  ansible.builtin.lineinfile:
+    dest: "{{ ssh_config_path }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: "sshd -T -f %s"
+    mode: "0644"
+  with_items:
+    - regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication {{ ssh_password_authentication }}"
+    - regexp: "^PermitRootLogin"
+      line: "PermitRootLogin {{ ssh_permit_root_login }}"
+    - regexp: "^Port"
+      line: "Port {{ ssh_port }}"
+    - regexp: "^UseDNS"
+      line: "UseDNS {{ ssh_usedns }}"
+    - regexp: "^PermitEmptyPasswords"
+      line: "PermitEmptyPasswords {{ ssh_permit_empty_password }}"
+    - regexp: "^ChallengeResponseAuthentication"
+      line: "ChallengeResponseAuthentication {{ ssh_challenge_response_auth }}"
+    - regexp: "^GSSAPIAuthentication"
+      line: "GSSAPIAuthentication {{ ssh_gss_api_authentication }}"
+    - regexp: "^X11Forwarding"
+      line: "X11Forwarding {{ ssh_x11_forwarding }}"
+  notify:
+    - reload systemd
+    - restart ssh
+
+- name: Add configured users allowed to connect over ssh.
+  ansible.builtin.lineinfile:
+    dest: "{{ ssh_config_path }}"
+    regexp: "^AllowUsers"
+    line: "AllowUsers {{ ssh_allowed_users | join(' ') }}"
+    state: present
+    create: true
+    validate: "sshd -T -f %s"
+    mode: "0644"
+  when: ssh_allowed_users | length > 0
+  notify: restart ssh
+
+- name: Add configured groups allowed to connect over ssh.
+  ansible.builtin.lineinfile:
+    dest: "{{ ssh_config_path }}"
+    regexp: "^AllowGroups"
+    line: "AllowGroups {{ ssh_allowed_groups | join(' ') }}"
+    state: present
+    create: true
+    validate: "sshd -T -f %s"
+    mode: "0644"
+  when: ssh_allowed_groups | length > 0
+  notify: restart ssh
