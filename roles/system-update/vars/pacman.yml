@@ -1,0 +1,2 @@
+---
+update_list_upgradable_cmd: "pacman -Qu"
