@@ -1,4 +1,5 @@
 ---
+proxmox_host: node
 proxmox_lxc:
   vmid: 101
   hostname: "ntfy"
