@@ -1,5 +1,4 @@
 ---
-lxc_appname: "InfluxDB"
 proxmox_lxc:
   vmid: 103
   hostname: "influxdb"

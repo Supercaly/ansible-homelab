@@ -1,5 +1,4 @@
 ---
-lxc_appname: "Grafana"
 proxmox_lxc:
   vmid: 104
   hostname: "grafana"
