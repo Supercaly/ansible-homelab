@@ -1,5 +1,4 @@
 ---
-lxc_appname: "NTFY"
 proxmox_lxc:
   vmid: 101
   hostname: "ntfy"

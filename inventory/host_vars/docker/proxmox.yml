@@ -1,5 +1,4 @@
 ---
-lxc_appname: "Docker"
 proxmox_lxc:
   vmid: 102
   hostname: "docker"

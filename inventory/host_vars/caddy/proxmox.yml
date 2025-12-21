@@ -1,5 +1,4 @@
 ---
-lxc_appname: "Caddy"
 proxmox_lxc:
   vmid: 100
   hostname: "caddy"
