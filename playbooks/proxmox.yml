@@ -1,0 +1,27 @@
+---
+- name: Create Proxmox LXCs.
+  hosts: pvenodes
+  become: true
+  tags:
+    - proxmox
+    - lxc
+  tasks:
+    - name: Create LXC guests.
+      ansible.builtin.include_role:
+        name: roles/create-lxc
+      vars:
+        proxmox_lxc: "{{ guest.proxmox_lxc }}"
+      loop: >-
+        {{
+          groups['all'] |
+          map('ansible.builtin.extract', hostvars) |
+          selectattr('proxmox_lxc', 'defined') |
+          selectattr('proxmox_host', 'defined') |
+          selectattr('proxmox_host', 'equalto', inventory_hostname) |
+          map('ansible.builtin.dict2items') |
+          map('ansible.builtin.selectattr', 'key', 'in', ['inventory_hostname', 'proxmox_lxc']) |
+          map('ansible.builtin.items2dict')
+        }}
+      loop_control:
+        label: "{{ guest.inventory_hostname }}"
+        loop_var: guest

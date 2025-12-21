@@ -1,4 +1,5 @@
 ---
+proxmox_host: node
 proxmox_lxc:
   vmid: 102
   hostname: "docker"

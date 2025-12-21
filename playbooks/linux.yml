@@ -1,0 +1,16 @@
+---
+- name: Configure Linux systems.
+  hosts: all:!pvenodes
+  become: true
+  roles:
+    - role: roles/system-locale
+      when: ansible_facts['distribution'] != 'Alpine'
+      tags: locale
+    - role: roles/system-update
+      tags: update
+    - role: roles/system-users
+      tags: users
+    - role: roles/ssh
+      tags: ssh
+    - role: roles/motd
+      tags: motd
