@@ -1,5 +1,5 @@
 ---
-# Inspired by [this role](https://github.com/robertdebock/ansible-role-users/tree/master)
+# Inspired by https://github.com/robertdebock/ansible-role-users/tree/master
 - name: Ensure system packages are present.
   ansible.builtin.package:
     name: "{{ system_users_packages }}"
@@ -18,7 +18,7 @@
         path: /etc/sudoers
         line: "{{ system_users_sudo_includedir }}"
         regexp: "^(@|#)includedir"
-        validate: "/usr/bin/visudo -cf %s"
+        validate: "{{ system_users_sudo_validate_cmd }}"
 
 - name: Ensure groups exists.
   ansible.builtin.import_tasks: groups.yml
