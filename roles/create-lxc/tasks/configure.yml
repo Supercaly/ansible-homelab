@@ -7,3 +7,7 @@
 
 - name: Set mount volumes.
   ansible.builtin.import_tasks: mount_volumes.yml
+
+- name: Set hookscript.
+  ansible.builtin.include_tasks: hookscript.yml
+  when: proxmox_lxc.hookscript is defined
