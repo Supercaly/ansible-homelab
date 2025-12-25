@@ -1,0 +1,41 @@
+---
+# Set hookscript manually because token-based auth can't do it.
+- name: Ensure snippets directory exists.
+  ansible.builtin.file:
+    path: "/var/lib/vz/snippets"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: Copy hookscript to guest.
+  ansible.builtin.copy:
+    src: "{{ proxmox_lxc.hookscript }}"
+    dest: "{{ hookscript_dest }}"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+  vars:
+    # Proxmox does not supports sub-directories for hookscripts,
+    # so we use the basename as path
+    hookscript_dest: >-
+      /var/lib/vz/snippets/{{ proxmox_lxc.hookscript | basename }}
+
+- name: Set hookscript of guest.
+  when: >-
+    (
+      lxc_config.hookscript |
+      default('')
+    ) != hookscript
+  ansible.builtin.command:
+    argv:
+      - pct
+      - set
+      - "{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}"
+      - --hookscript
+      - "{{ hookscript }}"
+  changed_when: true
+  vars:
+    # pct expects the hookscript path in the storage format
+    hookscript: >-
+      local:snippets/{{ proxmox_lxc.hookscript | basename }}
