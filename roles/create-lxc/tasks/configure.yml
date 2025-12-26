@@ -1,6 +1,50 @@
 ---
 - name: Get current config.
-  ansible.builtin.import_tasks: current_config.yml
+  block:
+    - name: Retrieve current LXC config.
+      module_defaults:
+        community.proxmox.proxmox_vm_info:
+          node: "{{ proxmox_node | ansible.builtin.mandatory }}"
+          api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+          api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+          vmid: "{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}"
+          config: current
+      block:
+        - name: Retrieve current LXC config via password.
+          community.proxmox.proxmox_vm_info: # noqa: args[module]
+            api_password: "{{ proxmox_api_password }}"
+          register: __proxmox_lxc_config_pwd
+          when: "__proxmox_is_password_setup"
+
+        - name: Retrieve current LXC config via token.
+          community.proxmox.proxmox_vm_info: # noqa: args[module]
+            api_token_id: "{{ proxmox_api_token_id }}"
+            api_token_secret: "{{ proxmox_api_token_secret }}"
+          register: __proxmox_lxc_config_token
+          when: "__proxmox_is_token_setup"
+
+    - name: Set '__proxmox_vm_info_result' variable from retrieved state.
+      ansible.builtin.set_fact:
+        __proxmox_vm_info_result: >-
+          {{
+            (not (__proxmox_lxc_config_token.skipped | default(false))) |
+            ternary(
+              __proxmox_lxc_config_token,
+              __proxmox_lxc_config_pwd
+            )
+          }}
+
+    - name: Fail if config is not defined.
+      ansible.builtin.fail:
+        msg: "Error retrieving current config of LXC '{{ proxmox_lxc.vmid }}'."
+      when: >-
+        __proxmox_vm_info_result.proxmox_vms is not defined or
+        __proxmox_vm_info_result.proxmox_vms | length == 0 or
+        __proxmox_vm_info_result.proxmox_vms[0].config is not defined
+
+    - name: Set '__lxc_current_config' variable with current config.
+      ansible.builtin.set_fact:
+        __lxc_current_config: "{{ __proxmox_vm_info_result.proxmox_vms[0].config }}"
 
 - name: Set features.
   ansible.builtin.import_tasks: features.yml

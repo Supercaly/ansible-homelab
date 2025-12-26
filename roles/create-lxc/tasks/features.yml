@@ -3,7 +3,7 @@
 - name: Set features.
   when: >-
     (
-      lxc_config.features |
+      __lxc_current_config.features |
       default('') |
       trim
     ) != features

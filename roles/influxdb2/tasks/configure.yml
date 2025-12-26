@@ -4,8 +4,8 @@
     influx ping --host "{{ influxdb2_host }}"
   retries: "{{ influxdb2_ping_retries }}"
   delay: "{{ influxdb2_ping_delay }}"
-  register: _influxdb2_ping_result
-  until: _influxdb2_ping_result.rc == 0
+  register: __influxdb2_ping_result
+  until: __influxdb2_ping_result.rc == 0
   changed_when: false
 
 - name: Setup InfluxDB default username, password, org, buket.
@@ -18,11 +18,11 @@
     --password {{ influxdb2_primary_password }}
     --token {{ influxdb2_admin_token }}
     --force
-  register: _influxdb2_setup_result
+  register: __influxdb2_setup_result
   failed_when:
-    - _influxdb2_setup_result.rc != 0
-    - '"has already been set up" not in _influxdb2_setup_result.stderr'
-  changed_when: _influxdb2_setup_result.rc == 0
+    - __influxdb2_setup_result.rc != 0
+    - "'has already been set up' not in __influxdb2_setup_result.stderr"
+  changed_when: __influxdb2_setup_result.rc == 0
 
 - name: Organizations.
   ansible.builtin.import_tasks: organizations.yml

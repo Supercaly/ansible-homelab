@@ -24,17 +24,27 @@
   block:
     - name: Query current locale.
       ansible.builtin.command: "localectl status"
-      register: _system_locale_status
+      register: __system_locale_status
       changed_when: false
 
-    - name: Set '_current_locale_lang' with current locale.
+    - name: Set '__current_locale_lang' with current locale.
       ansible.builtin.set_fact:
-        _current_locale_lang: "{{ _system_locale_status.stdout | regex_search('LANG=([^\n]+)', '\\1') | first }}"
+        __current_locale_lang: >-
+          {{
+            __system_locale_status.stdout |
+            regex_findall(
+              'LANG=([^\n]+)',
+              ignorecase=true,
+              multiline=true
+            ) |
+            first |
+            default('')
+          }}
 
 - name: Set locale.
   ansible.builtin.command: >-
     localectl set-locale {{ system_locale_lang }}
-  when: system_locale_lang != _current_locale_lang
+  when: system_locale_lang != __current_locale_lang
   changed_when: true
 
 - name: Set timezone.

@@ -11,8 +11,8 @@
   loop_control:
     label: "{{ __bucket.name }}"
     loop_var: __bucket
-  register: _influxdb2_bucket_result
+  register: __influxdb2_bucket_result
   failed_when:
-    - _influxdb2_bucket_result.rc != 0
-    - '"already exists" not in _influxdb2_bucket_result.stderr'
-  changed_when: _influxdb2_bucket_result.rc == 0
+    - __influxdb2_bucket_result.rc != 0
+    - "'already exists' not in __influxdb2_bucket_result.stderr"
+  changed_when: __influxdb2_bucket_result.rc == 0
