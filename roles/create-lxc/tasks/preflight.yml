@@ -1,25 +1,33 @@
 ---
 - name: Check for password or token authentication.
   block:
-    - name: Register password setup.
+    - name: Set '__proxmox_is_password_setup' variable.
       ansible.builtin.set_fact:
-        proxmox_is_password_setup: >-
-          {{ proxmox_api_password is defined
-          and proxmox_api_password is string
-          and proxmox_api_password | length > 0 }}
-    - name: Register token setup.
+        __proxmox_is_password_setup: >-
+          {{
+            proxmox_api_password is defined and
+            proxmox_api_password is string and
+            proxmox_api_password | length > 0
+          }}
+
+    - name: Set '__proxmox_is_token_setup' variable.
       ansible.builtin.set_fact:
-        proxmox_is_token_setup: >-
-          {{ proxmox_api_token_id is defined
-          and proxmox_api_token_id is string
-          and proxmox_api_token_id | length > 0
-          and proxmox_api_token_secret is defined
-          and proxmox_api_token_secret is string
-          and proxmox_api_token_secret | length > 0 }}
+        __proxmox_is_token_setup: >-
+          {{
+            proxmox_api_token_id is defined and
+            proxmox_api_token_id is string and
+            proxmox_api_token_id | length > 0 and
+            proxmox_api_token_secret is defined and
+            proxmox_api_token_secret is string and
+            proxmox_api_token_secret | length > 0
+          }}
+
     - name: Check conflict between password and token setup.
       ansible.builtin.assert:
-        that: "(not proxmox_is_password_setup and proxmox_is_token_setup) or (proxmox_is_password_setup and not proxmox_is_token_setup)"
-        fail_msg: "proxmox_api_password or proxmox_api_token_id and proxmox_api_token_secret must be defined, but not both."
+        that: "not (__proxmox_is_password_setup and __proxmox_is_token_setup)"
+        fail_msg: >-
+          define either 'proxmox_api_password' or
+          'proxmox_api_token_id' + 'proxmox_api_token_secret', not both.
         quiet: true
 
 - name: Ensure pip is present.

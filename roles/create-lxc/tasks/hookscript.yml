@@ -24,7 +24,7 @@
 - name: Set hookscript of guest.
   when: >-
     (
-      lxc_config.hookscript |
+      __lxc_current_config.hookscript |
       default('')
     ) != hookscript
   ansible.builtin.command:

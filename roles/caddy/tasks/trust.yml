@@ -3,9 +3,9 @@
   ansible.builtin.command: caddy trust
   become: true
   when: "caddy_local_certs | bool"
-  register: _caddy_trust_result
+  register: __caddy_trust_result
   changed_when:
-    - "'already trusted' not in _caddy_trust_result.stderr"
+    - "'already trusted' not in __caddy_trust_result.stderr"
 
 # TODO: Add changed_when to caddy untrust command.
 - name: Untrust Caddy local root CA. # noqa: no-changed-when
