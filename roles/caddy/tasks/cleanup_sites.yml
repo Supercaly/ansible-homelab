@@ -18,8 +18,8 @@
     path: "{{ __file.path }}"
     state: "absent"
   notify: restart caddy service
+  when: "(__file.path | basename) not in _caddy_valid_sites"
   loop: "{{ _caddy_existing_sites.files | default([]) }}"
   loop_control:
     label: "{{ __file.path }}"
     loop_var: __file
-  when: "(__file.path | basename) not in _caddy_valid_sites"

@@ -7,8 +7,8 @@
 
 - name: Copy unattended-upgrades configuration files in place.
   ansible.builtin.template:
-    src: "{{ system_update_test }}.j2"
-    dest: "/etc/apt/apt.conf.d/{{ system_update_test }}"
+    src: "{{ __file }}.j2"
+    dest: "/etc/apt/apt.conf.d/{{ __file }}"
     owner: "root"
     group: "root"
     mode: "0644"
@@ -16,4 +16,4 @@
     - 20auto-upgrades
     - 50unattended-upgrades
   loop_control:
-    loop_var: system_update_test
+    loop_var: __file
