@@ -3,13 +3,14 @@
   ansible.builtin.command: >-
     influx bucket create
     --host "{{ influxdb2_host }}"
-    --name "{{ item.name | ansible.builtin.mandatory }}"
-    --description "{{ item.description | default('') }}"
-    --org "{{ item.org | default(influxdb2_primary_org) }}" \
-    --retention "{{ item.retention | default(0) }}"
+    --name "{{ __bucket.name | ansible.builtin.mandatory }}"
+    --description "{{ __bucket.description | default('') }}"
+    --org "{{ __bucket.org | default(influxdb2_primary_org) }}" \
+    --retention "{{ __bucket.retention | default(0) }}"
   loop: "{{ influxdb2_buckets }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ __bucket.name }}"
+    loop_var: __bucket
   register: _influxdb2_bucket_result
   failed_when:
     - _influxdb2_bucket_result.rc != 0

@@ -1,21 +1,22 @@
 ---
 - name: Manage system users.
   ansible.builtin.user:
-    name: "{{ item.name | ansible.builtin.mandatory }}"
-    uid: "{{ item.uid | default(omit) }}"
-    comment: "{{ item.comment | default(omit) }}"
-    group: "{{ item.group | default(omit) }}"
-    groups: "{{ item.groups | default(omit) }}"
-    state: "{{ item.state | default('present') }}"
-    home: "{{ item.home | default(omit) }}"
-    create_home: "{{ item.create_home | default(omit) }}"
-    shell: "{{ item.shell | default(system_users_default_shell) }}"
-    system: "{{ item.system | default(omit) }}"
-    password: "{{ item.password | default(omit) }}"
-    expires: "{{ item.expires | default(omit) }}"
+    name: "{{ __user.name | ansible.builtin.mandatory }}"
+    uid: "{{ __user.uid | default(omit) }}"
+    comment: "{{ __user.comment | default(omit) }}"
+    group: "{{ __user.group | default(omit) }}"
+    groups: "{{ __user.groups | default(omit) }}"
+    state: "{{ __user.state | default('present') }}"
+    home: "{{ __user.home | default(omit) }}"
+    create_home: "{{ __user.create_home | default(omit) }}"
+    shell: "{{ __user.shell | default(system_users_default_shell) }}"
+    system: "{{ __user.system | default(omit) }}"
+    password: "{{ __user.password | default(omit) }}"
+    expires: "{{ __user.expires | default(omit) }}"
   loop: "{{ system_users }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ __user.name }}"
+    loop_var: __user
 
 - name: Add sudo options for users.
   ansible.builtin.template:
@@ -26,11 +27,12 @@
 
 - name: Deploy authorized keys for users.
   ansible.posix.authorized_key:
-    user: "{{ item.name | ansible.builtin.mandatory }}"
+    user: "{{ __user.name | ansible.builtin.mandatory }}"
     state: present
     exclusive: true
-    key: "{{ item.authorized_keys | join('\n') }}"
-  when: item.authorized_keys is defined
+    key: "{{ __user.authorized_keys | join('\n') }}"
+  when: __user.authorized_keys is defined
   loop: "{{ system_users }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ __user.name }}"
+    loop_var: __user

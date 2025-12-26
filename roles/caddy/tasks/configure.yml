@@ -1,7 +1,7 @@
 ---
 - name: Ensure Caddy directories are present.
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ __dir }}"
     state: directory
     owner: "{{ caddy_user }}"
     group: "{{ caddy_group }}"
@@ -10,6 +10,8 @@
     - "{{ caddy_config_dir }}"
     - "{{ caddy_log_dir }}"
     - "{{ caddy_sites_dir }}"
+  loop_control:
+    loop_var: __dir
 
 - name: Clean up unmanaged Caddy sites.
   ansible.builtin.include_tasks: cleanup_sites.yml
@@ -27,15 +29,15 @@
 - name: Generate sites from template.
   ansible.builtin.template:
     src: "site.caddy.j2"
-    dest: "{{ caddy_sites_dir }}/{{ _caddy_site.hostname | replace('.', '_') }}.caddy"
+    dest: "{{ caddy_sites_dir }}/{{ caddy_site_item.hostname | replace('.', '_') }}.caddy"
     owner: "{{ caddy_user }}"
     group: "{{ caddy_group }}"
     mode: "0644"
   notify: restart caddy service
   loop: "{{ caddy_sites }}"
   loop_control:
-    label: "{{ _caddy_site.hostname }}"
-    loop_var: "_caddy_site"
+    label: "{{ caddy_site_item.hostname }}"
+    loop_var: "caddy_site_item"
 
 - name: Ensure handlers are notified now to avoid conflicts.
   ansible.builtin.meta: flush_handlers

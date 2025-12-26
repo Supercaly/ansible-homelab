@@ -15,10 +15,11 @@
 
 - name: Delete unmanaged Caddy sites files.
   ansible.builtin.file:
-    path: "{{ item.path }}"
+    path: "{{ __file.path }}"
     state: "absent"
   notify: restart caddy service
   loop: "{{ _caddy_existing_sites.files | default([]) }}"
   loop_control:
-    label: "{{ item.path }}"
-  when: "(item.path | basename) not in _caddy_valid_sites"
+    label: "{{ __file.path }}"
+    loop_var: __file
+  when: "(__file.path | basename) not in _caddy_valid_sites"
