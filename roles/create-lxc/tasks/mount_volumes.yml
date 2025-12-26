@@ -1,7 +1,11 @@
 ---
 # Set mount volumes manually because token-based auth can't do it.
 - name: Set mount volumes.
-  when: lxc_config[__volume.key] | default('') != options_string
+  when: >-
+    (
+      __lxc_current_config[__volume.key] |
+      default('')
+    ) != options_string
   ansible.builtin.command:
     argv:
       - pct
