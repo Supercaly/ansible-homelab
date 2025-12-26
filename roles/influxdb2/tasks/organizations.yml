@@ -3,11 +3,12 @@
   ansible.builtin.command: >-
     influx org create
     --host "{{ influxdb2_host }}"
-    --name "{{ item.name | ansible.builtin.mandatory }}"
-    --description "{{ item.description | default('') }}"
+    --name "{{ __org.name | ansible.builtin.mandatory }}"
+    --description "{{ __org.description | default('') }}"
   loop: "{{ influxdb2_orgs }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ __org.name }}"
+    loop_var: __org
   register: _influxdb2_org_result
   failed_when:
     - _influxdb2_org_result.rc != 0

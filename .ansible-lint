@@ -1,2 +1,7 @@
 exclude_paths:
   - inventory/*.vault.yml
+
+enable_list:
+  - loop-var-prefix
+
+loop_var_prefix: "^(__|{role}_)"

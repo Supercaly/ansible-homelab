@@ -1,13 +1,14 @@
 ---
 - name: Manage system groups.
   ansible.builtin.group:
-    name: "{{ item.name | ansible.builtin.mandatory }}"
-    gid: "{{ item.gid | default(omit) }}"
-    state: "{{ item.state | default('present') }}"
-    system: "{{ item.system | default(false) }}"
+    name: "{{ __group.name | ansible.builtin.mandatory }}"
+    gid: "{{ __group.gid | default(omit) }}"
+    state: "{{ __group.state | default('present') }}"
+    system: "{{ __group.system | default(false) }}"
   loop: "{{ system_groups }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ __group.name }}"
+    loop_var: __group
 
 - name: Add sudo options for groups.
   ansible.builtin.template:

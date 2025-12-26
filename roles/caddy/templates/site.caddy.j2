@@ -1,23 +1,23 @@
 {{ ansible_managed | comment(decoration='# ') }}
 
-{% if _caddy_site.www_redir | default(false) %}
+{% if caddy_site_item.www_redir | default(false) %}
 # Redirect www to root domain.
-{{ _caddy_site.protocol | default('https') }}://www.{{ _caddy_site.hostname | ansible.builtin.mandatory }} {
-    redir {{ _caddy_site.protocol | default('https') }}://{{ _caddy_site.hostname }}{uri}
+{{ caddy_site_item.protocol | default('https') }}://www.{{ caddy_site_item.hostname | ansible.builtin.mandatory }} {
+    redir {{ caddy_site_item.protocol | default('https') }}://{{ caddy_site_item.hostname }}{uri}
 }
 {% endif %}
 
-{{ _caddy_site.protocol | default('https') }}://{{ _caddy_site.hostname | ansible.builtin.mandatory }} {
+{{ caddy_site_item.protocol | default('https') }}://{{ caddy_site_item.hostname | ansible.builtin.mandatory }} {
     # Configure site access log.
     log {
-        output file "{{ caddy_log_dir }}/{{ _caddy_site.hostname | replace('.','_') }}.log.json"
+        output file "{{ caddy_log_dir }}/{{ caddy_site_item.hostname | replace('.','_') }}.log.json"
         format json
     }
 
     # Encode responses.
     encode zstd gzip
 
-{% if not (_caddy_site.public | default(false)) %}
+{% if not (caddy_site_item.public | default(false)) %}
     # Block access to IPs outside private ranges.
     @outside_ip not remote_ip private_ranges
 
@@ -27,20 +27,20 @@
     }
 {% endif %}
 
-{% if _caddy_site.proxies | default([]) | length > 0 %}
+{% if caddy_site_item.proxies | default([]) | length > 0 %}
     # Proxies requests to one or more backends.
     reverse_proxy {
-        to {{ _caddy_site.proxies | join(' ') }}
+        to {{ caddy_site_item.proxies | join(' ') }}
 
         # Set headers going upstream to the backend
-{% for header in _caddy_site.header_up | default([]) %}
+{% for header in caddy_site_item.header_up | default([]) %}
         header_up {{ header }}
 {% endfor %}
     }
 {% else %}
     # Default response when no proxies are defined.
     respond 200 {
-        body "Hello from {{ _caddy_site.hostname }}!"
+        body "Hello from {{ caddy_site_item.hostname }}!"
         close
     }
 {% endif %}

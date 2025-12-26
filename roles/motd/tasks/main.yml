@@ -12,9 +12,11 @@
 
 - name: Remove dynamic MOTD.
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ __file }}"
     state: absent
   loop: "{{ motd_remove_dynamic }}"
+  loop_control:
+    loop_var: __file
 
 - name: Configure static MOTD file.
   ansible.builtin.copy:

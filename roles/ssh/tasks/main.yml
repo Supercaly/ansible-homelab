@@ -19,12 +19,12 @@
 - name: Update SSH configuration to be more secure.
   ansible.builtin.lineinfile:
     dest: "{{ ssh_config_path }}"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
+    regexp: "{{ __config_line.regexp }}"
+    line: "{{ __config_line.line }}"
     state: present
     validate: "sshd -T -f %s"
     mode: "0644"
-  with_items:
+  loop:
     - regexp: "^PasswordAuthentication"
       line: "PasswordAuthentication {{ ssh_password_authentication }}"
     - regexp: "^PermitRootLogin"
@@ -41,6 +41,8 @@
       line: "GSSAPIAuthentication {{ ssh_gss_api_authentication }}"
     - regexp: "^X11Forwarding"
       line: "X11Forwarding {{ ssh_x11_forwarding }}"
+  loop_control:
+    loop_var: __config_line
   notify:
     - reload systemd
     - restart ssh
