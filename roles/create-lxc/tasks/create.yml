@@ -56,13 +56,13 @@
     - name: Ensure LXC is present via password.
       community.proxmox.proxmox: # noqa: args[module]
         api_password: "{{ proxmox_api_password }}"
-      when: "proxmox_is_password_setup"
+      when: "__proxmox_is_password_setup"
 
     - name: Ensure LXC is present via token.
       community.proxmox.proxmox: # noqa: args[module]
         api_token_id: "{{ proxmox_api_token_id }}"
         api_token_secret: "{{ proxmox_api_token_secret }}"
-      when: "proxmox_is_token_setup"
+      when: "__proxmox_is_token_setup"
 
 - name: Ensure LXC exists after its creation.
   block:
@@ -78,20 +78,20 @@
           community.proxmox.proxmox_vm_info: # noqa: args[module]
             api_password: "{{ proxmox_api_password }}"
           register: __proxmox_lxc_status_pwd
-          when: "proxmox_is_password_setup"
+          when: "__proxmox_is_password_setup"
 
         - name: Retrieve LXC status via token.
           community.proxmox.proxmox_vm_info: # noqa: args[module]
             api_token_id: "{{ proxmox_api_token_id }}"
             api_token_secret: "{{ proxmox_api_token_secret }}"
           register: __proxmox_lxc_status_token
-          when: "proxmox_is_token_setup"
+          when: "__proxmox_is_token_setup"
 
     - name: Set '__proxmox_vm_info_result' variable from retrieved state.
       ansible.builtin.set_fact:
         __proxmox_vm_info_result: >-
           {{
-            (not (_proxmox_lxc_status_token.skipped | default(false))) |
+            (not (__proxmox_lxc_status_token.skipped | default(false))) |
             ternary(
               __proxmox_lxc_status_token,
               __proxmox_lxc_status_pwd
