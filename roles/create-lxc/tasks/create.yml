@@ -56,20 +56,54 @@
     - name: Ensure LXC is present via password.
       community.proxmox.proxmox: # noqa: args[module]
         api_password: "{{ proxmox_api_password }}"
-      when: "proxmox_is_password_setup"
+      when: "__proxmox_is_password_setup"
 
     - name: Ensure LXC is present via token.
       community.proxmox.proxmox: # noqa: args[module]
         api_token_id: "{{ proxmox_api_token_id }}"
         api_token_secret: "{{ proxmox_api_token_secret }}"
-      when: "proxmox_is_token_setup"
+      when: "__proxmox_is_token_setup"
 
 - name: Ensure LXC exists after its creation.
   block:
     - name: Retrieve LXC status.
-      ansible.builtin.import_tasks: lxc_exists.yml
+      module_defaults:
+        community.proxmox.proxmox_vm_info:
+          node: "{{ proxmox_node | ansible.builtin.mandatory }}"
+          api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+          api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+          vmid: "{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}"
+      block:
+        - name: Retrieve LXC status via password.
+          community.proxmox.proxmox_vm_info: # noqa: args[module]
+            api_password: "{{ proxmox_api_password }}"
+          register: __proxmox_lxc_status_pwd
+          when: "__proxmox_is_password_setup"
+
+        - name: Retrieve LXC status via token.
+          community.proxmox.proxmox_vm_info: # noqa: args[module]
+            api_token_id: "{{ proxmox_api_token_id }}"
+            api_token_secret: "{{ proxmox_api_token_secret }}"
+          register: __proxmox_lxc_status_token
+          when: "__proxmox_is_token_setup"
+
+    - name: Set '__proxmox_vm_info_result' variable from retrieved state.
+      ansible.builtin.set_fact:
+        __proxmox_vm_info_result: >-
+          {{
+            (not (__proxmox_lxc_status_token.skipped | default(false))) |
+            ternary(
+              __proxmox_lxc_status_token,
+              __proxmox_lxc_status_pwd
+            )
+          }}
+
+    - name: Fail if the status is not defined.
+      ansible.builtin.fail:
+        msg: "Error retrieving status of LXC '{{ proxmox_lxc.vmid }}'."
+      when: "__proxmox_vm_info_result.proxmox_vms is not defined"
 
     - name: Fail if the LXC does not exists after its creation.
       ansible.builtin.fail:
         msg: "LXC {{ proxmox_lxc.vmid }} does not exists after its creation."
-      when: "not lxc_exists"
+      when: "__proxmox_vm_info_result.proxmox_vms | length <= 0 | bool"
