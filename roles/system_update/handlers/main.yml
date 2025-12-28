@@ -1,4 +1,4 @@
 ---
 - name: reboot system # noqa: name[casing]
   ansible.builtin.reboot:
-  when: update_reboot | bool
+  when: system_update_reboot | bool

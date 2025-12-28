@@ -13,24 +13,24 @@
         - name: Retrieve current LXC config via password.
           community.proxmox.proxmox_vm_info: # noqa: args[module]
             api_password: "{{ proxmox_api_password }}"
-          register: __proxmox_lxc_config_pwd
+          register: __create_lxc_config_pwd
           when: "__proxmox_is_password_setup"
 
         - name: Retrieve current LXC config via token.
           community.proxmox.proxmox_vm_info: # noqa: args[module]
             api_token_id: "{{ proxmox_api_token_id }}"
             api_token_secret: "{{ proxmox_api_token_secret }}"
-          register: __proxmox_lxc_config_token
+          register: __create_lxc_config_token
           when: "__proxmox_is_token_setup"
 
     - name: Set '__proxmox_vm_info_result' variable from retrieved state.
       ansible.builtin.set_fact:
         __proxmox_vm_info_result: >-
           {{
-            (not (__proxmox_lxc_config_token.skipped | default(false))) |
+            (not (__create_lxc_config_token.skipped | default(false))) |
             ternary(
-              __proxmox_lxc_config_token,
-              __proxmox_lxc_config_pwd
+              __create_lxc_config_token,
+              __create_lxc_config_pwd
             )
           }}
 

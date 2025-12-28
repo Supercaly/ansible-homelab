@@ -4,7 +4,7 @@
 
 - name: Check network connectivity.
   ansible.builtin.include_tasks: network_check.yml
-  when: update_network_check | bool
+  when: system_update_network_check | bool
 
 - name: Update system.
   ansible.builtin.import_tasks: update.yml
@@ -14,7 +14,7 @@
 
 - name: Ensure dependencies are present.
   ansible.builtin.package:
-    name: "{{ update_install_packages }}"
+    name: "{{ system_update_install_packages }}"
     state: present
 
 - name: Configure automatic updates.

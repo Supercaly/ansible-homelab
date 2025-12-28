@@ -2,20 +2,20 @@
 - name: Check DNS resolution.
   ansible.builtin.command:
     cmd: "getent hosts {{ __dns }}"
-  loop: "{{ update_network_dns_domains }}"
+  loop: "{{ system_update_network_dns_domains }}"
   loop_control:
     loop_var: __dns
-  register: __update_test_dns_result
+  register: __system_update_test_dns_result
   changed_when: false
-  failed_when: __update_test_dns_result.rc != 0
+  failed_when: __system_update_test_dns_result.rc != 0
 
 - name: Check internet connectivity.
   ansible.builtin.uri:
     url: "{{ __url }}"
     method: GET
     return_content: false
-    status_code: "{{ update_network_http_status_codes }}"
-    timeout: "{{ update_network_http_timeout }}"
-  loop: "{{ update_network_http_urls }}"
+    status_code: "{{ system_update_network_http_status_codes }}"
+    timeout: "{{ system_update_network_http_timeout }}"
+  loop: "{{ system_update_network_http_urls }}"
   loop_control:
     loop_var: __url

@@ -2,19 +2,19 @@
 # Inspired by https://github.com/geerlingguy/ansible-role-security/blob/master/tasks/autoupdate-RedHat.yml
 - name: Install automatic update utility.
   ansible.builtin.package:
-    name: "{{ update_automatic_utility }}"
+    name: "{{ system_update_automatic_utility }}"
     state: present
 
 - name: Ensure automatic update utility is running and enabled on boot.
   ansible.builtin.service:
-    name: "{{ update_automatic_service }}"
+    name: "{{ system_update_automatic_service }}"
     state: started
     enabled: true
 
 - name: Copy automatic updates configuration file in place.
   ansible.builtin.template:
-    src: "{{ update_automatic_template }}"
-    dest: "{{ update_automatic_conf_path }}"
+    src: "{{ system_update_automatic_template }}"
+    dest: "{{ system_update_automatic_conf_path }}"
     owner: "root"
     group: "root"
     mode: "0644"

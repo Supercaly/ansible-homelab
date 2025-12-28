@@ -1,39 +1,39 @@
 ---
 # Reboot the system after updates
-update_reboot: false
+system_update_reboot: false
 
 # Check for network connectivity before updating
-update_network_check: true
-update_network_dns_domains:
+system_update_network_check: true
+system_update_network_dns_domains:
   - "github.com"
-update_network_http_timeout: 5
-update_network_http_status_codes:
+system_update_network_http_timeout: 5
+system_update_network_http_status_codes:
   - 200
   - 204
-update_network_http_urls:
+system_update_network_http_urls:
   - "https://google.com/generate_204"
 
 # Print upgradable packages
-update_print_upgradable: true
+system_update_print_upgradable: true
 
 # Clean old packages
-update_autoremove: true
+system_update_autoremove: true
 
 # List of additional packages to install
-update_install_packages: []
+system_update_install_packages: []
 
 # Upgrade type used by APT
-update_apt_upgrade_type: "safe"
+system_update_apt_upgrade_type: "safe"
 
 # Configure automatic updates on Debian and RedHat
-update_autoupdate_enabled: true
-update_autoupdate_reboot: false
-update_autoupdate_mail_to: ""
+system_update_autoupdate_enabled: true
+system_update_autoupdate_reboot: false
+system_update_autoupdate_mail_to: ""
 
 # Autoupdate setting on Debian/Ubuntu only
-update_autoupdate_reboot_time: "03:00"
-update_autoupdate_blacklist: []
-update_autoupdate_additional_origins: []
+system_update_autoupdate_reboot_time: "03:00"
+system_update_autoupdate_blacklist: []
+system_update_autoupdate_additional_origins: []
 
 # Autoupdate setting on RedHat only
-update_autoupdate_type: "security"
+system_update_autoupdate_type: "security"

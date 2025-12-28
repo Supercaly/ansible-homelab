@@ -1,13 +1,13 @@
 [commands]
-upgrade_type = {{ update_autoupdate_type }}
+upgrade_type = {{ system_update_autoupdate_type }}
 download_updates = yes
 apply_updates = yes
-reboot = {{ 'when-needed' if update_autoupdate_reboot else 'never' }}
+reboot = {{ 'when-needed' if system_update_autoupdate_reboot else 'never' }}
 
 [emitters]
-emit_via = {{ 'email,stdio' if update_autoupdate_mail_to else 'stdio' }}
+emit_via = {{ 'email,stdio' if system_update_autoupdate_mail_to else 'stdio' }}
 
-{% if update_autoupdate_mail_to %}
+{% if system_update_autoupdate_mail_to %}
 [email]
-email_to = {{ update_autoupdate_mail_to }}
+email_to = {{ system_update_autoupdate_mail_to }}
 {% endif %}

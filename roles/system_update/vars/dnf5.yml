@@ -1,7 +1,7 @@
 ---
-update_list_upgradable_cmd: "dnf5 list --upgrades -q"
+system_update_list_upgradable_cmd: "dnf5 list --upgrades -q"
 
-update_automatic_utility: dnf5-plugin-automatic
-update_automatic_service: dnf5-automatic.timer
-update_automatic_template: automatic.conf.j2
-update_automatic_conf_path: /etc/dnf/automatic.conf
+system_update_automatic_utility: dnf5-plugin-automatic
+system_update_automatic_service: dnf5-automatic.timer
+system_update_automatic_template: automatic.conf.j2
+system_update_automatic_conf_path: /etc/dnf/automatic.conf

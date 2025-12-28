@@ -4,19 +4,19 @@
     update_cache: true
 
 - name: List upgradable packages.
-  when: update_print_upgradable | bool
+  when: system_update_print_upgradable | bool
   block:
     - name: Retrieve upgradable packages.
       ansible.builtin.command:
-        cmd: "{{ update_list_upgradable_cmd }}"
-      register: __update_upgradable_result
+        cmd: "{{ system_update_list_upgradable_cmd }}"
+      register: __system_update_upgradable_result
       changed_when: false
       failed_when: false
 
     - name: List upgradable packages.
-      when: "'Available Upgrades' in __update_upgradable_result.stdout_lines"
+      when: "'Available Upgrades' in __system_update_upgradable_result.stdout_lines"
       ansible.builtin.debug:
-        msg: "{{ __update_upgradable_result.stdout }}"
+        msg: "{{ __system_update_upgradable_result.stdout }}"
 
 - name: Upgrade packages.
   ansible.builtin.package:
@@ -25,6 +25,6 @@
   notify: reboot system
 
 - name: Remove unused dependecy packages.
-  when: update_autoremove | bool
+  when: system_update_autoremove | bool
   ansible.builtin.package:
     autoremove: true
