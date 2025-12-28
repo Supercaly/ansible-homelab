@@ -1,20 +1,35 @@
-Ansible Role: create_lxc
-=========
+# Ansible Role: create_lxc
 
 An Ansible Role that creates and configures LXC containers on Proxmox VE using the Proxmox API.
 
 The role is responsible only for container creation and base configuration.
 It assumes that Proxmox is already installed, reachable, and properly configured.
 
-Requirements
-------------
+This role is able to perform the following operations:
 
-None.
+- Create LXC containers on Proxmox VE via API
+- Download container templates if not already available
+- Configure CPU, memory, storage, networking, SSH key, etc.
+- Support for:
+  - password-based authentication
+  - API token-based authentication
+- Support for hookscript
 
-Role Variables
---------------
+## Requirements
 
-Available variables are listed below, along with default values (see 'defaults/main.yml' for a complete list).
+This role assumes that Proxmox VE is already installed, running, and properly configured.
+
+The Proxmox API must be reachable from the Ansible control node (default port `8006`) and authentication must be provided via a Proxmox user or API token with sufficient permissions to:
+
+- create and manage LXC containers
+- download container templates
+- configure storage, networking, and startup options
+
+All referenced storages (template storage, root disk storage, and any optional mount points) must exist prior to execution.
+
+## Role Variables
+
+Available variables are listed below, along with default values (see `defaults/main.yml` for a complete list).
 
 Variables are divided into two logical groups:
 
@@ -35,9 +50,11 @@ For authentication you must use either password-based authentication or API toke
 
 | Name | Required | Type | Description |
 | - | - | - | - |
-| `proxmox_api_password` | Yes | string | Password for API user. Mutually exclusive with token-based auth. |
-| `proxmox_api_token_id` | Yes | string | API token ID. Mutually exclusive with password auth. |
-| `proxmox_api_token_secret` | Yes | string | API token secret. Mutually exclusive with password auth. |
+| `proxmox_api_password` | Yes* | string | Password for API user. |
+| `proxmox_api_token_id` | Yes* | string | API token ID. |
+| `proxmox_api_token_secret` | Yes* | string | API token secret. |
+
+&ast; This variables are mutually exclusive.
 
 ### LXC container variables
 
@@ -70,27 +87,41 @@ All container-related settings are defined inside the `proxmox_lxc` dictionary.
 | `features` | | list | `[]` | Additional LXC features. |
 | `tags` | | list | `["ansible"]` | Container Tags. |
 
-Dependencies
-------------
+## Dependencies
 
-None.
+This role depends on the collection `community.proxmox` for managing Proxmox LXCs.
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
-- name: Create lxc
+- name: Ensure LXC exists.
   hosts: all
   roles:
     - role: create_lxc
 ```
 
-License
--------
+Example variable definition:
+
+```yaml
+proxmox_node: pve
+proxmox_api_user: ansible@pve
+proxmox_api_token_id: ansible
+proxmox_api_token_secret: "{{ vault_proxmox_api_token_secret }}"
+proxmox_lxc:
+  vmid: 100
+  hostname: lxc1
+  password: "{{ vault_lxc_password }}"
+  template:
+    name: "debian-12-standard_12.7-1_amd64.tar.zst"
+  disk_volume:
+    storage: "local"
+    size: 2
+```
+
+## License
 
 MIT
 
-Author Information
-------------------
+## Author Information
 
 This role was created in 2025 by Lorenzo Calsti.

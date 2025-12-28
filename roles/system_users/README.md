@@ -1,27 +1,26 @@
-Ansible Role: system_users
-=========
+# Ansible Role: system_users
 
-An Ansible Role to setup system users and groups on Linux.
+An Ansible Role that manages system users and groups on Linux systems.
 
-Requirements
-------------
+The role allows you to declaratively define:
+
+- Unix groups
+- User accounts
+- Group membership
+- SSH authorized keys
+- Sudo privileges (users and groups)
+
+## Requirements
 
 None.
 
-Role Variables
---------------
+## Role Variables
 
-
-Available variables are listed below, along with default values (see 'defaults/main.yml' for a complete list):
-
-| Name | Required | Type | Default | Description |
-| - | - | - | - | - |
-|`system_groups`| | list | `[]` | List of groups present on the system.|
-|`system_users`| | list | `[]` | List of users present on the system.|
+Available variables are listed below, along with default values (see `defaults/main.yml` for a complete list):
 
 ### System groups
 
-The groups present on the system are controlled by the list `system_groups`. Each element of the list is a dictionary with the following fields:
+The list `system_groups` controls the groups present on the system. Each entry is a dictionary with the following fields:
 
 | Name | Required | Type | Default | Description |
 | - | - | - | - | - |
@@ -33,7 +32,7 @@ The groups present on the system are controlled by the list `system_groups`. Eac
 
 ### System users
 
-The users present on the system are controlled by the list `system_users`. Each element of the list is a dictionary with the following fields:
+The list `system_users` controls the users present on the system. Each entry is a dictionary with the following fields:
 
 | Name | Required | Type | Default | Description |
 | - | - | - | - | - |
@@ -52,27 +51,40 @@ The users present on the system are controlled by the list `system_users`. Each 
 |`sudo_options`| | list| | List of sudoers options for the user. |
 |`authorized_keys`| | list | | List of SSH keys added to the user's authorized_keys file.|
 
-Dependencies
-------------
+## Dependencies
 
-None.
+This role depends on the collection `ansible.posix` for managing authorized SSH keys.
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
-- name: Set system users.
+- name: Configure system users and groups.
   hosts: all
   roles:
     - role: system_users
 ```
 
-License
--------
+Example variable definition:
+
+```yaml
+system_groups:
+  - name: admin
+    sudo_options:
+      - "ALL=(ALL) NOPASSWD:ALL"
+
+system_users:
+  - name: user1
+    groups:
+      - admin
+    shell: /bin/bash
+    authorized_keys:
+      - "ssh-ed25519 AAAAC1ZbaC1lZ..."
+```
+
+## License
 
 MIT
 
-Author Information
-------------------
+## Author Information
 
 This role was created in 2025 by Lorenzo Calsti.
