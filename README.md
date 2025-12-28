@@ -43,7 +43,7 @@ $ ansible-playbook playbooks/main.yml
 
 This playbook acts as the entry point and orchestrates the configuration of the entire homelab.
 
-# Ansible Vault password
+## Ansible Vault password
 
 This repository uses Ansible Vault to manage sensitive data such as passwords, tokens, and credentials.
 

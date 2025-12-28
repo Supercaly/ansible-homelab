@@ -1,32 +1,27 @@
-Ansible Role: motd
-=========
+# Ansible Role: motd
 
-Set a static Message of the Day (MOTD) on Linux.
+An Ansible Role that sets a static Message of the Day (MOTD) on Linux.
 
-Requirements
-------------
+## Requirements
 
 None.
 
-Role Variables
---------------
+## Role Variables
 
-Available variables are listed below, along with default values (see 'defaults/main.yml' for a complete list):
+Available variables are listed below, along with default values (see `defaults/main.yml` for a complete list):
 
-| Name | Required | Type | Default | Description |
-| - | - | - | - | - |
-| `motd_content` | | string | | Full message printed my the MOTD. |
+| Name | Type | Default | Description |
+| - | - | - | - |
+| `motd_content` | string | | Full message printed my the MOTD. |
 
-Dependencies
-------------
+## Dependencies
 
 None.
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
-- name: MOTD
+- name: Set MOTD.
   hosts: all
   roles:
     - role: motd
@@ -53,12 +48,10 @@ Timezone: CET(+0100)
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ```
 
-License
--------
+## License
 
 MIT
 
-Author Information
-------------------
+## Author Information
 
 This role was created in 2025 by Lorenzo Calsti.
