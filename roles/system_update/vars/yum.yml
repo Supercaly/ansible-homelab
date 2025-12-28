@@ -1,7 +1,7 @@
 ---
-update_list_upgradable_cmd: "yum list --upgrades"
+system_update_list_upgradable_cmd: "yum list --upgrades"
 
-update_automatic_utility: yum-cron
-update_automatic_service: yum-cron
-update_automatic_template: yum-cron.conf.j2
-update_automatic_conf_path: /etc/yum/yum-cron.conf
+system_update_automatic_utility: yum-cron
+system_update_automatic_service: yum-cron
+system_update_automatic_template: yum-cron.conf.j2
+system_update_automatic_conf_path: /etc/yum/yum-cron.conf

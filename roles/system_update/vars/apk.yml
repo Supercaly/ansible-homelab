@@ -1,2 +1,2 @@
 ---
-update_list_upgradable_cmd: "apk upgrade --simulate"
+system_update_list_upgradable_cmd: "apk upgrade --simulate"

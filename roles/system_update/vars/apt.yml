@@ -1,2 +1,2 @@
 ---
-update_list_upgradable_cmd: "apt list --upgradable"
+system_update_list_upgradable_cmd: "apt list --upgradable"

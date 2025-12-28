@@ -1,7 +1,7 @@
 ---
-update_list_upgradable_cmd: "dnf list --upgrades"
+system_update_list_upgradable_cmd: "dnf list --upgrades"
 
-update_automatic_utility: dnf-automatic
-update_automatic_service: dnf-automatic-install.timer
-update_automatic_template: automatic.conf.j2
-update_automatic_conf_path: /etc/dnf/automatic.conf
+system_update_automatic_utility: dnf-automatic
+system_update_automatic_service: dnf-automatic-install.timer
+system_update_automatic_template: automatic.conf.j2
+system_update_automatic_conf_path: /etc/dnf/automatic.conf

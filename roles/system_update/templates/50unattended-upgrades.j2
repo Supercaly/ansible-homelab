@@ -1,8 +1,8 @@
-Unattended-Upgrade::Automatic-Reboot "{{ 'true' if update_autoupdate_reboot else 'false' }}";
-Unattended-Upgrade::Automatic-Reboot-Time "{{ update_autoupdate_reboot_time }}";
+Unattended-Upgrade::Automatic-Reboot "{{ 'true' if system_update_autoupdate_reboot else 'false' }}";
+Unattended-Upgrade::Automatic-Reboot-Time "{{ system_update_autoupdate_reboot_time }}";
 
-{% if update_autoupdate_mail_to %}
-Unattended-Upgrade::Mail "{{ update_autoupdate_mail_to }}";
+{% if system_update_autoupdate_mail_to %}
+Unattended-Upgrade::Mail "{{ system_update_autoupdate_mail_to }}";
 Unattended-Upgrade::MailOnlyOnError "true";
 {% endif %}
 
@@ -19,13 +19,13 @@ Unattended-Upgrade::Origins-Pattern {
     "origin=${distro_id}ESM,archive=${distro_codename}-infra-security";
 
     // Custom repositories
-{% for origin in update_autoupdate_additional_origins %}
+{% for origin in system_update_autoupdate_additional_origins %}
     "{{ origin }}";
 {% endfor %}
 }
 
 Unattended-Upgrade::Package-Blacklist{
-{% for package in update_autoupdate_blacklist %}
+{% for package in system_update_autoupdate_blacklist %}
     "{{package}}";
 {% endfor %}
 }

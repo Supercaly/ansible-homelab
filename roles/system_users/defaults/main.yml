@@ -6,7 +6,7 @@
 #     state: present
 #     system: true
 #     sudo_options
-system_groups: []
+system_groups: [] # noqa: var-naming[no-role-prefix]
 
 # System users.
 # system_users:
@@ -19,7 +19,7 @@ system_groups: []
 #       - group3
 #     state: present
 #     sudo_options
-system_users: []
+system_users: [] # noqa: var-naming[no-role-prefix]
 
 # Default shell for new users.
 system_users_default_shell: "/bin/bash"
