@@ -1,4 +1,4 @@
-Ansible Role: system-update
+Ansible Role: system_update
 =========
 
 An Ansible Role to update system packages on Linux.
@@ -52,7 +52,7 @@ Example Playbook
 - name: Update system
   hosts: all
   roles:
-    - role: system-update
+    - role: system_update
 ```
 
 License

@@ -1,6 +1,6 @@
 ---
-- name: Test create-lxc Role.
+- name: Test create_lxc Role.
   hosts: localhost
   remote_user: root
   roles:
-    - create-lxc
+    - create_lxc

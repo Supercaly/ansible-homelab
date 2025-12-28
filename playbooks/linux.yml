@@ -3,12 +3,12 @@
   hosts: all:!pvenodes
   become: true
   roles:
-    - role: roles/system-locale
+    - role: roles/system_locale
       when: ansible_facts['distribution'] != 'Alpine'
       tags: locale
-    - role: roles/system-update
+    - role: roles/system_update
       tags: update
-    - role: roles/system-users
+    - role: roles/system_users
       tags: users
     - role: roles/ssh
       tags: ssh

@@ -8,7 +8,7 @@
   tasks:
     - name: Create LXC guests.
       ansible.builtin.include_role:
-        name: roles/create-lxc
+        name: roles/create_lxc
       vars:
         proxmox_lxc: "{{ guest.proxmox_lxc }}"
       loop: >-
