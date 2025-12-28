@@ -1,6 +1,0 @@
----
-- name: Test system-update role.
-  hosts: localhost
-  remote_user: root
-  roles:
-    - system-update

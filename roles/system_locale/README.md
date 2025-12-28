@@ -1,4 +1,4 @@
-Ansible Role: system-locale
+Ansible Role: system_locale
 =========
 
 An Ansible Role that sets system locale and timezone on Linux.
@@ -30,7 +30,7 @@ Example Playbook
 - name: Setup locale
   hosts: all
   roles:
-    - role: system-locale
+    - role: system_locale
 ```
 
 License

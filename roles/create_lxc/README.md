@@ -1,4 +1,4 @@
-Ansible Role: create-lxc
+Ansible Role: create_lxc
 =========
 
 An Ansible Role that creates and configures LXC containers on Proxmox VE using the Proxmox API.
@@ -82,7 +82,7 @@ Example Playbook
 - name: Create lxc
   hosts: all
   roles:
-    - role: create-lxc
+    - role: create_lxc
 ```
 
 License

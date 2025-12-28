@@ -1,4 +1,4 @@
-Ansible Role: system-users
+Ansible Role: system_users
 =========
 
 An Ansible Role to setup system users and groups on Linux.
@@ -64,7 +64,7 @@ Example Playbook
 - name: Set system users.
   hosts: all
   roles:
-    - role: system-users
+    - role: system_users
 ```
 
 License
