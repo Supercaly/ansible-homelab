@@ -1,13 +1,11 @@
 ---
 - name: Check DNS resolution.
-  ansible.builtin.command:
-    cmd: "getent hosts {{ __dns }}"
+  ansible.builtin.getent:
+    database: "hosts"
+    key: "{{ __dns }}"
   loop: "{{ system_update_network_dns_domains }}"
   loop_control:
     loop_var: __dns
-  register: __system_update_test_dns_result
-  changed_when: false
-  failed_when: __system_update_test_dns_result.rc != 0
 
 - name: Check internet connectivity.
   ansible.builtin.uri:
