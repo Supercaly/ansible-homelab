@@ -1,0 +1,6 @@
+---
+- name: Copy files and templates.
+  ansible.builtin.import_tasks: files.yml
+
+- name: Deploy the compose stack.
+  ansible.builtin.import_tasks: deploy.yml
