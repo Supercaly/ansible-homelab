@@ -1,0 +1,17 @@
+---
+- name: Pull images in the compose stack.
+  community.docker.docker_compose_v2_pull:
+    project_src: "{{ docker_compose_root }}"
+  when: "docker_compose_pull | bool"
+
+- name: Deploy the compose stack.
+  community.docker.docker_compose_v2:
+    project_src: "{{ docker_compose_root }}"
+    state: present
+
+- name: Prune unused and dangling Docker images.
+  community.docker.docker_prune:
+    images: true
+    images_filters:
+      dangling: "{{ docker_compose_dangling }}"
+  when: "docker_compose_prune | bool"

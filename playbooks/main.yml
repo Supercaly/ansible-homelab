@@ -15,36 +15,9 @@
 - name: Services hosted on Docker.
   hosts: docker
   become: true
-  tasks:
-    - name: Install docker.
+  roles:
+    - role: geerlingguy.docker
       tags: docker
-      block:
-        - name: Add docker's repository to apt.
-          ansible.builtin.deb822_repository:
-            name: Docker
-            architectures: amd64
-            components: stable
-            signed_by: https://download.docker.com/linux/debian/gpg
-            suites: bookworm
-            types: deb
-            uris: https://download.docker.com/linux/debian
-
-        - name: Install docker from the official repository.
-          ansible.builtin.apt:
-            name:
-              - docker-ce
-              - docker-ce-cli
-              - containerd.io
-              - docker-buildx-plugin
-              - docker-compose-plugin
-            update_cache: true
-            state: present
-
-        - name: Enable docker service on boot.
-          ansible.builtin.service:
-            name: docker
-            enabled: true
-            state: started
 
 - name: Configure Grafana.
   hosts: grafana
