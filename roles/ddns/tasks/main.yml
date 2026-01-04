@@ -1,7 +1,7 @@
 ---
 - name: Deploy ddns Docker Compose stack.
   ansible.builtin.import_role:
-    name: docker_compose
+    name: roles/docker_compose
   vars:
     docker_compose_root: "{{ ddns_root }}"
     docker_compose_templates:
