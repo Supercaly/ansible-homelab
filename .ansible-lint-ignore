@@ -1,6 +1,7 @@
 # This file contains ignores rule violations for ansible-lint
-playbooks/main.yml role-name[path]
-playbooks/proxmox.yml role-name[path]
 playbooks/linux.yml role-name[path]
+playbooks/main.yml role-name[path]
 playbooks/proxmox.yml var-naming[no-role-prefix]
+playbooks/proxmox.yml role-name[path]
 roles/create_lxc/defaults/main.yml var-naming[no-role-prefix]
+roles/ddns/tasks/main.yml var-naming[path]
