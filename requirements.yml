@@ -1,7 +1,11 @@
 ---
+roles:
+  - name: geerlingguy.docker
+
 collections:
-  - ansible.posix
-  - community.general
-  - community.proxmox
-  - maxhoesel.caddy
-  - grafana.grafana
+  - name: ansible.posix
+  - name: community.docker
+  - name: community.general
+  - name: community.proxmox
+  - name: grafana.grafana
+  - name: maxhoesel.caddy
