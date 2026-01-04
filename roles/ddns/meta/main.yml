@@ -1,0 +1,13 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: ddns
+  author: Lorenzo Calisti
+  description: Deploy ddns-updater as a Docker container.
+  license: MIT
+  min_ansible_version: "2.1"
+  galaxy_tags:
+    - ddns
+    - ddnsupdater
+    - docker

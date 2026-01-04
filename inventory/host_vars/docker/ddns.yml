@@ -1,0 +1,9 @@
+---
+ddns_root: /compose/ddns
+ddns_config:
+  settings:
+    - provider: "{{ vault_ddns_provider }}"
+      domain: "{{ vault_ddns_domain }}"
+      username: "{{ vault_ddns_username }}"
+      password: "{{ vault_ddns_password }}"
+      ip_version: "ipv4"

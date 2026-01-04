@@ -1,0 +1,5 @@
+---
+ddns_root: "/opt/ddns"
+ddns_restart: "unless-stopped"
+ddns_port: 8000
+ddns_timezone: "UTC"
