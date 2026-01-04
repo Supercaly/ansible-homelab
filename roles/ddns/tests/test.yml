@@ -1,0 +1,6 @@
+---
+- name: Test ddns role.
+  hosts: localhost
+  remote_user: root
+  roles:
+    - ddns
