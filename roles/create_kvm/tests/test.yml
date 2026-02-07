@@ -1,0 +1,5 @@
+---
+- name: Test create_kvm role.
+  hosts: localhost
+  roles:
+    - create_kvm

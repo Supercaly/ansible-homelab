@@ -1,0 +1,18 @@
+---
+- name: Add RNG device to KVM.
+  when: >-
+    (
+      __kvm_current_config.rng0 |
+      default('') |
+      trim
+    ) != rng
+  ansible.builtin.command:
+    argv:
+      - qm
+      - set
+      - "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+      - --rng0
+      - "{{ rng }}"
+  changed_when: true
+  vars:
+    rng: "{{ proxmox_kvm.rng0 | default('') }}"

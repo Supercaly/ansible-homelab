@@ -1,0 +1,130 @@
+---
+- name: Clone KVM from template.
+  module_defaults:
+    community.proxmox.proxmox_kvm:
+      node: "{{ proxmox_node | ansible.builtin.mandatory }}"
+      api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+      api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+      vmid: "{{ proxmox_kvm.template_vmid | ansible.builtin.mandatory }}"
+      clone: "{{ proxmox_kvm.template_name | ansible.builtin.mandatory }}"
+      name: "{{ proxmox_kvm.name | ansible.builtin.mandatory }}"
+      newid: "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+      full: "{{ proxmox_kvm.full | default(omit) }}"
+      format: "{{ proxmox_kvm.format | default(omit) }}"
+      target: "{{ proxmox_kvm.target | default(omit) }}"
+      storage: "{{ proxmox_kvm.storage | default(omit) }}"
+      state: present
+  block:
+    - name: Clone KVM from template via password.
+      community.proxmox.proxmox_kvm: # noqa: args[module]
+        api_password: "{{ proxmox_api_password }}"
+      when: "__proxmox_is_password_setup"
+
+    - name: Clone KVM from template via token.
+      community.proxmox.proxmox_kvm: # noqa: args[module]
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+      when: "__proxmox_is_token_setup"
+
+- name: Ensure KVM exists after cloning.
+  block:
+    - name: Retrieve KVM status.
+      module_defaults:
+        community.proxmox.proxmox_vm_info:
+          node: "{{ proxmox_node | ansible.builtin.mandatory }}"
+          api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+          api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+          vmid: "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+      block:
+        - name: Retrieve KVM status via password.
+          community.proxmox.proxmox_vm_info: # noqa: args[module]
+            api_password: "{{ proxmox_api_password }}"
+          register: __create_kvm_status_pwd
+          when: "__proxmox_is_password_setup"
+
+        - name: Retrieve KVM status via token.
+          community.proxmox.proxmox_vm_info: # noqa: args[module]
+            api_token_id: "{{ proxmox_api_token_id }}"
+            api_token_secret: "{{ proxmox_api_token_secret }}"
+          register: __create_kvm_status_token
+          when: "__proxmox_is_token_setup"
+
+    - name: Set '__proxmox_vm_info_result' variable from retrieved state.
+      ansible.builtin.set_fact:
+        __proxmox_vm_info_result: >-
+          {{
+            (not (__create_kvm_status_token.skipped | default(false))) |
+            ternary(
+              __create_kvm_status_token,
+              __create_kvm_status_pwd
+            )
+          }}
+
+    - name: Fail if the status is not defined.
+      ansible.builtin.fail:
+        msg: "Error retrieving status of KVM '{{ proxmox_kvm.vmid }}'."
+      when: "__proxmox_vm_info_result.proxmox_vms is not defined"
+
+    - name: Fail if the KVM does not exists after cloning.
+      ansible.builtin.fail:
+        msg: "KVM {{ proxmox_kvm.vmid }} does not exists after cloning."
+      when: "__proxmox_vm_info_result.proxmox_vms | length <= 0 | bool"
+
+- name: Configure KVM parameters.
+  module_defaults:
+    community.proxmox.proxmox_kvm:
+      node: "{{ proxmox_node | ansible.builtin.mandatory }}"
+      api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+      api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+
+      vmid: "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+      name: "{{ proxmox_kvm.name | ansible.builtin.mandatory }}"
+      update: true
+
+      # Set hardware info
+      cpu: "{{ proxmox_kvm.cpu | default(omit) }}"
+      cores: "{{ proxmox_kvm.cores | default(omit) }}"
+      sockets: "{{ proxmox_kvm.sockets | default(omit) }}"
+      memory: "{{ proxmox_kvm.memory | default(omit) }}"
+      balloon: "{{ proxmox_kvm.balloon | default(omit) }}"
+
+      # Set boot options
+      startup: "{{ proxmox_kvm.startup | default(omit) }}"
+      onboot: "{{ proxmox_kvm.onboot | default(omit) }}"
+
+      # Set hardware devices
+      audio: "{{ proxmox_kvm.audio | default(omit) }}"
+      parallel: "{{ proxmox_kvm.parallel | default(omit) }}"
+      serial: "{{ proxmox_kvm.serial | default(omit) }}"
+      vga: "{{ proxmox_kvm.vga | default(omit) }}"
+      watchdog: "{{ proxmox_kvm.watchdog | default(omit) }}"
+
+      # Set Cloud-Init options
+      cipassword: "{{ proxmox_kvm.cipassword | default(omit) }}"
+      ciupgrade: "{{ proxmox_kvm.ciupgrade | default(omit) }}"
+      ciuser: "{{ proxmox_kvm.ciuser | default(omit) }}"
+      ipconfig: "{{ proxmox_kvm.ipconfig | default(omit) }}"
+      sshkeys: "{{ proxmox_kvm.sshkeys | default(omit) }}"
+      nameservers: "{{ proxmox_kvm.nameservers | default(omit) }}"
+      searchdomains: "{{ proxmox_kvm.searchdomains | default(omit) }}"
+      localtime: "{{ proxmox_kvm.localtime | default(omit) }}"
+
+      # Set additional info
+      tags: "{{ proxmox_kvm.tags | default([]) | union(['ansible']) }}"
+      description: >-
+        # ({{ proxmox_kvm.vmid }}) {{ proxmox_kvm.name }} KVM
+
+        **Note:** This Proxmox VM is managed by Ansible.
+        Please contact your system administrators to ensure that any changes you
+        make here are not lost.
+  block:
+    - name: Configure KVM parameters via password.
+      community.proxmox.proxmox_kvm: # noqa: args[module]
+        api_password: "{{ proxmox_api_password }}"
+      when: "__proxmox_is_password_setup"
+
+    - name: Configure KVM parameters via token.
+      community.proxmox.proxmox_kvm: # noqa: args[module]
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+      when: "__proxmox_is_token_setup"
