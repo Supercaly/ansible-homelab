@@ -98,13 +98,13 @@
       audio: "{{ proxmox_kvm.audio | default(omit) }}"
       parallel: "{{ proxmox_kvm.parallel | default(omit) }}"
       serial: "{{ proxmox_kvm.serial | default(omit) }}"
+      usb: "{{ proxmox_kvm.usb | default(omit) }}"
+      hostpci: "{{ proxmox_kvm.hostpci | default(omit) }}"
       vga: "{{ proxmox_kvm.vga | default(omit) }}"
       rng0: "{{ proxmox_kvm.rng0 | default(omit) }}"
       watchdog: "{{ proxmox_kvm.watchdog | default(omit) }}"
 
       # Set Cloud-Init options
-      # TODO: Figure out CI-custom
-      # cicustom: "{{ proxmox_kvm.cicustom | default(omit) }}"
       cipassword: "{{ proxmox_kvm.cipassword | default(omit) }}"
       ciupgrade: "{{ proxmox_kvm.ciupgrade | default(omit) }}"
       ciuser: "{{ proxmox_kvm.ciuser | default(omit) }}"
