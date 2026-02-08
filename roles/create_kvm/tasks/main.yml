@@ -5,8 +5,8 @@
 - name: Clone the KVM.
   ansible.builtin.import_tasks: clone.yml
 
-- name: Add and Grow disks.
-  ansible.builtin.import_tasks: disks.yml
+- name: Configure the KVM.
+  ansible.builtin.import_tasks: configure.yml
 
 - name: Start the KVM.
   ansible.builtin.import_tasks: start.yml

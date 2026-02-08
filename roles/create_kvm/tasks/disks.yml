@@ -23,7 +23,12 @@
       }}
     iothread: "{{ __disk.value.iothread | default(false) }}"
     ssd: "{{ __disk.value.ssd | default(false) }}"
-  loop: "{{ proxmox_kvm.scsi | dict2items }}"
+  loop: >-
+    {{
+      proxmox_kvm.scsi |
+      default({}) |
+      ansible.builtin.dict2items
+    }}
   loop_control:
     label: "{{ __disk.key }}={{ __disk.value }}"
     loop_var: __disk
@@ -50,7 +55,12 @@
       }}
     iothread: "{{ __disk.value.iothread | default(false) }}"
     ssd: "{{ __disk.value.ssd | default(false) }}"
-  loop: "{{ proxmox_kvm.scsi | dict2items }}"
+  loop: >-
+    {{
+      proxmox_kvm.scsi |
+      default({}) |
+      ansible.builtin.dict2items
+    }}
   loop_control:
     label: "{{ __disk.key }}={{ __disk.value }}"
     loop_var: __disk
@@ -65,7 +75,12 @@
     disk: "{{ __disk.key }}"
     size: "{{ __disk.value.size | ansible.builtin.mandatory }}G"
     state: resized
-  loop: "{{ proxmox_kvm.scsi | dict2items }}"
+  loop: >-
+    {{
+      proxmox_kvm.scsi |
+      default({}) |
+      ansible.builtin.dict2items
+    }}
   loop_control:
     label: "{{ __disk.key }}={{ __disk.value }}"
     loop_var: __disk
@@ -81,7 +96,12 @@
     disk: "{{ __disk.key }}"
     size: "{{ __disk.value.size | ansible.builtin.mandatory }}G"
     state: resized
-  loop: "{{ proxmox_kvm.scsi | dict2items }}"
+  loop: >-
+    {{
+      proxmox_kvm.scsi |
+      default({}) |
+      ansible.builtin.dict2items
+    }}
   loop_control:
     label: "{{ __disk.key }}={{ __disk.value }}"
     loop_var: __disk

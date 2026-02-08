@@ -10,7 +10,7 @@ The role also supports cloud-init, allowing the new VM to be configured with cus
 This role is able to perform the following operations:
 
 - Clone a KVM virtual machine from an existing template on Proxmox VE via API
-- Configure CPU, memory, storage, networking, and startup options
+- Configure CPU, memory, storage, and startup options
 - Configure cloud-init parameters (users, passwords, SSH keys, IP configuration, DNS)
 - Authenticate to Proxmox using either:
   - password-based authentication
@@ -24,7 +24,6 @@ The Proxmox API must be reachable from the Ansible control node (default port `8
 
 - create and clone virtual machines
 - configure CPU, memory, disks, and devices
-- configure networking and startup options
 - manage cloud-init settings
 - start and stop virtual machines
 
@@ -86,7 +85,6 @@ All KVM-related settings are defined inside the `proxmox_kvm` dictionary.
 |`nameservers` | | string | | DNS servers configured via cloud-init. | 
 |`searchdomains` | | string | | DNS search domains. | 
 |`localtime` | | bool | | Use local time instead of UTC. | 
-|`net` | | object | | Dictionary of network devices configuration. |
 |`audio` | | object | | Dictionary of audio devices configuration. |
 |`parallel` | | object | | Dictionary of parallel devices configuration. |
 |`serial`| | object | | Dictionary of serial devices configuration. |

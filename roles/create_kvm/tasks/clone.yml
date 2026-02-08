@@ -78,6 +78,7 @@
       api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
 
       vmid: "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+      name: "{{ proxmox_kvm.name | ansible.builtin.mandatory }}"
       update: true
 
       # Set hardware info
@@ -87,9 +88,6 @@
       memory: "{{ proxmox_kvm.memory | default(omit) }}"
       balloon: "{{ proxmox_kvm.balloon | default(omit) }}"
 
-      # Set network interfaces
-      net: "{{ proxmox_kvm.net | default(omit) }}"
-
       # Set boot options
       startup: "{{ proxmox_kvm.startup | default(omit) }}"
       onboot: "{{ proxmox_kvm.onboot | default(omit) }}"
@@ -98,10 +96,7 @@
       audio: "{{ proxmox_kvm.audio | default(omit) }}"
       parallel: "{{ proxmox_kvm.parallel | default(omit) }}"
       serial: "{{ proxmox_kvm.serial | default(omit) }}"
-      usb: "{{ proxmox_kvm.usb | default(omit) }}"
-      hostpci: "{{ proxmox_kvm.hostpci | default(omit) }}"
       vga: "{{ proxmox_kvm.vga | default(omit) }}"
-      rng0: "{{ proxmox_kvm.rng0 | default(omit) }}"
       watchdog: "{{ proxmox_kvm.watchdog | default(omit) }}"
 
       # Set Cloud-Init options
