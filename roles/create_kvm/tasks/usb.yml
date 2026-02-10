@@ -19,6 +19,6 @@
       ansible.builtin.dict2items
     }}
   loop_control:
-    label: "{{ __usb.key }}={{__usb.value }}"
+    label: "{{ __usb.key }}={{ __usb.value }}"
     loop_var: __usb
   changed_when: true
