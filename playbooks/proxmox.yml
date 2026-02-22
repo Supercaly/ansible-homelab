@@ -5,23 +5,37 @@
   tags:
     - proxmox
     - lxc
+  vars:
+    # Select all hosts with `proxmox_lxc` defined and `proxmox_host`
+    # pointing to the current host.
+    lxc_guests: >-
+      {{
+        groups['all'] |
+        map('ansible.builtin.extract', hostvars) |
+        selectattr('proxmox_lxc', 'defined') |
+        selectattr('proxmox_host', 'defined') |
+        selectattr('proxmox_host', 'equalto', inventory_hostname)
+      }}
   tasks:
     - name: Create LXC guests.
       ansible.builtin.include_role:
         name: roles/create_lxc
       vars:
         proxmox_lxc: "{{ guest.proxmox_lxc }}"
-      loop: >-
-        {{
-          groups['all'] |
-          map('ansible.builtin.extract', hostvars) |
-          selectattr('proxmox_lxc', 'defined') |
-          selectattr('proxmox_host', 'defined') |
-          selectattr('proxmox_host', 'equalto', inventory_hostname) |
-          map('ansible.builtin.dict2items') |
-          map('ansible.builtin.selectattr', 'key', 'in', ['inventory_hostname', 'proxmox_lxc']) |
-          map('ansible.builtin.items2dict')
-        }}
+      loop: "{{ lxc_guests }}"
+      loop_control:
+        label: "{{ guest.inventory_hostname }}"
+        loop_var: guest
+
+    - name: Wait for SSH to become accessible.
+      delegate_to: localhost
+      become: false
+      ansible.builtin.wait_for:
+        host: "{{ guest.ansible_host }}"
+        port: 22
+        timeout: 60
+        state: started
+      loop: "{{ lxc_guests }}"
       loop_control:
         label: "{{ guest.inventory_hostname }}"
         loop_var: guest
