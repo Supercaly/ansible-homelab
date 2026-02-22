@@ -64,6 +64,16 @@
         api_token_secret: "{{ proxmox_api_token_secret }}"
       when: "__proxmox_is_token_setup"
 
+# Introduce a short delay (1 second) to allow Proxmox to finalize
+# the LXC creation/update process.
+# Without this delay, subsequent tasks may run before the container
+# is fully initialized, leading to intermittent failures.
+# Observed issues include startup errors and temporary SSH
+# unavailability immediately after provisioning.
+- name: Ensure LXC is properly configured before proceeding.
+  ansible.builtin.wait_for:
+    timeout: 1
+
 - name: Ensure LXC exists after its creation.
   block:
     - name: Retrieve LXC status.
