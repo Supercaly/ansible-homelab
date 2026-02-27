@@ -1,0 +1,5 @@
+---
+caddy_sites:
+  - hostname: "{{ influxdb_domain }}"
+    proxies:
+      - "{{ interfaces.lan.ip4.address }}:{{ influxdb_port }}"

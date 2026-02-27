@@ -1,4 +1,3 @@
 ---
 influxdb_domain: "influxdb.{{ network.domain }}"
-influxdb_address: 192.168.1.123
 influxdb_port: 8086
