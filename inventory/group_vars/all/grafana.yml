@@ -1,3 +1,3 @@
 ---
-grafana_domain: "grafana.{{ network.domain }}"
-grafana_port: 3000
+grafana_dashboard_domain: "grafana.{{ network.domain }}"
+grafana_dashboard_port: 3000
