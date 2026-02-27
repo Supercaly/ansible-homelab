@@ -8,9 +8,21 @@
 - name: Configure reverse proxy.
   hosts: caddy
   become: true
+  tags: caddy
+  pre_tasks:
+    - name: Generate 'caddy_site' variable from dynamic services.
+      ansible.builtin.set_fact:
+        caddy_sites: >-
+          {{
+            groups['all'] |
+            map('ansible.builtin.extract', hostvars) |
+            selectattr('caddy_sites', 'defined') |
+            map(attribute='caddy_sites') |
+            list |
+            flatten
+          }}
   roles:
     - role: roles/caddy
-      tags: caddy
 
 - name: Services hosted on Docker.
   hosts: docker

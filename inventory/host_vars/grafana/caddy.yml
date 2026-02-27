@@ -1,0 +1,5 @@
+---
+caddy_sites:
+  - hostname: "{{ grafana_dashboard_domain }}"
+    proxies:
+      - "{{ interfaces.lan.ip4.address }}:{{ grafana_dashboard_port }}"

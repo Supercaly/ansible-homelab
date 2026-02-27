@@ -1,0 +1,5 @@
+---
+caddy_sites:
+  - hostname: "{{ ntfy_domain }}"
+    proxies:
+      - "{{ interfaces.lan.ip4.address }}:{{ ntfy_port }}"
