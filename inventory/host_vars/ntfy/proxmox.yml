@@ -14,7 +14,10 @@ proxmox_lxc:
   memory: 512
   netif:
     net0: >-
-      name=eth0,ip=192.168.1.121/24,gw={{
+      name={{ interfaces.lan.device }},ip={{
+        (interfaces.lan.ip4.address ~ '/' ~ interfaces.lan.ip4.prefix) |
+        ansible.utils.ipaddr('host/prefix')
+      }},gw={{
         network.gw4
       }},bridge=vmbr0
   features:
