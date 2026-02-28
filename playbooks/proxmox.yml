@@ -28,13 +28,9 @@
         loop_var: guest
 
     - name: Wait for SSH to become accessible.
-      delegate_to: localhost
-      become: false
-      ansible.builtin.wait_for:
-        host: "{{ guest.ansible_host }}"
-        port: 22
+      delegate_to: "{{ guest.inventory_hostname }}"
+      ansible.builtin.wait_for_connection:
         timeout: 60
-        state: started
       loop: "{{ lxc_guests }}"
       loop_control:
         label: "{{ guest.inventory_hostname }}"
