@@ -20,6 +20,8 @@ proxmox_lxc:
       }},gw={{
         network.gw4
       }},bridge=vmbr0
+  nameserver: "{{ dns.servers | join(',') }}"
+  searchdomain: "{{ dns.search_domains | join(',') }}"
   features:
     - "keyctl=1"
     - "nesting=1"
