@@ -1,4 +1,7 @@
 ---
+roles:
+  - lae.proxmox
+
 collections:
   - ansible.posix
   - ansible.utils
