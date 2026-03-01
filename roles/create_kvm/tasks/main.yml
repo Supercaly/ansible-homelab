@@ -1,0 +1,12 @@
+---
+- name: Run preflight checks.
+  ansible.builtin.import_tasks: preflight.yml
+
+- name: Clone the KVM.
+  ansible.builtin.import_tasks: clone.yml
+
+- name: Configure the KVM.
+  ansible.builtin.import_tasks: configure.yml
+
+- name: Start the KVM.
+  ansible.builtin.import_tasks: start.yml

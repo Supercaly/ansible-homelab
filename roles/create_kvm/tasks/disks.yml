@@ -1,0 +1,111 @@
+---
+# Ansible does not support loops with module_defaults.
+# For this reason we need to split the tasks in two,
+# one for password and one for token.
+- name: Add disks to KVM.
+  block:
+    - name: Add disks to KVM via password.
+      when: "__proxmox_is_password_setup"
+      community.proxmox.proxmox_disk:
+        api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+        api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+        api_password: "{{ proxmox_api_password }}"
+        vmid: "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+        state: present
+        disk: "{{ __disk.key }}"
+        storage: "{{ __disk.value.storage | ansible.builtin.mandatory }}"
+        size: "{{ __disk.value.size | ansible.builtin.mandatory }}"
+        format: "{{ __disk.value.format | default(omit) }}"
+        backup: "{{ __disk.value.backup | default(true) }}"
+        discard: >-
+          {{
+            __disk.value.discard |
+            default(false) |
+            ansible.builtin.ternary('on', 'ignore')
+          }}
+        iothread: "{{ __disk.value.iothread | default(false) }}"
+        ssd: "{{ __disk.value.ssd | default(false) }}"
+      loop: >-
+        {{
+          proxmox_kvm.scsi |
+          default({}) |
+          ansible.builtin.dict2items
+        }}
+      loop_control:
+        label: "{{ __disk.key }}={{ __disk.value }}"
+        loop_var: __disk
+
+    - name: Add disks to KVM via token.
+      when: "__proxmox_is_token_setup"
+      community.proxmox.proxmox_disk:
+        api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+        api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+        vmid: "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+        state: present
+        disk: "{{ __disk.key }}"
+        storage: "{{ __disk.value.storage | ansible.builtin.mandatory }}"
+        size: "{{ __disk.value.size | ansible.builtin.mandatory }}"
+        format: "{{ __disk.value.format | default(omit) }}"
+        backup: "{{ __disk.value.backup | default(true) }}"
+        discard: >-
+          {{
+            __disk.value.discard |
+            default(false) |
+            ansible.builtin.ternary('on', 'ignore')
+          }}
+        iothread: "{{ __disk.value.iothread | default(false) }}"
+        ssd: "{{ __disk.value.ssd | default(false) }}"
+      loop: >-
+        {{
+          proxmox_kvm.scsi |
+          default({}) |
+          ansible.builtin.dict2items
+        }}
+      loop_control:
+        label: "{{ __disk.key }}={{ __disk.value }}"
+        loop_var: __disk
+
+- name: Grow existing disks of KVM.
+  block:
+    - name: Grow existing disks of KVM via password.
+      when: "__proxmox_is_password_setup"
+      community.proxmox.proxmox_disk:
+        api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+        api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+        api_password: "{{ proxmox_api_password }}"
+        vmid: "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+        disk: "{{ __disk.key }}"
+        size: "{{ __disk.value.size | ansible.builtin.mandatory }}G"
+        state: resized
+      loop: >-
+        {{
+          proxmox_kvm.scsi |
+          default({}) |
+          ansible.builtin.dict2items
+        }}
+      loop_control:
+        label: "{{ __disk.key }}={{ __disk.value }}"
+        loop_var: __disk
+
+    - name: Grow existing disks of KVM via token.
+      when: "__proxmox_is_token_setup"
+      community.proxmox.proxmox_disk:
+        api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+        api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+        vmid: "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+        disk: "{{ __disk.key }}"
+        size: "{{ __disk.value.size | ansible.builtin.mandatory }}G"
+        state: resized
+      loop: >-
+        {{
+          proxmox_kvm.scsi |
+          default({}) |
+          ansible.builtin.dict2items
+        }}
+      loop_control:
+        label: "{{ __disk.key }}={{ __disk.value }}"
+        loop_var: __disk

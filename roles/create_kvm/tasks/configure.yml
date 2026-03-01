@@ -1,0 +1,59 @@
+---
+- name: Get current config.
+  block:
+    - name: Retrieve current KVM config.
+      module_defaults:
+        community.proxmox.proxmox_vm_info:
+          node: "{{ proxmox_node | ansible.builtin.mandatory }}"
+          api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+          api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+          vmid: "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+          config: current
+      block:
+        - name: Retrieve current KVM config via password.
+          community.proxmox.proxmox_vm_info: # noqa: args[module]
+            api_password: "{{ proxmox_api_password }}"
+          register: __create_kvm_config_pwd
+          when: "__proxmox_is_password_setup"
+
+        - name: Retrieve current KVM config via token.
+          community.proxmox.proxmox_vm_info: # noqa: args[module]
+            api_token_id: "{{ proxmox_api_token_id }}"
+            api_token_secret: "{{ proxmox_api_token_secret }}"
+          register: __create_kvm_config_token
+          when: "__proxmox_is_token_setup"
+
+    - name: Set '__proxmox_vm_info_result' variable from retrieved state.
+      ansible.builtin.set_fact:
+        __proxmox_vm_info_result: >-
+          {{
+            (not (__create_kvm_config_token.skipped | default(false))) |
+            ternary(
+              __create_kvm_config_token,
+              __create_kvm_config_pwd
+            )
+          }}
+
+    - name: Fail if config is not defined.
+      ansible.builtin.fail:
+        msg: "Error retrieving current config of KVM '{{ proxmox_kvm.vmid }}'."
+      when: >-
+        __proxmox_vm_info_result.proxmox_vms is not defined or
+        __proxmox_vm_info_result.proxmox_vms | length == 0 or
+        __proxmox_vm_info_result.proxmox_vms[0].config is not defined
+
+    - name: Set '__kvm_current_config' variable with current config.
+      ansible.builtin.set_fact:
+        __kvm_current_config: "{{ __proxmox_vm_info_result.proxmox_vms[0].config }}"
+
+- name: Add and Grow disks.
+  ansible.builtin.import_tasks: disks.yml
+
+- name: Set RNG.
+  ansible.builtin.import_tasks: rng.yml
+
+- name: Set hostpci devices.
+  ansible.builtin.import_tasks: hostpci.yml
+
+- name: Set USB devices.
+  ansible.builtin.import_tasks: usb.yml
