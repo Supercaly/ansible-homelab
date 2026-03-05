@@ -1,0 +1,14 @@
+---
+- name: Ensure service group exists.
+  ansible.builtin.group:
+    name: "{{ adguardhome_group }}"
+    state: present
+    system: true
+
+- name: Ensure service user exists.
+  ansible.builtin.user:
+    name: "{{ adguardhome_user }}"
+    group: "{{ adguardhome_group }}"
+    create_home: false
+    shell: /usr/sbin/nologin
+    system: true
