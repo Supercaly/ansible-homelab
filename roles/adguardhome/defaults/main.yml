@@ -1,0 +1,22 @@
+---
+# Installation options
+adguardhome_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+adguardhome_download_url: "https://static.adguard.com/adguardhome/release/AdGuardHome_linux_{{ adguardhome_arch }}.tar.gz"
+
+# AdGuardHome user and group
+adguardhome_user: "adguardhome"
+adguardhome_group: "adguardhome"
+
+# AdGuardHome directories
+adguardhome_bin_dir: "/opt/adguardhome"
+adguardhome_conf_dir: "/etc/adguardhome"
+adguardhome_data_dir: "/var/lib/adguardhome"
+adguardhome_bin_file: "{{ adguardhome_bin_dir }}/AdGuardHome"
+adguardhome_conf_file: "{{ adguardhome_conf_dir }}/AdGuardHome.yaml"
+
+# Systemd service options
+adguardhome_service_name: adguardhome
+adguardhome_service_enabled: true
+
+# AdGuardHome configuration
+adguardhome_config: {}

@@ -1,0 +1,30 @@
+---
+- name: Ensure AdGuardHome user and group exist.
+  ansible.builtin.import_tasks: user.yml
+
+- name: Ensure directories are present.
+  ansible.builtin.file:
+    path: "{{ __dir.path | ansible.builtin.mandatory }}"
+    owner: "{{ __dir.owner | default(adguardhome_user) }}"
+    group: "{{ __dir.group | default(adguardhome_group) }}"
+    mode: "{{ __dir.mode | default('0755') }}"
+    state: directory
+  loop:
+    - path: "{{ adguardhome_bin_dir }}"
+      mode: "0700"
+    - path: "{{ adguardhome_data_dir }}"
+      mode: "0700"
+    - path: "{{ adguardhome_conf_dir }}"
+  loop_control:
+    label: "{{ __dir.path }}"
+    loop_var: __dir
+
+- name: Install AdGuardHome.
+  ansible.builtin.import_tasks: install.yml
+
+- name: Fix systemd-resolved for Ubuntu.
+  ansible.builtin.include_tasks: resolved.yml
+  when: ansible_facts['distribution'] == 'Ubuntu'
+
+- name: Configure AdGuardHome.
+  ansible.builtin.import_tasks: configure.yml
