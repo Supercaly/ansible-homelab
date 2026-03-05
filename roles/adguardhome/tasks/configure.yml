@@ -1,0 +1,20 @@
+---
+# Before configuring AdGuardHome we need to stop the running
+# service, otherwise it will owerwrite the values we set.
+- name: Stop AdGuardHome service before writing config file.
+  ansible.builtin.service:
+    name: "{{ adguardhome_service_name }}"
+    state: "stopped"
+
+- name: Generate config file.
+  ansible.builtin.copy:
+    dest: "{{ adguardhome_conf_file }}"
+    content: "{{ adguardhome_config | to_nice_yaml }}"
+    owner: "{{ adguardhome_user }}"
+    group: "{{ adguardhome_group }}"
+    mode: "0644"
+
+- name: Start AdGuardHome service after writing config file.
+  ansible.builtin.service:
+    name: "{{ adguardhome_service_name }}"
+    state: "started"

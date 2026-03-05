@@ -1,0 +1,36 @@
+---
+- name: Create '/etc/systemd/resolved.conf.d' directory.
+  ansible.builtin.file:
+    path: "/etc/systemd/resolved.conf.d"
+    mode: "0644"
+    state: directory
+
+- name: Configure systemd-resolved.
+  community.general.ini_file:
+    path: /etc/systemd/resolved.conf.d/adguardhome.conf
+    section: Resolve
+    option: "{{ __opt.option }}"
+    value: "{{ __opt.value }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  loop:
+    - option: "DNS"
+      value: "127.0.0.1"
+    - option: "DNSStubListener"
+      value: "no"
+  loop_control:
+    label: "{{ __opt.option }}={{ __opt.value }}"
+    loop_var: __opt
+  notify: restart systemd-resolved
+
+- name: Symlink '/etc/resolv.conf' to '/run/systemd/resolve/resolv.conf'.
+  ansible.builtin.file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+    force: true
+  notify: restart systemd-resolved
+
+- name: Ensure handlers are notified now to avoid conflicts.
+  ansible.builtin.meta: flush_handlers

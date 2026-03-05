@@ -1,0 +1,5 @@
+---
+- name: Test adguardhome role.
+  hosts: localhost
+  roles:
+    - adguardhome
