@@ -3,4 +3,5 @@ dns:
   search_domains:
     - "{{ network.domain | ansible.builtin.mandatory }}"
   servers:
+    - "{{ network.ip4 | ansible.utils.nthhost(200) | ansible.builtin.mandatory }}"
     - "{{ network.ip4 | ansible.utils.nthhost(1) | ansible.builtin.mandatory }}"

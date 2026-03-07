@@ -2,6 +2,7 @@
 - name: Configure Linux systems.
   hosts: all:!pvenodes
   become: true
+  tags: linux
   roles:
     - role: roles/system_locale
       when: ansible_facts['distribution'] != 'Alpine'
