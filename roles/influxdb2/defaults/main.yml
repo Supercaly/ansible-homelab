@@ -2,15 +2,6 @@
 # URL of the InfluxDB APIs
 influxdb2_host: "http://localhost:8086"
 
-# Primary user, organization, and bucket
-influxdb2_primary_org: "example-org"
-influxdb2_primary_bucket: "example-bucket"
-influxdb2_primary_username: "example-user"
-influxdb2_primary_password: "password123"
-
-# Admin operator token
-influxdb2_admin_token: "ExampleToken"
-
 # Additional organizations
 # influxdb2_orgs:
 #   - name: org1
