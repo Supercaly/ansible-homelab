@@ -1,0 +1,15 @@
+---
+adguardhome_config:
+  http:
+    address: 0.0.0.0:3000
+  users:
+    - name: admin
+      password: $2a$12$MbrazBCdmrahkVv/JOTqLe2JLm0CESkWnpuvF0FLKScfco5UvE6FW
+  filtering:
+    rewrites:
+      - answer: 192.168.1.120
+        domain: "example.com"
+        enabled: true
+      - answer: 192.168.1.120
+        domain: "*.example.com"
+        enabled: true
