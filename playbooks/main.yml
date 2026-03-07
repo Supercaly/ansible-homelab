@@ -5,6 +5,13 @@
 - name: Import Linux configuration playbook.
   ansible.builtin.import_playbook: linux.yml
 
+- name: Configure dns server.
+  hosts: dns
+  become: true
+  roles:
+    - role: roles/adguardhome
+      tags: dns
+
 - name: Configure reverse proxy.
   hosts: caddy
   become: true
