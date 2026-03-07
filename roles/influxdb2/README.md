@@ -5,7 +5,7 @@ An Ansible Role that installs and configure [InfluxDB 2](https://influxdata.com)
 The role manages:
 
 - InfluxDB 2 installation
-- Initial setup (organization, bucket, admin user, token)
+- Basic installation (main organization, bucket, admin user, token)
 - Creation of additional organizations, users, and buckets
 
 ## Requirements
@@ -16,14 +16,14 @@ None.
 
 Available variables are listed below, along with default values (see `defaults/main.yml` for a complete list):
 
-| Name | Type | Default | Description |
-| - | - | - | - |
-| `influxdb2_host` | string | `"http://localhost:8086"` | URL of the InfluxDB APIs. |
-| `influxdb2_primary_username` | string | `"example-user"` | Admin user created during setup. |
-| `influxdb2_primary_password` | string | `"password123"` | Password of the admin user. |
-| `influxdb2_primary_org` | string | `"example-org"` | Name of the primary organization created during setup. |
-| `influxdb2_primary_bucket` | string | `"example-bucket"` | Name of the primary bucket created during setup. |
-| `influxdb2_admin_token` | string | `"ExampleToken"` | Admin operator token. |
+| Name | Required | Type | Default | Description |
+| - | - | - | - | - |
+| `influxdb2_host` | | string | `"http://localhost:8086"` | URL of the InfluxDB APIs. |
+| `influxdb2_primary_username` | Yes | string | | Admin user created during setup. |
+| `influxdb2_primary_password` | Yes | string | | Password of the admin user. |
+| `influxdb2_primary_org` | Yes | string | | Name of the primary organization created during setup. |
+| `influxdb2_primary_bucket` | Yes | string | | Name of the primary bucket created during setup. |
+| `influxdb2_admin_token` | Yes | string | | Admin operator token. |
 | `influxdb2_orgs` | object | `[]` | Additional organizations. |
 | `influxdb2_users` | object | `[]` | Additional users. |
 | `influxdb2_buckets` | object | `[]` | Additional buckets. |

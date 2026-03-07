@@ -12,11 +12,11 @@
   ansible.builtin.command: >-
     influx setup
     --host "{{ influxdb2_host }}"
-    --org {{ influxdb2_primary_org }}
-    --bucket {{ influxdb2_primary_bucket }}
-    --username {{ influxdb2_primary_username }}
-    --password {{ influxdb2_primary_password }}
-    --token {{ influxdb2_admin_token }}
+    --org {{ influxdb2_primary_org | ansible.builtin.mandatory }}
+    --bucket {{ influxdb2_primary_bucket | ansible.builtin.mandatory }}
+    --username {{ influxdb2_primary_username | ansible.builtin.mandatory }}
+    --password {{ influxdb2_primary_password | ansible.builtin.mandatory }}
+    --token {{ influxdb2_admin_token | ansible.builtin.mandatory }}
     --force
   register: __influxdb2_setup_result
   failed_when:
