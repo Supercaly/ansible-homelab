@@ -1,0 +1,39 @@
+---
+name: Lint
+
+on:
+  pull_request:
+  push:
+
+# Cancel previous runs when a new commit is started
+concurrency:
+  group: ${{ github.workflow }} - ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ansible-lint:
+    name: Perform Ansible Lint.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout latest version of the project.
+        uses: actions/checkout@v4
+
+      # Running Ansible Lint with a vault file configured requires
+      # a `.vault-password` file to be present in the repo.
+      # The password inside is never used or verified so it can be
+      # just a random string.
+      - name: Create fake vault password file.
+        run: >-
+          echo "fake" > .vault-password
+
+      - name: Run ansible-lint.
+        uses: ansible/ansible-lint@main
+        with:
+          requirements_file: requirements.yml
+          args: --exclude .ansible
+
+      - name: Clear fake vault password file.
+        if: ${{ always() }}
+        run: >-
+          rm -f .vault-password
