@@ -35,7 +35,7 @@ Available variables are listed below, along with default values (see `defaults/m
 
 ## Dependencies
 
-This role depends on the collection `maxhoesel.caddy` for installing and managing the Caddy service itself.
+None.
 
 ## Example Playbook
 

@@ -1,0 +1,14 @@
+---
+caddy_requirements:
+  - debian-keyring
+  - debian-archive-keyring
+  - apt-transport-https
+  - python3-requests
+
+caddy_packages:
+  - caddy
+
+caddy_service: caddy
+
+caddy_apt_repo_url: https://dl.cloudsmith.io/public/caddy/stable/deb/debian
+caddy_apt_key_url: "https://dl.cloudsmith.io/public/caddy/stable/gpg.key"

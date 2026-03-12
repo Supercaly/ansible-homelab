@@ -1,12 +1,17 @@
 ---
-- name: Install Caddy.
-  ansible.builtin.import_role:
-    name: maxhoesel.caddy.caddy_server
+- name: Load OS-specific vars.
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
   vars:
-    caddy_apply_config: false
+    params:
+      files:
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+        - main.yml
+      paths:
+        - "vars"
 
-- name: Ensure handlers are notified now to avoid conflicts.
-  ansible.builtin.meta: flush_handlers
+- name: Install Caddy service.
+  ansible.builtin.import_tasks: install.yml
 
 - name: Configure Caddy.
   ansible.builtin.import_tasks: configure.yml

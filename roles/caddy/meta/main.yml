@@ -11,6 +11,17 @@ galaxy_info:
       versions:
         - bullseye
         - bookworm
+    - name: EL
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
   galaxy_tags:
     - caddy
     - reverse

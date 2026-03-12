@@ -1,0 +1,21 @@
+---
+# This part of the role is taken from:
+# https://github.com/maxhoesel-ansible/ansible-collection-caddy/blob/main/roles/caddy_server/tasks/install.yml
+- name: Install package requirements.
+  ansible.builtin.package:
+    name: "{{ caddy_requirements }}"
+
+- name: Perform distro-specific setup.
+  ansible.builtin.include_tasks: "setup-{{ ansible_facts.os_family }}.yml"
+
+- name: Install Caddy packages.
+  ansible.builtin.package:
+    name: "{{ caddy_packages }}"
+    state: present
+  notify: restart caddy service
+
+- name: Start and enable Caddy service at boot.
+  ansible.builtin.service:
+    name: "{{ caddy_service }}"
+    enabled: true
+    state: started
