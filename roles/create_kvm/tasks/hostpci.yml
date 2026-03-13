@@ -1,0 +1,23 @@
+- name: Set host PCI deviceis of KVM.
+  when: >-
+    (
+      __kvm_current_config[__hostpci.key] |
+      default('')
+    ) != __hostpci.value
+  ansible.builtin.command:
+    argv:
+      - qm
+      - set
+      - "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+      - "--{{ __hostpci.key }}"
+      - "{{ __hostpci.value }}"
+  loop: >-
+    {{
+      proxmox_kvm.hostpci |
+      default({}) |
+      ansible.builtin.dict2items
+    }}
+  loop_control:
+    label: "{{ __hostpci.key }}={{ __hostpci.value }}"
+    loop_var: __hostpci
+  changed_when: true
