@@ -2,3 +2,41 @@
 proxmox_node: ansible-proxmox
 proxmox_api_user: "{{ vault_proxmox_api_user }}"
 proxmox_api_password: "{{ vault_proxmox_api_password }}"
+
+pve_group: # No cluster.
+pve_fqdn: "ansible-proxmox.{{ network.domain | ansible.builtin.mandatory }}"
+pve_groups:
+  - name: admin
+    comment: System Administrators
+pve_users:
+  # User password is the same as the Linux password.
+  - name: root@pam
+    email: root@example.com
+    groups:
+      - admin
+pve_acls:
+  - path: /
+    roles:
+      - Administrator
+    groups:
+      - admin
+
+pve_pcie_passthrough_enabled: true
+pve_iommu_passthrough_mode: true
+
+pve_storages:
+  - name: local
+    type: dir
+    path: /var/lib/vz
+    content:
+      - iso
+      - vztmpl
+      - snippets
+      - backup
+  - name: local-lvm
+    type: lvmthin
+    content:
+      - images
+      - rootdir
+    vgname: pve
+    thinpool: data

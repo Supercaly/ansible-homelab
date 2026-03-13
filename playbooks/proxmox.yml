@@ -1,4 +1,17 @@
 ---
+- name: Configure Proxmox PVEs.
+  hosts: pvenodes
+  become: true
+  roles:
+    - role: lae.proxmox
+      vars:
+        # Would remove Proxmox completely.
+        # https://github.com/lae/ansible-role-proxmox/issues/223
+        pve_remove_old_kernels: false
+      tags:
+        - proxmox
+        - pve
+
 - name: Create Proxmox LXCs.
   hosts: pvenodes
   become: true
