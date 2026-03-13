@@ -6,7 +6,7 @@
     components: "{{ ntfy_apt_components }}"
     signed_by: "{{ ntfy_apt_gpg_key }}"
     suites: "{{ ntfy_apt_suites }}"
-    types: "{{ ntfy_apt_types }}"
+    types: "deb"
     uris: "{{ ntfy_apt_uris }}"
     state: "present"
 
