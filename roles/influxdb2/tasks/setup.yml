@@ -6,7 +6,7 @@
     components: "{{ influxdb2_apt_components }}"
     signed_by: "{{ influxdb2_apt_gpg_key }}"
     suites: "{{ influxdb2_apt_suites }}"
-    types: "{{ influxdb2_apt_types }}"
+    types: "deb"
     uris: "{{ influxdb2_apt_uri }}"
 
 - name: Update APT cache.
