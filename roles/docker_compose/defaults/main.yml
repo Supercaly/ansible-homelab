@@ -1,0 +1,38 @@
+---
+# Default permissions
+docker_compose_owner: "root"
+docker_compose_group: "root"
+docker_compose_mode: "0755"
+
+# List of sub-directories to replicate
+# docker_compose_subdirs:
+#   - path: "subdir"
+#     owner: "root"
+#     group: "root"
+#     mode: "0755"
+docker_compose_subdirs: []
+
+# List of files to copy to host
+# docker_compose_files:
+#   - src: "file.txt"
+#     dest: "subdir/file.txt"
+#     owner: "root"
+#     group: "root"
+#     mode: "0755"
+docker_compose_files: []
+
+# List of templates to generate to host
+# docker_compose_templates:
+#   - src: "compose.yaml.j2"
+#     dest: "compose.yaml"
+#     owner: "root"
+#     group: "root"
+#     mode: "0755"
+docker_compose_templates: []
+
+# Pull Docker images before deployment
+docker_compose_pull: true
+
+# Prune dangling Docker images
+docker_compose_prune: false
+docker_compose_dangling: true
