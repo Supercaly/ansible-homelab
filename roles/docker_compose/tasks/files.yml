@@ -1,0 +1,44 @@
+---
+- name: Ensure compose root directory exists.
+  ansible.builtin.file:
+    path: "{{ docker_compose_root | ansible.builtin.mandatory }}"
+    state: directory
+    owner: "{{ docker_compose_owner }}"
+    group: "{{ docker_compose_group }}"
+    mode: "{{ docker_compose_mode }}"
+
+- name: Ensure sub-directories exist.
+  ansible.builtin.file:
+    path: "{{ docker_compose_root }}/{{ __subdir.path | ansible.builtin.mandatory }}"
+    state: directory
+    owner: "{{ __subdir.owner | default(docker_compose_owner) }}"
+    group: "{{ __subdir.group | default(docker_compose_group) }}"
+    mode: "{{ __subdir.mode | default(docker_compose_mode) }}"
+  loop: "{{ docker_compose_subdirs }}"
+  loop_control:
+    label: "{{ __subdir.path | ansible.builtin.mandatory }}"
+    loop_var: __subdir
+
+- name: Copy static files.
+  ansible.builtin.copy:
+    src: "{{ __file.src | ansible.builtin.mandatory }}"
+    dest: "{{ docker_compose_root }}/{{ __file.dest | ansible.builtin.mandatory }}"
+    owner: "{{ __file.owner | default(docker_compose_owner) }}"
+    group: "{{ __file.group | default(docker_compose_group) }}"
+    mode: "{{ __file.mode | default(docker_compose_mode) }}"
+  loop: "{{ docker_compose_files }}"
+  loop_control:
+    label: "{{ __file.src | ansible.builtin.mandatory }}"
+    loop_var: __file
+
+- name: Copy template files.
+  ansible.builtin.template:
+    src: "{{ __template.src | ansible.builtin.mandatory }}"
+    dest: "{{ docker_compose_root }}/{{ __template.dest | ansible.builtin.mandatory }}"
+    owner: "{{ __template.owner | default(docker_compose_owner) }}"
+    group: "{{ __template.group | default(docker_compose_group) }}"
+    mode: "{{ __template.mode | default(docker_compose_mode) }}"
+  loop: "{{ docker_compose_templates }}"
+  loop_control:
+    label: "{{ __template.src | ansible.builtin.mandatory }}"
+    loop_var: __template

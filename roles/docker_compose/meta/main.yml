@@ -1,0 +1,35 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: docker_compose
+  author: Lorenzo Calisti
+  description: Deploy a Docker compose stack on Linux.
+  license: MIT
+  min_ansible_version: "2.1"
+  platforms:
+    - name: Alpine
+      versions:
+        - all
+    - name: ArchLinux
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: EL
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+  galaxy_tags:
+    - docker
+    - compose
+    - stack
