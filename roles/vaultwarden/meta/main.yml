@@ -1,0 +1,12 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: vaultwarden
+  author: Lorenzo Calisti
+  description: Deploy vaultwarden as a Docker container.
+  license: MIT
+  min_ansible_version: "2.1"
+  galaxy_tags:
+    - vaultwarden
+    - docker

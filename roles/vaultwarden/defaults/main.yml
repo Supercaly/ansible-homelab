@@ -1,0 +1,40 @@
+---
+vaultwarden_root: "/opt/vaultwarden"
+
+vaultwarden_server_version: "latest"
+vaultwarden_backup_version: "latest"
+vaultwarden_restart: "unless-stopped"
+vaultwarden_port: 8000
+vaultwarden_timezone: "UTC"
+
+# Vaultwarden config
+vaultwarden_config: {}
+
+# Rcolne config
+vaultwarden_rclone_remote_name: "BitwardenBackup"
+
+# Backup config
+vaultwarden_remote_dir: "/BitwardenBackup"
+vaultwarden_rclone_global_flag: ""
+vaultwarden_backup_cron: "0 0 * * *"
+vaultwarden_zip_enable: true
+vaultwarden_zip_password: "WHEREISMYPASSWORD?"
+vaultwarden_zip_type: "zip"
+vaultwarden_backup_file_suffix: "%Y%m%d"
+vaultwarden_backup_keep_days: 0
+
+# Backup notification config
+vaultwarden_ping_url: ""
+vaultwarden_ping_url_curl_options: ""
+vaultwarden_ping_url_when_start: ""
+vaultwarden_ping_url_when_start_curl_options: ""
+vaultwarden_ping_url_when_success: ""
+vaultwarden_ping_url_when_success_curl_options: ""
+vaultwarden_ping_url_when_failure: ""
+vaultwarden_ping_url_when_failure_curl_options: ""
+vaultwarden_mail_smtp_enable: false
+vaultwarden_mail_smtp_variables: ""
+vaultwarden_mail_to: ""
+vaultwarden_mail_when_success: true
+vaultwarden_mail_when_failure: true
+vaultwarden_mail_force_thread: false
