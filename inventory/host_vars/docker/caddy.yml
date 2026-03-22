@@ -3,3 +3,6 @@ caddy_sites:
   - hostname: "ddns.{{ network.domain }}"
     proxies:
       - "{{ interfaces.lan.ip4.address }}:{{ ddns_port }}"
+  - hostname: "{{ vaultwarden_domain }}"
+    proxies:
+      - "{{ interfaces.lan.ip4.address }}:{{ vaultwarden_port }}"
