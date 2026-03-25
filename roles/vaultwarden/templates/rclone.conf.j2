@@ -1,0 +1,6 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+[{{ vaultwarden_rclone_remote_name }}]
+{% for key, value in vaultwarden_rclone_config | ansible.builtin.mandatory | dictsort %}
+{{ key }} = {{ value }}
+{% endfor %}

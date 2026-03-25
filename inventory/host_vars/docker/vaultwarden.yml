@@ -1,0 +1,16 @@
+---
+vaultwarden_domain: "vaultwarden.{{ network.domain }}"
+vaultwarden_port: 8001
+
+vaultwarden_root: /srv/stacks/vaultwarden
+vaultwarden_rclone_config:
+  type: local
+vaultwarden_config:
+  domain: "https://{{ vaultwarden_domain }}"
+  signups_allowed: false
+  org_creation_users: none
+  invitations_allowed: false
+  email_change_allowed: false
+  password_hints_allowed: false
+  show_password_hint: false
+  admin_token: "{{ vault_vaultwarden_admin_token }}"

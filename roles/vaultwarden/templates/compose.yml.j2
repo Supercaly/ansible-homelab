@@ -1,0 +1,31 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:{{ vaultwarden_server_version }}
+    container_name: vaultwarden
+    restart: {{ vaultwarden_restart }}
+    env_file:
+      - ".server.env"
+    environment:
+      TZ: "{{ vaultwarden_timezone }}"
+    volumes:
+      - data:/data
+    ports:
+      - "{{ vaultwarden_port }}:80"
+
+  backup:
+      image: ttionya/vaultwarden-backup:{{ vaultwarden_backup_version }}
+      container_name: vaultwarden-backup
+      restart: {{ vaultwarden_restart }}
+      env_file:
+        - ".backup.env"
+      volumes:
+        - "data:/bitwarden/data"
+        - "./rclone:/config/rclone"
+        # TODO: This volume is used only for local backups. Remove this when using other types of remotes.
+        - "backup:{{ vaultwarden_remote_dir }}"
+
+volumes:
+  data:
+  backup:

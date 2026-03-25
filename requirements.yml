@@ -1,7 +1,11 @@
 ---
+roles:
+  - name: geerlingguy.docker
+
 collections:
-  - ansible.posix
-  - ansible.utils
-  - community.general
-  - community.proxmox
-  - grafana.grafana
+  - name: ansible.posix
+  - name: ansible.utils
+  - name: community.docker
+  - name: community.general
+  - name: community.proxmox
+  - name: grafana.grafana

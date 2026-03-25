@@ -1,0 +1,10 @@
+---
+ddns_root: /srv/stacks/ddns
+ddns_port: 8000
+ddns_config:
+  settings:
+    - provider: "{{ vault_ddns_provider }}"
+      domain: "{{ vault_ddns_domain }}"
+      username: "{{ vault_ddns_username }}"
+      password: "{{ vault_ddns_password }}"
+      ip_version: "ipv4"

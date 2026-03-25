@@ -1,0 +1,17 @@
+---
+- name: Deploy vaultwarden Docker Compose stack.
+  ansible.builtin.import_role:
+    name: roles/docker_compose
+  vars:
+    docker_compose_root: "{{ vaultwarden_root }}"
+    docker_compose_subdirs:
+      - path: rclone
+    docker_compose_templates:
+      - src: compose.yml.j2
+        dest: compose.yml
+      - src: server.env.j2
+        dest: .server.env
+      - src: backup.env.j2
+        dest: .backup.env
+      - src: rclone.conf.j2
+        dest: rclone/rclone.conf
