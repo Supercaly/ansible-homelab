@@ -32,7 +32,7 @@ influxdb2_repo_url: "https://repos.influxdata.com"
 
 # APT-related variables
 influxdb2_apt_name: "InfluxDB"
-influxdb2_apt_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'armhf' if ansible_architecture == 'armv7l' else 'amd64' }}"
+influxdb2_apt_arch: "{{ 'arm64' if ansible_facts.architecture == 'aarch64' else 'armhf' if ansible_facts.architecture == 'armv7l' else 'amd64' }}"
 influxdb2_apt_components: "main"
 influxdb2_apt_suites: "stable"
 influxdb2_apt_uri: "{{ influxdb2_repo_url }}/debian"
