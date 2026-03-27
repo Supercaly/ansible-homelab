@@ -1,4 +1,16 @@
 ---
+- name: Gather fact for all hosts.
+  hosts: all
+  gather_facts: false
+  become: true
+  tags: always
+  tasks:
+    - name: Gather fact for host that do not have disable_fact_gathering=true.
+      when: >-
+        disable_fact_gathering is not defined or
+        disable_fact_gathering is defined and not disable_fact_gathering | bool
+      ansible.builtin.setup:
+
 - name: Import Proxmox configuration playbook.
   ansible.builtin.import_playbook: proxmox.yml
 
@@ -8,6 +20,7 @@
 - name: Configure dns server.
   hosts: dns
   become: true
+  gather_facts: false
   roles:
     - role: roles/adguardhome
       tags: dns
@@ -15,6 +28,7 @@
 - name: Configure reverse proxy.
   hosts: caddy
   become: true
+  gather_facts: false
   tags: caddy
   pre_tasks:
     - name: Generate 'caddy_site' variable from dynamic services.
@@ -34,6 +48,7 @@
 - name: Services hosted on Docker.
   hosts: docker
   become: true
+  gather_facts: false
   roles:
     - role: geerlingguy.docker
       tags: docker
@@ -45,6 +60,7 @@
 - name: Configure Grafana.
   hosts: grafana
   become: true
+  gather_facts: false
   roles:
     - role: grafana.grafana.grafana
       tags: grafana
@@ -52,6 +68,7 @@
 - name: Configure InfluxDB.
   hosts: influxdb
   become: true
+  gather_facts: false
   roles:
     - role: roles/influxdb2
       tags: influxdb
@@ -59,6 +76,7 @@
 - name: Configure NTFY.
   hosts: ntfy
   become: true
+  gather_facts: false
   roles:
     - role: roles/ntfy
       tags: ntfy

@@ -1,9 +1,10 @@
-# -- IDE ---
+# --- IDE ---
 .ropeproject
 .vscode
 
 # --- Ansible ---
 .ansible
+.ansible_facts_cache
 
 # --- Ansible secrets ---
 .vault-password
