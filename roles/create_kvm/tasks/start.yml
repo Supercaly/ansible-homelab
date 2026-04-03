@@ -1,0 +1,20 @@
+---
+- name: Ensure KVM is running.
+  module_defaults:
+    community.proxmox.proxmox_kvm:
+      node: "{{ proxmox_node | ansible.builtin.mandatory }}"
+      api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
+      api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+      vmid: "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+      state: started
+  block:
+    - name: Ensure KVM is running via password.
+      community.proxmox.proxmox_kvm: # noqa: args[module]
+        api_password: "{{ proxmox_api_password }}"
+      when: "__proxmox_is_password_setup"
+
+    - name: Ensure KVM is running via token.
+      community.proxmox.proxmox_kvm: # noqa: args[module]
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+      when: "__proxmox_is_token_setup"
