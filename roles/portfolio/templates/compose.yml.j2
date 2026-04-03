@@ -1,0 +1,13 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+services:
+  portfolio:
+    build:
+      context: "."
+    container_name: "portfolio"
+    restart: "{{ portfolio_restart }}"
+    ports:
+      - "{{ portfolio_port }}:3000"
+    environment:
+      NODE_ENV: "production"
+      TZ: "{{ portfolio_timezone }}"

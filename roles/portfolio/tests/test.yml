@@ -1,0 +1,6 @@
+---
+- name: Test portfolio role.
+  hosts: localhost
+  remote_user: root
+  roles:
+    - portfolio

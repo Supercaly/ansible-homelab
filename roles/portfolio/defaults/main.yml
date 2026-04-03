@@ -1,0 +1,9 @@
+---
+portfolio_root: "/opt/portfolio"
+
+portfolio_restart: "unless-stopped"
+portfolio_port: 8000
+portfolio_timezone: "UTC"
+
+portfolio_repo: "https://github.com/Supercaly/portfolio-svelte"
+portfolio_repo_branch: "main"
