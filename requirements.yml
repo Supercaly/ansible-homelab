@@ -1,6 +1,7 @@
 ---
 roles:
   - name: geerlingguy.docker
+  - name: lae.proxmox
 
 collections:
   - name: ansible.posix
