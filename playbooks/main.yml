@@ -41,6 +41,8 @@
       tags: ddns
     - role: roles/vaultwarden
       tags: vaultwarden
+    - role: roles/portfolio
+      tags: portfolio
 
 - name: Configure Grafana.
   hosts: grafana

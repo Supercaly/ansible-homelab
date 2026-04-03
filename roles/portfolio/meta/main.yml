@@ -1,0 +1,12 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: ddns
+  author: Lorenzo Calisti
+  description: Deploy my personal portfolio site as a Docker Compose stack.
+  license: MIT
+  min_ansible_version: "2.1"
+  galaxy_tags:
+    - portfolio
+    - docker
