@@ -9,7 +9,7 @@ ntfy_group: "ntfy"
 
 ntfy_repo_url: "https://archive.heckel.io"
 
-ntfy_apt_arch: "{{ 'arm64' if ansible_facts.architecture == 'aarch64' else 'armhf' if ansible_facts.architecture == 'armv7l' else 'amd64' }}"
+ntfy_apt_arch: "{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'armhf' if ansible_facts['architecture'] == 'armv7l' else 'amd64' }}"
 ntfy_apt_components: "main"
 ntfy_apt_suites: "debian"
 ntfy_apt_gpg_key: "{{ ntfy_repo_url }}/apt/pubkey.txt"

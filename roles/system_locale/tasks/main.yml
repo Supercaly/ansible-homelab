@@ -4,8 +4,8 @@
   vars:
     params:
       files:
-        - "{{ ansible_facts.distribution }}.yml"
-        - "{{ ansible_facts.os_family }}.yml"
+        - "{{ ansible_facts['distribution'] }}.yml"
+        - "{{ ansible_facts['os_family'] }}.yml"
         - main.yml
       paths:
         - "vars"
@@ -16,7 +16,7 @@
     state: present
 
 - name: Generate locale.
-  when: ansible_facts.os_family == 'Debian'
+  when: ansible_facts['os_family'] == 'Debian'
   community.general.locale_gen:
     name: "{{ system_locale_lang }}"
 

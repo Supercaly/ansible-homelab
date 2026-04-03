@@ -6,7 +6,7 @@
     name: "{{ caddy_requirements }}"
 
 - name: Perform distro-specific setup.
-  ansible.builtin.include_tasks: "setup-{{ ansible_facts.os_family }}.yml"
+  ansible.builtin.include_tasks: "setup-{{ ansible_facts['os_family'] }}.yml"
 
 - name: Install Caddy packages.
   ansible.builtin.package:

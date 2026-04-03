@@ -5,7 +5,7 @@
   tags: linux
   roles:
     - role: roles/system_locale
-      when: ansible_facts.distribution != 'Alpine'
+      when: ansible_facts['distribution'] != 'Alpine'
       tags: locale
     - role: roles/system_update
       tags: update
