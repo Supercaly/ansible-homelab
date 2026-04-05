@@ -9,5 +9,3 @@ caddy_local_certs: true
 # belong to a specific service host.
 caddy_sites:
   - hostname: "{{ network.domain }}"
-    public: true
-    www_redir: true

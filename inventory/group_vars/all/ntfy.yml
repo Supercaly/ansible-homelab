@@ -1,3 +1,0 @@
----
-ntfy_domain: "ntfy.{{ network.domain }}"
-ntfy_port: 8081

@@ -18,7 +18,7 @@
   ansible.builtin.import_playbook: linux.yml
 
 - name: Configure dns server.
-  hosts: dns
+  hosts: mercury-dns
   become: true
   gather_facts: false
   roles:
@@ -26,7 +26,7 @@
       tags: dns
 
 - name: Configure reverse proxy.
-  hosts: caddy
+  hosts: mars-proxy
   become: true
   gather_facts: false
   tags: caddy
@@ -46,7 +46,7 @@
     - role: roles/caddy
 
 - name: Services hosted on Docker.
-  hosts: docker
+  hosts: earth-docker
   become: true
   gather_facts: false
   roles:
