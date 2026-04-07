@@ -1,4 +1,7 @@
 ---
+grafana_dashboard_domain: "grafana.{{ network.domain }}"
+grafana_dashboard_port: 3000
+
 # Configure Grafana https://github.com/grafana/grafana-ansible-collection/tree/main/roles/grafana
 # Grafana init from https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/
 grafana_ini:

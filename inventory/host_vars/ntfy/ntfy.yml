@@ -1,4 +1,7 @@
 ---
+ntfy_domain: "ntfy.{{ network.domain }}"
+ntfy_port: 8081
+
 ntfy_config:
   base-url: "https://{{ ntfy_domain }}"
   behind-proxy: true

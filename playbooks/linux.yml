@@ -1,6 +1,6 @@
 ---
 - name: Configure Linux systems.
-  hosts: all:!pvenodes
+  hosts: all:!hypervisor
   become: true
   gather_facts: false
   tags: linux

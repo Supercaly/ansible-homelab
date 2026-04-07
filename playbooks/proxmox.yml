@@ -1,6 +1,6 @@
 ---
 - name: Configure Proxmox PVEs.
-  hosts: pvenodes
+  hosts: hypervisor
   become: true
   roles:
     - role: lae.proxmox
@@ -13,7 +13,7 @@
         - pve
 
 - name: Create Proxmox LXCs.
-  hosts: pvenodes
+  hosts: hypervisor
   become: true
   gather_facts: false
   tags:

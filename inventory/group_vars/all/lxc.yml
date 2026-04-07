@@ -1,3 +1,5 @@
 ---
 lxc_default_password: "{{ vault_lxc_default_password }}"
 lxc_default_pubkey: "{{ lookup('ansible.builtin.file', '~/.ssh/id_rsa.pub') }}"
+lxc_default_template: "debian-12-standard_12.12-1_amd64.tar.zst"
+lxc_default_template_timeout: 60
