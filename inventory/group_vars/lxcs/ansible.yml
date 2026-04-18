@@ -1,4 +1,4 @@
-ansible_user: "root"
+ansible_user: "ansible"
 # Automatically accept new SSH host keys if they are not present.
 # This argument is used sporadically to ensure an high level of security
 # without complicating the setup of new hosts.

@@ -4,6 +4,7 @@ proxmox_lxc:
   vmid: 200
   hostname: "dns"
   password: "{{ lxc_default_password }}"
+  hookscript: "{{ lxc_default_hookscript }}"
   template:
     name: "debian-12-standard_12.7-1_amd64.tar.zst"
     timeout: 180
