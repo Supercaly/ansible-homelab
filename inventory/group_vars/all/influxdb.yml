@@ -1,3 +1,0 @@
----
-influxdb_domain: "influxdb.{{ network.domain }}"
-influxdb_port: 8086

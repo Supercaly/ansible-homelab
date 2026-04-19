@@ -3,6 +3,7 @@ vaultwarden_domain: "vaultwarden.{{ network.domain }}"
 vaultwarden_port: 8001
 
 vaultwarden_root: /srv/stacks/vaultwarden
+# TODO: Configure remote rclone for backups
 vaultwarden_rclone_config:
   type: local
 vaultwarden_config:

@@ -1,13 +1,14 @@
 ---
-proxmox_host: node
+proxmox_host: vega
 proxmox_lxc:
-  vmid: 103
-  hostname: "influxdb"
+  vmid: 1041
+  hostname: "{{ inventory_hostname }}"
   password: "{{ lxc_default_password }}"
   hookscript: "{{ lxc_default_hookscript }}"
+  pubkey: "{{ lxc_default_pubkey }}"
   template:
-    name: "debian-12-standard_12.7-1_amd64.tar.zst"
-    timeout: 180
+    name: "{{ lxc_default_template }}"
+    timeout: "{{ lxc_default_template_timeout }}"
   disk_volume:
     storage: "local-lvm"
     size: 8
@@ -23,9 +24,10 @@ proxmox_lxc:
       }},bridge=vmbr0
   nameserver: "{{ dns.servers | join(',') }}"
   searchdomain: "{{ dns.search_domains | join(',') }}"
+  onboot: true
+  startup: "order=101"
   features:
     - "keyctl=1"
     - "nesting=1"
-  pubkey: "{{ lxc_default_pubkey }}"
   tags:
     - "database"

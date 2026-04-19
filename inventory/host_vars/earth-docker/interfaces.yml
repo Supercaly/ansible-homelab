@@ -3,5 +3,5 @@ interfaces:
   lan:
     device: "eth0"
     ip4:
-      address: "{{ network.ip4 | ansible.utils.nthhost(122) }}"
+      address: "{{ network.ip4 | ansible.utils.nthhost(30) }}"
       prefix: "{{ network.ip4 | ansible.utils.ipaddr('prefix') }}"
