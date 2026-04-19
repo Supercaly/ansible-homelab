@@ -3,8 +3,11 @@
 # Playbooks violations
 playbooks/linux.yml role-name[path]
 playbooks/main.yml role-name[path]
+playbooks/monitoring.yml role-name[path]
+playbooks/networking.yml role-name[path]
 playbooks/proxmox.yml var-naming[no-role-prefix]
 playbooks/proxmox.yml role-name[path]
+playbooks/services.yml role-name[path]
 
 # Proxmox-related violations
 roles/create_lxc/defaults/main.yml var-naming[no-role-prefix]

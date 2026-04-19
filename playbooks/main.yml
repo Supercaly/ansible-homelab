@@ -25,68 +25,11 @@
 - name: Import Linux configuration playbook.
   ansible.builtin.import_playbook: linux.yml
 
-- name: Configure dns server.
-  hosts: mercury-dns
-  become: true
-  gather_facts: false
-  roles:
-    - role: roles/adguardhome
-      tags: dns
+- name: Import Networking services playbook.
+  ansible.builtin.import_playbook: networking.yml
 
-- name: Configure reverse proxy.
-  hosts: mars-proxy
-  become: true
-  gather_facts: false
-  tags: caddy
-  pre_tasks:
-    - name: Generate 'caddy_site' variable from dynamic services.
-      ansible.builtin.set_fact:
-        caddy_sites: >-
-          {{
-            groups['all'] |
-            map('ansible.builtin.extract', hostvars) |
-            selectattr('caddy_sites', 'defined') |
-            map(attribute='caddy_sites') |
-            list |
-            flatten
-          }}
-  roles:
-    - role: roles/caddy
+- name: Import Monitoring services playbook.
+  ansible.builtin.import_playbook: monitoring.yml
 
-- name: Services hosted on Docker.
-  hosts: earth-docker
-  become: true
-  gather_facts: false
-  roles:
-    - role: geerlingguy.docker
-      tags: docker
-    - role: roles/ddns
-      tags: ddns
-    - role: roles/vaultwarden
-      tags: vaultwarden
-    - role: roles/portfolio
-      tags: portfolio
-
-- name: Configure Grafana.
-  hosts: grafana
-  become: true
-  gather_facts: false
-  roles:
-    - role: grafana.grafana.grafana
-      tags: grafana
-
-- name: Configure InfluxDB.
-  hosts: influxdb
-  become: true
-  gather_facts: false
-  roles:
-    - role: roles/influxdb2
-      tags: influxdb
-
-- name: Configure NTFY.
-  hosts: ntfy
-  become: true
-  gather_facts: false
-  roles:
-    - role: roles/ntfy
-      tags: ntfy
+- name: Import other services playbook.
+  ansible.builtin.import_playbook: services.yml
