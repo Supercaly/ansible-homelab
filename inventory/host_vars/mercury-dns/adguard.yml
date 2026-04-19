@@ -1,0 +1,34 @@
+---
+adguardhome_config:
+  http:
+    address: "0.0.0.0:3000"
+  users: "{{ vault_adguard_users }}"
+  language: "en"
+  dns:
+    upstream_dns:
+      - "https://dns10.quad9.net/dns-query"
+    fallback_dns:
+      - "1.1.1.1"
+  dhcp:
+    enabled: true
+    interface_name: "{{ interfaces.lan.device }}"
+    local_domain_name: >-
+      {{
+        dns.search_domains |
+        ansible.builtin.first |
+        ansible.builtin.mandatory
+      }}
+    dhcpv4:
+      gateway_ip: "{{ network.gw4 }}"
+      subnet_mask: "{{ network.ip4 | ansible.utils.ipaddr('netmask') }}"
+      range_start: "{{ network.ip4 | ansible.utils.nthhost(150) }}"
+      range_end: "{{ network.ip4 | ansible.utils.nthhost(250) }}"
+      lease_duration: 86400
+  filtering:
+    rewrites:
+      - answer: "192.168.1.21"
+        domain: "{{ network.domain }}"
+        enabled: true
+      - answer: "192.168.1.21"
+        domain: "*.{{ network.domain }}"
+        enabled: true

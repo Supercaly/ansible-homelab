@@ -1,32 +1,32 @@
 ---
 - name: Gather facts for all physical hosts.
-  hosts: all:!lxcs
+  hosts: all:!guest
   gather_facts: false
   become: true
   tags: always
   tasks:
     - name: Gather facts for physical hosts that do not have disable_fact_gathering=true.
-      when: not disable_fact_gathering | default(false) | bool
+      when: not (disable_fact_gathering | default(false) | bool)
       ansible.builtin.setup:
 
 - name: Import Proxmox configuration playbook.
   ansible.builtin.import_playbook: proxmox.yml
 
 - name: Gather facts for all virtual hosts.
-  hosts: lxcs
+  hosts: guest
   gather_facts: false
   become: true
   tags: always
   tasks:
     - name: Gather facts for virtual hosts that do not have disable_fact_gathering=true.
-      when: not disable_fact_gathering | default(false) | bool
+      when: not (disable_fact_gathering | default(false) | bool)
       ansible.builtin.setup:
 
 - name: Import Linux configuration playbook.
   ansible.builtin.import_playbook: linux.yml
 
 - name: Configure dns server.
-  hosts: dns
+  hosts: mercury-dns
   become: true
   gather_facts: false
   roles:
@@ -34,7 +34,7 @@
       tags: dns
 
 - name: Configure reverse proxy.
-  hosts: caddy
+  hosts: mars-proxy
   become: true
   gather_facts: false
   tags: caddy
@@ -54,7 +54,7 @@
     - role: roles/caddy
 
 - name: Services hosted on Docker.
-  hosts: docker
+  hosts: earth-docker
   become: true
   gather_facts: false
   roles:
