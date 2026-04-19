@@ -1,0 +1,24 @@
+---
+- name: Configure Grafana.
+  hosts: grafana
+  become: true
+  gather_facts: false
+  roles:
+    - role: grafana.grafana.grafana
+      tags: grafana
+
+- name: Configure InfluxDB.
+  hosts: influxdb
+  become: true
+  gather_facts: false
+  roles:
+    - role: roles/influxdb2
+      tags: influxdb
+
+- name: Configure NTFY.
+  hosts: ntfy
+  become: true
+  gather_facts: false
+  roles:
+    - role: roles/ntfy
+      tags: ntfy
