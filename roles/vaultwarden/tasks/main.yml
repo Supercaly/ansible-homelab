@@ -1,7 +1,7 @@
 ---
 - name: Deploy vaultwarden Docker Compose stack.
   ansible.builtin.import_role:
-    name: roles/docker_compose
+    name: docker_compose
   vars:
     docker_compose_root: "{{ vaultwarden_root }}"
     docker_compose_subdirs:

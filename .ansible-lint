@@ -1,5 +1,6 @@
 exclude_paths:
-  - inventory/*.vault.yml
+  - .ansible
+  - .github
 
 enable_list:
   - loop-var-prefix

@@ -12,7 +12,7 @@
   become: true
   gather_facts: false
   roles:
-    - role: roles/influxdb2
+    - role: influxdb2
       tags: influxdb
 
 - name: Configure NTFY.
@@ -20,5 +20,5 @@
   become: true
   gather_facts: false
   roles:
-    - role: roles/ntfy
+    - role: ntfy
       tags: ntfy
