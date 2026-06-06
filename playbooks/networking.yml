@@ -1,0 +1,28 @@
+---
+- name: Configure dns server.
+  hosts: mercury-dns
+  become: true
+  gather_facts: false
+  roles:
+    - role: roles/adguardhome
+      tags: dns
+
+- name: Configure reverse proxy.
+  hosts: mars-proxy
+  become: true
+  gather_facts: false
+  tags: caddy
+  pre_tasks:
+    - name: Generate 'caddy_site' variable from dynamic services.
+      ansible.builtin.set_fact:
+        caddy_sites: >-
+          {{
+            groups['all'] |
+            map('ansible.builtin.extract', hostvars) |
+            selectattr('caddy_sites', 'defined') |
+            map(attribute='caddy_sites') |
+            list |
+            flatten
+          }}
+  roles:
+    - role: roles/caddy

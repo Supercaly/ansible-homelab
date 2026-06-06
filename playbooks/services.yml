@@ -1,0 +1,14 @@
+---
+- name: Configure services hosted on Docker.
+  hosts: earth-docker
+  become: true
+  gather_facts: false
+  roles:
+    - role: geerlingguy.docker
+      tags: docker
+    - role: roles/ddns
+      tags: ddns
+    - role: roles/vaultwarden
+      tags: vaultwarden
+    - role: roles/portfolio
+      tags: portfolio
