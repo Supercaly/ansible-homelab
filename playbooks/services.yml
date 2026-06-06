@@ -6,9 +6,9 @@
   roles:
     - role: geerlingguy.docker
       tags: docker
-    - role: roles/ddns
+    - role: ddns
       tags: ddns
-    - role: roles/vaultwarden
+    - role: vaultwarden
       tags: vaultwarden
-    - role: roles/portfolio
+    - role: portfolio
       tags: portfolio

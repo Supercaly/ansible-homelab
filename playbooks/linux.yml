@@ -5,14 +5,14 @@
   gather_facts: false
   tags: linux
   roles:
-    - role: roles/system_locale
+    - role: system_locale
       when: ansible_facts['distribution'] != 'Alpine'
       tags: locale
-    - role: roles/system_update
+    - role: system_update
       tags: update
-    - role: roles/system_users
+    - role: system_users
       tags: users
-    - role: roles/ssh
+    - role: ssh
       tags: ssh
-    - role: roles/motd
+    - role: motd
       tags: motd
