@@ -1,0 +1,24 @@
+---
+- name: Set USB devices of KVM.
+  when: >-
+    (
+      __kvm_current_config[__usb.key] |
+      default('')
+    ) != __usb.value
+  ansible.builtin.command:
+    argv:
+      - qm
+      - set
+      - "{{ proxmox_kvm.vmid | ansible.builtin.mandatory }}"
+      - "--{{ __usb.key }}"
+      - "{{ __usb.value }}"
+  loop: >-
+    {{
+      proxmox_kvm.usb |
+      default({}) |
+      ansible.builtin.dict2items
+    }}
+  loop_control:
+    label: "{{ __usb.key }}={{ __usb.value }}"
+    loop_var: __usb
+  changed_when: true
