@@ -5,11 +5,11 @@
       node: "{{ proxmox_node | ansible.builtin.mandatory }}"
       api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
       api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
+      validate_certs: "{{ proxmox_validate_certs | default(omit) }}"
       template: "{{ proxmox_lxc.template.name | ansible.builtin.mandatory }}"
       storage: "{{ proxmox_lxc.template.storage | default(omit) }}"
       content_type: "{{ proxmox_lxc.template.content_type | default(omit) }}"
       timeout: "{{ proxmox_lxc.template.timeout | default(omit) }}"
-      validate_certs: "{{ proxmox_validate_certs | default(omit) }}"
       state: present
   block:
     - name: Ensure LXC template is present via password.

@@ -9,7 +9,7 @@
       when: not (disable_fact_gathering | default(false) | bool)
       ansible.builtin.setup:
 
-- name: Configure Proxmox hosts and LXCs.
+- name: Configure Proxmox hosts, KVMs and LXCs.
   ansible.builtin.import_playbook: proxmox.yml
 
 - name: Gather facts for all virtual hosts.

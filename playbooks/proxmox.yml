@@ -42,11 +42,51 @@
         label: "{{ guest.inventory_hostname }}"
         loop_var: guest
 
-    - name: Wait for SSH to become accessible.
+    - name: Wait for LXCs to become accessible over SSH.
       delegate_to: "{{ guest.inventory_hostname }}"
       ansible.builtin.wait_for_connection:
         timeout: 60
+        delay: 10
       loop: "{{ lxc_guests }}"
+      loop_control:
+        label: "{{ guest.inventory_hostname }}"
+        loop_var: guest
+
+- name: Create Proxmox KVMs.
+  hosts: hypervisor
+  become: true
+  gather_facts: false
+  tags:
+    - proxmox
+    - kvm
+  vars:
+    # Select all hosts with `proxmox_kvm` defined and `proxmox_host`
+    # pointing to the current host.
+    kvm_guests: >-
+      {{
+        groups['all'] |
+        map('ansible.builtin.extract', hostvars) |
+        selectattr('proxmox_kvm', 'defined') |
+        selectattr('proxmox_host', 'defined') |
+        selectattr('proxmox_host', 'equalto', inventory_hostname)
+      }}
+  tasks:
+    - name: Create KVM guests.
+      ansible.builtin.include_role:
+        name: create_kvm
+      vars:
+        proxmox_kvm: "{{ guest.proxmox_kvm }}"
+      loop: "{{ kvm_guests }}"
+      loop_control:
+        label: "{{ guest.inventory_hostname }}"
+        loop_var: guest
+
+    - name: Wait for KVMs to become accessible over SSH.
+      delegate_to: "{{ guest.inventory_hostname }}"
+      ansible.builtin.wait_for_connection:
+        timeout: 600
+        delay: 30
+      loop: "{{ kvm_guests }}"
       loop_control:
         label: "{{ guest.inventory_hostname }}"
         loop_var: guest
