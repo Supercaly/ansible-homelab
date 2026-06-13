@@ -8,6 +8,7 @@
           api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
           api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
           vmid: "{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}"
+          validate_certs: "{{ proxmox_validate_certs | default(omit) }}"
           config: current
       block:
         - name: Retrieve current LXC config via password.

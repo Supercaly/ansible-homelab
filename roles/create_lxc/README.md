@@ -45,6 +45,7 @@ These variables define how Ansible authenticates and connects to the Proxmox API
 | `proxmox_node` | Yes | string | | Proxmox host node. |
 | `proxmox_api_host` | | string | `"localhost"` | Address of the Proxmox API host. |
 | `proxmox_api_user` | Yes | string | | Proxmox API user. |
+| `proxmox_validate_certs` | | bool | | Validate the TLS certificates used for the connection to the Proxmox VE API.|
 
 For authentication you must use either password-based authentication or API tokens, not both.
 

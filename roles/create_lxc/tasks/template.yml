@@ -9,6 +9,7 @@
       storage: "{{ proxmox_lxc.template.storage | default(omit) }}"
       content_type: "{{ proxmox_lxc.template.content_type | default(omit) }}"
       timeout: "{{ proxmox_lxc.template.timeout | default(omit) }}"
+      validate_certs: "{{ proxmox_validate_certs | default(omit) }}"
       state: present
   block:
     - name: Ensure LXC template is present via password.
