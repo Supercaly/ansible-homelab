@@ -7,6 +7,7 @@
       api_user: "{{ proxmox_api_user }}"
       vmid: "{{ proxmox_lxc.vmid }}"
       hostname: "{{ proxmox_lxc.hostname }}"
+      validate_certs: "{{ proxmox_validate_certs | default(omit) }}"
       state: started
   block:
     - name: Ensure LXC is running via password.

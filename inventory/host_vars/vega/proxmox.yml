@@ -4,6 +4,10 @@ proxmox_api_user: "{{ vault_proxmox_api_user }}"
 proxmox_api_token_id: "{{ vault_proxmox_api_token_id }}"
 proxmox_api_token_secret: "{{ vault_proxmox_api_token_secret }}"
 
+# Disable SSL certificate validation to avoid problems
+# with Proxmox API connection.
+proxmox_validate_certs: false
+
 pve_group: # No cluster.
 pve_fqdn: "{{ inventory_hostname }}.{{ network.domain | ansible.builtin.mandatory }}"
 pve_groups:
