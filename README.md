@@ -25,70 +25,26 @@ Ansible does not perform OS installation on Proxmox hosts or bare-metal machines
 Clone the repository locally:
 
 ```bash
-$ git clone https://github.com/Supercaly/ansible-homelab.git
-$ cd ansible-homelab
+git clone https://github.com/Supercaly/ansible-homelab.git
+cd ansible-homelab
 ```
 
 Install the required Ansible packages:
 
 ```bash
-$ ansible-galaxy install -r requirements.yml
+ansible-galaxy install -r requirements.yml
 ```
 
 Run the main playbook:
 
 ```bash
-$ ansible-playbook playbooks/main.yml
+ansible-playbook playbooks/main.yml
 ```
 
 This playbook acts as the entry point and orchestrates the configuration of the entire homelab.
 
-## Ansible Vault password
+## Additional Documentation
 
-This repository uses Ansible Vault to manage sensitive data such as passwords, tokens, and credentials.
-
-Ansible is configured to automatically read the Vault password from a file when running playbooks.
-This project expects a local file named `.vault-password` containing the Vault password in plain-text.
-
-## Controlling execution with tags and hosts
-
-Playbooks and roles in this repository are organized using Ansible *tags* to control what gets executed, and inventory *limits* to control where it runs.
-
-This allows you to safely target specific components, services, or machines without applying changes to the entire homelab.
-
-To print a list of available tags and hosts run:
-
-```bash
-$ ansiple-playbook playbooks/main.yml --list-tags --list-hosts
-```
-
-## Password-protected SSH keys
-
-If your SSH private key is protected by a passphrase (recommended), Ansible will normally ask for that passphrase every time it opens a new SSH connection.
-Since Ansible often opens many SSH connections during a run, this quickly becomes inconvenient.
-
-To avoid repeated prompts, you should use `ssh-agent`, which securely caches your decrypted SSH key in memory for the duration of your session.
-
-To set it up:
-
-1. Start the SSH agent (if not already running):
-
-```bash
-$ ssh-agent -s
-```
-
-2. Add your private key to the agent (you will be prompted once for the passphrase):
-
-```bash
-$ ssh-add ~/.ssh/id_rsa
-```
-
-3. Verify that the key is loaded:
-
-```bash
-ssh-add -l
-```
-
-As long as the agent is running and your terminal session remains open, Ansible will be able to connect to all hosts without asking for the passphrase again.
-
-> Note: You only need to run ssh-add once per session. Closing the terminal or stopping the ssh-agent will require you to add the key again.
+- [Ansible Vault setup](docs/vault-password.md)
+- [SSH Key Setup](docs/protected-ssh-keys.md)
+- [Controlling playbooks execution](docs/playbook-execution.md)
