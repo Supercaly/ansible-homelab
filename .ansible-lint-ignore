@@ -5,3 +5,4 @@
 # the roles' naming conventions.
 playbooks/proxmox.yml var-naming[no-role-prefix]
 roles/create_lxc/defaults/main.yml var-naming[no-role-prefix]
+roles/create_kvm/defaults/main.yml var-naming[no-role-prefix]

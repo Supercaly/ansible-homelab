@@ -84,8 +84,8 @@
           node: "{{ proxmox_node | ansible.builtin.mandatory }}"
           api_host: "{{ proxmox_api_host | ansible.builtin.mandatory }}"
           api_user: "{{ proxmox_api_user | ansible.builtin.mandatory }}"
-          vmid: "{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}"
           validate_certs: "{{ proxmox_validate_certs | default(omit) }}"
+          vmid: "{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}"
       block:
         - name: Retrieve LXC status via password.
           community.proxmox.proxmox_vm_info: # noqa: args[module]
