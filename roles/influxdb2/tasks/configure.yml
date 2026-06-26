@@ -8,7 +8,7 @@
   until: __influxdb2_ping_result.rc == 0
   changed_when: false
 
-- name: Setup InfluxDB default username, password, org, buket.
+- name: Setup InfluxDB default username, password, org, bucket.
   ansible.builtin.command: >-
     influx setup
     --host "{{ influxdb2_host }}"

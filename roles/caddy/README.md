@@ -1,6 +1,6 @@
 # Ansible Role: caddy
 
-An Ansible Role that installs and configure the [Caddy](https://caddyserver.com/) web server as a reverse proxy on Linux.
+An Ansible Role that installs and configures the [Caddy](https://caddyserver.com/) web server as a reverse proxy on Linux.
 
 The role manages:
 

@@ -10,7 +10,7 @@ vaultwarden_timezone: "UTC"
 # Vaultwarden config
 vaultwarden_config: {}
 
-# Rcolne config
+# Rclone config
 vaultwarden_rclone_remote_name: "BitwardenBackup"
 
 # Backup config

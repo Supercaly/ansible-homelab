@@ -26,7 +26,7 @@ system_users_default_shell: "/bin/bash"
 
 # Includedir command for sudoers file.
 system_users_sudo_includedir: "@includedir /etc/sudoers.d"
-# Command used to validate the sodoers file.
+# Command used to validate the sudoers file.
 system_users_sudo_validate_cmd: "/usr/sbin/visudo -cf %s"
 system_users_sudo_mode: "0440"
 
