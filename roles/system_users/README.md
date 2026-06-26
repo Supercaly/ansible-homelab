@@ -87,4 +87,4 @@ MIT
 
 ## Author Information
 
-This role was created in 2025 by Lorenzo Calsti.
+This role was created in 2025 by Lorenzo Calisti.

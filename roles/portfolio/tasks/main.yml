@@ -1,5 +1,5 @@
 ---
-- name: Clone git reporitory locally.
+- name: Clone git repository locally.
   ansible.builtin.git:
     repo: "{{ portfolio_repo }}"
     dest: "{{ portfolio_root }}"

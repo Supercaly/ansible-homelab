@@ -1,6 +1,6 @@
 # Ansible Role: influxdb2
 
-An Ansible Role that installs and configure [InfluxDB 2](https://influxdata.com) on Linux.
+An Ansible Role that installs and configures [InfluxDB 2](https://influxdata.com) on Linux.
 
 The role manages:
 
@@ -57,4 +57,4 @@ MIT
 
 ## Author Information
 
-This role was created in 2025 by Lorenzo Calsti.
+This role was created in 2025 by Lorenzo Calisti.

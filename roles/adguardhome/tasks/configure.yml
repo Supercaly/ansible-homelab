@@ -1,6 +1,6 @@
 ---
 # Before configuring AdGuardHome we need to stop the running
-# service, otherwise it will owerwrite the values we set.
+# service, otherwise it will overwrite the values we set.
 - name: Stop AdGuardHome service before writing config file.
   ansible.builtin.service:
     name: "{{ adguardhome_service_name }}"

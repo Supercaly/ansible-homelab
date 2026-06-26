@@ -18,7 +18,7 @@ influxdb2_users: []
 # Additional buckets
 # influxdb2_buckets:
 #   - name: bucket1
-#     decription: A bucket
+#     description: A bucket
 #     org: org1
 #     retention: 0
 influxdb2_buckets: []
