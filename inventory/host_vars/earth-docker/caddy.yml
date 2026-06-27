@@ -9,3 +9,6 @@ caddy_sites:
   - hostname: "lorenzo.{{ network.domain }}"
     proxies:
       - "{{ interfaces.lan.ip4.address }}:{{ portfolio_port }}"
+  - hostname: "photo.{{ network.domain }}"
+    proxies:
+      - "{{ interfaces.lan.ip4.address }}:{{ immich_port }}"

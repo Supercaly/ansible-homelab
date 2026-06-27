@@ -1,0 +1,11 @@
+---
+- name: Deploy immich Docker Compose stack.
+  ansible.builtin.import_role:
+    name: docker_compose
+  vars:
+    docker_compose_root: "{{ immich_root }}"
+    docker_compose_templates:
+      - src: compose.yml.j2
+        dest: compose.yml
+      - src: env.j2
+        dest: .env
