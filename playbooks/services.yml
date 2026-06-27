@@ -12,3 +12,5 @@
       tags: vaultwarden
     - role: portfolio
       tags: portfolio
+    - role: immich
+      tags: immich
