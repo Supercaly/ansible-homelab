@@ -3,15 +3,24 @@
   hosts: hypervisor
   become: true
   gather_facts: false
+  tags:
+    - proxmox
+    - pve
   roles:
     - role: lae.proxmox
       vars:
         # Would remove Proxmox completely.
         # https://github.com/lae/ansible-role-proxmox/issues/223
         pve_remove_old_kernels: false
-      tags:
-        - proxmox
-        - pve
+      tags: pve_system
+    - role: system_locale
+      tags: locale
+    - role: system_users
+      tags: users
+    - role: ssh
+      tags: ssh
+    - role: motd
+      tags: motd
 
 - name: Create Proxmox LXCs.
   hosts: hypervisor
