@@ -38,6 +38,6 @@
 - name: Ensure proxmox dependencies are present.
   ansible.builtin.pip:
     name:
-      - proxmoxer>=2.0
+      - proxmoxer>=2.3
       - requests
     break_system_packages: true
