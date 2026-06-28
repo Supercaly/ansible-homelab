@@ -1,0 +1,17 @@
+---
+motd_content: |
+
+  --------------------------------------------------------------------------
+                      This system is managed by Ansible
+  --------------------------------------------------------------------------
+
+  FQDN:     {{ ansible_facts['fqdn'] }}
+  Distro:   {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }} {{ ansible_facts['distribution_release'] }}
+  Virtual:  {{ 'YES (' ~ ansible_facts['virtualization_type'] ~ ')' if ansible_facts['virtualization_role'] == 'guest' else 'NO' }}
+  CPUs:     {{ ansible_facts['processor_vcpus'] }}
+  RAM:      {{ (ansible_facts['memtotal_mb'] / 1000) | round(1) }} GB
+  Timezone: {{ ansible_facts['date_time'].tz }} ({{ ansible_facts['date_time'].tz_offset }})
+  IPv4:     {{ ansible_facts['all_ipv4_addresses'] | join(', ') }}
+  IPv6:     {{ ansible_facts['all_ipv6_addresses'] | join(', ') }}
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
