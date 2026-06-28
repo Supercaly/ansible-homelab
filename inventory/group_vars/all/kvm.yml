@@ -3,4 +3,4 @@ kvm_default_template_name: "debian-13-cloudinit-template"
 kvm_default_template_vmid: 9001
 kvm_default_user: "{{ vault_kvm_default_user }}"
 kvm_default_password: "{{ vault_kvm_default_password }}"
-kvm_default_pubkey: "{{ lookup('ansible.builtin.file', '~/.ssh/id_rsa.pub') }}"
+kvm_default_pubkey: "{{ controller_ssh_pubkey }}"
