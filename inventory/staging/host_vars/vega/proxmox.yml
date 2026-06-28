@@ -10,23 +10,6 @@ proxmox_validate_certs: false
 
 pve_group: # No cluster.
 pve_fqdn: "{{ inventory_hostname }}.{{ network.domain | ansible.builtin.mandatory }}"
-pve_groups:
-  - name: admin
-    comment: System Administrators
-pve_users:
-  # User password is the same as the Linux password.
-  - name: lcalisti@pam
-    email: l.calisti96@gmail.com
-    firstname: Lorenzo
-    lastname: Calisti
-    groups:
-      - admin
-pve_acls:
-  - path: /
-    roles:
-      - Administrator
-    groups:
-      - admin
 
 pve_pcie_passthrough_enabled: true
 pve_iommu_passthrough_mode: true
