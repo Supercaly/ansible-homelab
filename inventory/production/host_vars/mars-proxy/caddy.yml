@@ -1,0 +1,10 @@
+---
+caddy_email: "djonline96@gmail.com"
+
+# Static Caddy sites.
+# These entries are defined explicitly and are not generated dynamically
+# from the distributed `caddy_sites` variables collected across the inventory.
+# They typically represent global or standalone configurations that do not
+# belong to a specific service host.
+caddy_sites:
+  - hostname: "{{ network.domain }}"

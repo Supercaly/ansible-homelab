@@ -1,0 +1,38 @@
+---
+proxmox_host: vega
+proxmox_lxc:
+  vmid: 1020
+  hostname: "{{ inventory_hostname }}"
+  password: "{{ lxc_default_password }}"
+  hookscript: "{{ lxc_default_hookscript }}"
+  pubkey: "{{ lxc_default_pubkey }}"
+  template:
+    name: "{{ lxc_default_template }}"
+    timeout: "{{ lxc_default_template_timeout }}"
+    storage: "{{ lxc_default_template_storage }}"
+  disk_volume:
+    storage: "{{ lxc_default_disk_storage }}"
+    size: 6
+  cores: 1
+  memory: 512
+  netif:
+    net0: >-
+      name={{ interfaces.lan.device }},ip={{
+        (interfaces.lan.ip4.address ~ '/' ~ interfaces.lan.ip4.prefix) |
+        ansible.utils.ipaddr('host/prefix')
+      }},gw={{
+        network.gw4
+      }},bridge=vmbr0
+  # TODO: mars-proxy cannot use mercury-dns as DNS because it resolves domain names
+  # with local IPs. For this reason we use the router's DNS server as fallback.
+  # Using the DNS-Challenge in caddy will resolve this problem.
+  nameserver: "{{ network.ip4 | ansible.utils.nthhost(1) | ansible.builtin.mandatory }}"
+  searchdomain: "{{ dns.search_domains | join(',') }}"
+  onboot: true
+  startup: "order=20"
+  features:
+    - "keyctl=1"
+    - "nesting=1"
+  tags:
+    - "webserver"
+    - "proxy"
