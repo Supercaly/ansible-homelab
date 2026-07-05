@@ -12,7 +12,7 @@
     content: "{{ adguardhome_config | to_nice_yaml }}"
     owner: "{{ adguardhome_user }}"
     group: "{{ adguardhome_group }}"
-    mode: "0644"
+    mode: "0600"
 
 - name: Start AdGuardHome service after writing config file.
   ansible.builtin.service:

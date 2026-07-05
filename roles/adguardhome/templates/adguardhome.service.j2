@@ -16,6 +16,7 @@ Restart=always
 RestartSec=10
 StandardOutput=journal
 StandardError=journal
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_NET_RAW
 
 [Install]
 WantedBy=multi-user.target

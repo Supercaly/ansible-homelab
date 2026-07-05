@@ -15,6 +15,7 @@
     - path: "{{ adguardhome_data_dir }}"
       mode: "0700"
     - path: "{{ adguardhome_conf_dir }}"
+      mode: "0700"
   loop_control:
     label: "{{ __dir.path }}"
     loop_var: __dir

@@ -1,5 +1,6 @@
 ---
 adguardhome_config:
+  schema_version: 34
   http:
     address: "0.0.0.0:3000"
   users: "{{ vault_adguard_users }}"

@@ -13,18 +13,28 @@
     mode: "0755"
     creates: "{{ adguardhome_bin_dir }}/AdGuardHome"
 
-- name: Allow binary to bind to ports lower than 1024 as a non-root user
+- name: Allow binary to bind to privileged ports as non-root user.
   community.general.capabilities:
     path: "{{ adguardhome_bin_file }}"
-    capability: cap_net_bind_service+eip
+    capability: "{{ __cap }}"
     state: present
+  loop:
+    - "cap_net_bind_service+eip"
+    - "cap_net_raw+eip"
+  loop_control:
+    loop_var: __cap
   when: adguardhome_user != "root"
 
-- name: Disallow binary to bind to ports lower than 1024 as a non-root user
+- name: Remove capabilities from binary when running as root.
   community.general.capabilities:
     path: "{{ adguardhome_bin_file }}"
-    capability: cap_net_bind_service+eip
+    capability: "{{ __cap }}"
     state: absent
+  loop:
+    - "cap_net_bind_service+eip"
+    - "cap_net_raw+eip"
+  loop_control:
+    loop_var: __cap
   when: adguardhome_user == "root"
 
 - name: Copy systemd service.
