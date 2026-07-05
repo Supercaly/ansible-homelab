@@ -1,0 +1,5 @@
+---
+caddy_sites:
+  - hostname: "adguard.{{ network.domain }}"
+    proxies:
+      - "{{ interfaces.lan.ip4.address }}:3000"
