@@ -14,6 +14,7 @@ all:
         kvm:
     lxc:
       hosts:
+        mercury-dns:
     kvm:
       hosts:
 
@@ -21,6 +22,7 @@ all:
     # Used by playbooks as targets across inventories.
     dns:
       hosts:
+        mercury-dns:
     proxy:
       hosts:
     docker:

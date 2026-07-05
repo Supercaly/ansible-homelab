@@ -1,0 +1,4 @@
+# Automatically accept new SSH host keys if they are not present.
+# This argument is used sporadically to ensure a high level of security
+# without complicating the setup of new hosts.
+ansible_ssh_common_args: "-o StrictHostKeyChecking=accept-new"
