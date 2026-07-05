@@ -4,3 +4,9 @@ all:
     hypervisor:
       hosts:
         vega:
+    guest:
+      children:
+        lxc:
+    lxc:
+      hosts:
+        mercury-dns:
