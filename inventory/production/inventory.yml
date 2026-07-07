@@ -16,6 +16,7 @@ all:
       hosts:
         mercury-dns:
         mars-proxy:
+        earth-docker:
     kvm:
       hosts:
 
@@ -29,3 +30,4 @@ all:
         mars-proxy:
     docker:
       hosts:
+        earth-docker:
