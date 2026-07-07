@@ -1,0 +1,18 @@
+---
+ddns_root: /srv/stacks/ddns
+ddns_port: 8000
+ddns_config:
+  # TODO: The DDNS provider does not support wildcard domain.
+  # For this reason we need to update every sub-domain (public or private) manually.
+  # When caddy will use the DNS-Challenge we could remove the privete sub-domains.
+  settings:
+    - domain: "{{ network.domain }}"
+      provider: "{{ vault_provider }}"
+      username: "{{ vault_username }}"
+      password: "{{ vault_password }}"
+      ip_version: "ipv4"
+    - domain: "ddns.{{ network.domain }}"
+      provider: "{{ vault_provider }}"
+      username: "{{ vault_username }}"
+      password: "{{ vault_password }}"
+      ip_version: "ipv4"
