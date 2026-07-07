@@ -11,6 +11,12 @@ services:
       - "data:/updater/data"
     env_file:
       ".env"
+{% if ddns_dns_servers | length > 0 %}
+    dns:
+{% for server in ddns_dns_servers %}
+      - "{{ server }}"
+{% endfor %}
+{% endif %}
     environment:
       TZ: "{{ ddns_timezone }}"
       # TODO: Add support for notifications
