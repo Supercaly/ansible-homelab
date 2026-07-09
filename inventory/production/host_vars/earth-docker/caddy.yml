@@ -3,3 +3,8 @@ caddy_sites:
   - hostname: "ddns.{{ network.domain }}"
     proxies:
       - "{{ interfaces.lan.ip4.address }}:{{ ddns_port }}"
+  - hostname: "lorenzo.{{ network.domain }}"
+    public: true
+    www_redir: true
+    proxies:
+      - "{{ interfaces.lan.ip4.address }}:{{ portfolio_port }}"
