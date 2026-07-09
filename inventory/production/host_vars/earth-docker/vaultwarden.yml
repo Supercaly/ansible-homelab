@@ -1,4 +1,7 @@
 ---
+vaultwarden_server_version: "1.36.0"
+vaultwarden_backup_version: "1.26.11"
+
 vaultwarden_domain: "pwd.{{ network.domain }}"
 vaultwarden_port: 8001
 
