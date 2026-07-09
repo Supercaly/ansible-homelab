@@ -1,0 +1,32 @@
+---
+caddy_sites:
+  - name: "ddns"
+    content: |
+        https://ddns.{{ network.domain }} {
+          import logging "ddns.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ ddns_port }}"
+        }
+  - name: "portfolio"
+    content: |
+        # Redirect www to the non-www domain.
+        https://www.lorenzo.{{ network.domain }} {
+          redir https://lorenzo.{{ network.domain }}{uri} permanent
+        }
+
+        https://lorenzo.{{ network.domain }} {
+          import logging "portfolio.log"
+          import encode
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ portfolio_port }}"
+        }
+  - name: "vaultwarden"
+    content: |
+        https://{{ vaultwarden_domain }} {
+          import logging "vaultwarden.log"
+          import encode
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ vaultwarden_port }}"
+        }
