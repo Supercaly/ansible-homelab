@@ -1,0 +1,25 @@
+---
+ddns_version: "v2.10.0"
+
+ddns_root: /srv/stacks/ddns
+ddns_port: 8000
+# The DDNS service must obtain eternal IP address for the domains,
+# so it cannot use the internal DNS server to resolve those domains.
+# We use Quad9 and DNS4EU as external DNS servers.
+ddns_dns_servers:
+  - "9.9.9.10"
+  - "86.54.11.100"
+ddns_config:
+  # The domain provider does not support DDNS on the wildcard subdomain.
+  # We need to update every public subdomain manually.
+  settings:
+    - domain: "lorenzo.{{ network.domain }}"
+      provider: "{{ vault_provider }}"
+      username: "{{ vault_username }}"
+      password: "{{ vault_password }}"
+      ip_version: "ipv4"
+    - domain: "pwd.{{ network.domain }}"
+      provider: "{{ vault_provider }}"
+      username: "{{ vault_username }}"
+      password: "{{ vault_password }}"
+      ip_version: "ipv4"

@@ -15,17 +15,16 @@ services:
       - "{{ vaultwarden_port }}:80"
 
   backup:
-      image: "ttionya/vaultwarden-backup:{{ vaultwarden_backup_version }}"
-      container_name: "vaultwarden-backup"
-      restart: "{{ vaultwarden_restart }}"
-      env_file:
-        - ".backup.env"
-      volumes:
-        - "data:/bitwarden/data"
-        - "./rclone:/config/rclone"
-        # TODO: This volume is used only for local backups. Remove this when using other types of remotes.
-        - "backup:{{ vaultwarden_remote_dir }}"
+    image: "ttionya/vaultwarden-backup:{{ vaultwarden_backup_version }}"
+    container_name: "vaultwarden-backup"
+    restart: "{{ vaultwarden_restart }}"
+    env_file:
+      - ".backup.env"
+    environment:
+      TZ: "{{ vaultwarden_timezone }}"
+    volumes:
+      - "data:/bitwarden/data"
+      - "./rclone:/config/rclone"
 
 volumes:
   data:
-  backup:
