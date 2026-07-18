@@ -1,6 +1,6 @@
 ---
 - name: Configure services hosted on Docker.
-  hosts: earth-docker
+  hosts: docker
   become: true
   gather_facts: false
   roles:
