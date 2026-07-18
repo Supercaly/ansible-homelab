@@ -1,0 +1,8 @@
+---
+system_groups:
+  - name: "docker"
+
+system_users:
+  - name: "ansible"
+    groups:
+      - "docker"
