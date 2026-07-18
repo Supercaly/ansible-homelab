@@ -1,0 +1,6 @@
+---
+all:
+  children:
+    hypervisor:
+      hosts:
+        vega:
