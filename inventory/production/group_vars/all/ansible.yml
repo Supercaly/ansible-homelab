@@ -1,0 +1,4 @@
+---
+ansible_user: "ansible"
+ansible_managed: "WARNING: This file is managed by Ansible."
+controller_ssh_pubkey: "{{ lookup('ansible.builtin.file', '~/.ssh/id_rsa.pub') }}"

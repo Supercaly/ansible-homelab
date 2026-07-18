@@ -1,0 +1,4 @@
+---
+# Allow pubkey authentication for the root user to avoid
+# problems with the Proxmox Web UI not working.
+ssh_permit_root_login: "prohibit-password"
