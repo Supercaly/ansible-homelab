@@ -1,6 +1,6 @@
 ---
 - name: Configure dns server.
-  hosts: mercury-dns
+  hosts: dns
   become: true
   gather_facts: false
   roles:
@@ -8,7 +8,7 @@
       tags: dns
 
 - name: Configure reverse proxy.
-  hosts: mars-proxy
+  hosts: proxy
   become: true
   gather_facts: false
   tags: caddy

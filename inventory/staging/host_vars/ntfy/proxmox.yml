@@ -1,5 +1,5 @@
 ---
-proxmox_host: vega
+proxmox_host: pve
 proxmox_lxc:
   vmid: 1042
   hostname: "{{ inventory_hostname }}"

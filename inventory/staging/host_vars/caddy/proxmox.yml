@@ -1,7 +1,7 @@
 ---
-proxmox_host: vega
+proxmox_host: pve
 proxmox_lxc:
-  vmid: 1020
+  vmid: 1021
   hostname: "{{ inventory_hostname }}"
   password: "{{ lxc_default_password }}"
   hookscript: "{{ lxc_default_hookscript }}"
@@ -11,7 +11,7 @@ proxmox_lxc:
     timeout: "{{ lxc_default_template_timeout }}"
   disk_volume:
     storage: "local-lvm"
-    size: 4
+    size: 6
   cores: 1
   memory: 512
   netif:
@@ -25,10 +25,10 @@ proxmox_lxc:
   nameserver: "{{ dns.servers | join(',') }}"
   searchdomain: "{{ dns.search_domains | join(',') }}"
   onboot: true
-  startup: "order=10"
+  startup: "order=20"
   features:
     - "keyctl=1"
     - "nesting=1"
   tags:
-    - "dns"
-    - "adblock"
+    - "webserver"
+    - "proxy"

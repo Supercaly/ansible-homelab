@@ -1,20 +1,33 @@
 ---
 all:
   children:
+    # --- Structural groups (real machines, and VMs) ---
+    # Physical Proxmox hosts
     hypervisor:
       hosts:
-        vega:
+        pve:
+
+    # All VMs and containers
     guest:
       children:
         lxc:
         kvm:
     lxc:
       hosts:
-        mercury-dns:
-        mars-proxy:
+        adguard:
+        caddy:
         ntfy:
         influxdb:
         grafana:
     kvm:
       hosts:
-        earth-docker:
+        docker:
+
+    # --- Functional groups ---
+    # Used by playbooks as targets across inventories.
+    dns:
+      hosts:
+        adguard:
+    proxy:
+      hosts:
+        caddy:
