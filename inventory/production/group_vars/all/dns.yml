@@ -1,0 +1,7 @@
+---
+dns:
+  search_domains:
+    - "home.arpa"
+  servers:
+    - "{{ network.ip4 | ansible.utils.nthhost(10) | ansible.builtin.mandatory }}"
+    - "{{ network.ip4 | ansible.utils.nthhost(1) | ansible.builtin.mandatory }}"
