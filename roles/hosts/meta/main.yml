@@ -1,0 +1,35 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: hosts
+  author: Lorenzo Calisti
+  description: Manage /etc/hosts with inventory-based host entries.
+  license: MIT
+  min_ansible_version: "2.1"
+  platforms:
+    - name: ArchLinux
+      versions:
+        - all
+    - name: Alpine
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: EL
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+  galaxy_tags:
+    - hosts
+    - dns
+    - networking

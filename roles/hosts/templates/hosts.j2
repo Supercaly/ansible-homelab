@@ -1,0 +1,19 @@
+{{ ansible_managed | comment }}
+
+# Loopback
+127.0.0.1 localhost
+
+# Basic IPv6 entries
+::1      localhost6.localdomain6  localhost6  ip6-localhost  ip6-loopback
+fe00::0  ip6-localnet
+ff00::0  ip6-mcastprefix
+ff02::1  ip6-allnodes
+ff02::2  ip6-allrouters
+
+# Inventory hosts
+{% for host in groups[hosts_group] | sort %}
+{% set _vars = hostvars[host] %}
+{% if _vars.ansible_host is defined %}
+{{ "{:<15}".format(_vars.ansible_host) }} {% if hosts_domain %}{{ host }}.{{ hosts_domain }} {% endif %}{{ host }}
+{% endif %}
+{% endfor %}
