@@ -15,6 +15,7 @@ all:
     lxc:
       hosts:
         mercury-dns:
+        mars-proxy:
     kvm:
       hosts:
 
@@ -25,5 +26,6 @@ all:
         mercury-dns:
     proxy:
       hosts:
+        mars-proxy:
     docker:
       hosts:
