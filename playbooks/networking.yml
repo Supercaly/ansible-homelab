@@ -4,6 +4,15 @@
   become: true
   gather_facts: false
   roles:
+    - role: hosts
+      tags: hosts
+      vars:
+        hosts_domain: >-
+          {{
+            dns.search_domains |
+            ansible.builtin.first |
+            ansible.builtin.mandatory
+          }}
     - role: adguardhome
       tags: dns
 
