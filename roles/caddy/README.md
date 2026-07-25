@@ -23,7 +23,7 @@ Available variables are listed below, along with default values (see `defaults/m
 |`caddy_log_dir` | string | `"/var/log/caddy"` | Path to caddy logs directory. |
 |`caddy_caddyfile_file` | string | `"/etc/caddy/Caddyfile"` | Path to the Caddyfile. |
 |`caddy_sites_dir` | string | `"/etc/caddy/sites"` | Path to the directory containing additional sites. |
-|`caddy_sites` | object | `[]` | List of additional sites. |
+|`caddy_sites` | list | `[]` | List of site definitions. See **Site options** below. |
 |`caddy_rm_unmanaged_sites` | bool | `true` | Automatically remove old sites files not present in the config. |
 |`caddy_debug` | bool | `false` | Enable debug mode. |
 |`caddy_admin` | string | `"localhost:2019"` | Customize the admin API endpoint. If set to `off` the admin endpoint is disabled. |
@@ -32,6 +32,21 @@ Available variables are listed below, along with default values (see `defaults/m
 |`caddy_ca` | string | `"default"` | ACME endpoint to use [default, staging]. |
 |`caddy_default_ca` | string |`"https://acme-v02.api.letsencrypt.org/directory"` | Default ACME API endpoint. |
 |`caddy_staging_ca` | string | `"https://acme-staging-v02.api.letsencrypt.org/directory"` | Staging ACME API endpoint. |
+
+### Site options
+
+Each entry in `caddy_sites` supports the following keys:
+
+| Name | Type | Default | Description |
+| - | - | - | - |
+| `hostname` | string | — | **(Required)** Site hostname. |
+| `protocol` | string | `https` | Protocol prefix (`http` or `https`). |
+| `public` | bool | `false` | Allow access from outside private IP ranges. When `false`, requests from public IPs receive a `403`. |
+| `www_redir` | bool | `false` | Redirect `www.hostname` to `hostname`. |
+| `proxies` | list | `[]` | Upstream backend addresses (e.g. `192.168.1.10:8443`). If empty, a default `200` response is returned. |
+| `insecure_skip_verify` | bool | `false` | Skip TLS certificate verification on the upstream backend. Useful for backends with self-signed certificates. |
+| `header_up` | list | `[]` | Headers to set or modify on requests sent upstream to the backend. Prefix with `-` to remove a header (e.g. `-Authorization`). |
+| `header_down` | list | `[]` | Headers to set or modify on responses received downstream from the backend. Prefix with `-` to remove a header (e.g. `-Server`). |
 
 ## Dependencies
 
@@ -53,7 +68,23 @@ caddy_email: admin@example.com
 caddy_sites:
   - hostname: my.domain.com
     proxies:
-      - 172.0.0.10:8080
+      - 192.168.1.10:8080
+
+  # Backend with a self-signed certificate.
+  - hostname: nas.domain.com
+    insecure_skip_verify: true
+    proxies:
+      - 192.168.1.20:8443
+
+  # Backend with custom headers.
+  - hostname: app.domain.com
+    proxies:
+      - 192.168.1.30:3000
+    header_up:
+      - "X-Forwarded-Proto https"
+      - "-Authorization"
+    header_down:
+      - "-Server"
 ```
 
 ## License

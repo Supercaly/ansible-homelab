@@ -31,11 +31,26 @@
     # Proxies requests to one or more backends.
     reverse_proxy {
         to {{ caddy_site_item.proxies | join(' ') }}
+{% if caddy_site_item.insecure_skip_verify | default(false) %}
 
-        # Set headers going upstream to the backend
-{% for header in caddy_site_item.header_up | default([]) %}
+        transport http {
+            tls_insecure_skip_verify
+        }
+{% endif %}
+{% if caddy_site_item.header_up | default([]) | length > 0 %}
+
+        # Headers upstream.
+{% for header in caddy_site_item.header_up %}
         header_up {{ header }}
 {% endfor %}
+{% endif %}
+{% if caddy_site_item.header_down | default([]) | length > 0 %}
+
+        # Headers downstream.
+{% for header in caddy_site_item.header_down %}
+        header_down {{ header }}
+{% endfor %}
+{% endif %}
     }
 {% else %}
     # Default response when no proxies are defined.

@@ -46,13 +46,5 @@ caddy_default_ca: "https://acme-v02.api.letsencrypt.org/directory"
 # Staging ACME API endpoint
 caddy_staging_ca: "https://acme-staging-v02.api.letsencrypt.org/directory"
 
-# List of sites to manage
-# caddy_sites:
-#   - hostname: my.domain.com
-#     protocol: 'https'
-#     public: false
-#     www_redir: false
-#     header_up: []
-#     proxies:
-#       - 172.0.0.10:8080
+# List of sites to manage.
 caddy_sites: []
