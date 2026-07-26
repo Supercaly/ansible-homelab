@@ -23,10 +23,7 @@ proxmox_lxc:
       }},gw={{
         network.gw4
       }},bridge=vmbr0
-  # TODO: mars-proxy cannot use mercury-dns as DNS because it resolves domain names
-  # with local IPs. For this reason we use the router's DNS server as fallback.
-  # Using the DNS-Challenge in caddy will resolve this problem.
-  nameserver: "{{ network.ip4 | ansible.utils.nthhost(1) | ansible.builtin.mandatory }}"
+  nameserver: "{{ dns.servers | join(',') }}"
   searchdomain: "{{ dns.search_domains | join(',') }}"
   onboot: true
   startup: "order=20"

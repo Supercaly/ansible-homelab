@@ -2,7 +2,7 @@
 - name: Trust Caddy local root CA.
   ansible.builtin.command: caddy trust
   become: true
-  when: "caddy_local_certs | bool"
+  when: caddy_trust_local_ca | bool
   register: __caddy_trust_result
   changed_when:
     - "'already trusted' not in __caddy_trust_result.stderr"
@@ -10,5 +10,5 @@
 - name: Untrust Caddy local root CA.
   ansible.builtin.command: caddy untrust
   become: true
-  when: "not caddy_local_certs | bool"
+  when: not caddy_trust_local_ca | bool
   changed_when: false

@@ -9,13 +9,31 @@
   loop:
     - "{{ caddy_config_dir }}"
     - "{{ caddy_log_dir }}"
+    - "{{ caddy_snippets_dir }}"
     - "{{ caddy_sites_dir }}"
   loop_control:
     loop_var: __dir
 
+- name: Clean up unmanaged Caddy snippets.
+  ansible.builtin.include_tasks: cleanup_snippets.yml
+  when: caddy_rm_unmanaged_snippets | bool
+
 - name: Clean up unmanaged Caddy sites.
   ansible.builtin.include_tasks: cleanup_sites.yml
-  when: "caddy_rm_unmanaged_sites | bool"
+  when: caddy_rm_unmanaged_sites | bool
+
+- name: Deploy Caddy snippets.
+  ansible.builtin.template:
+    src: "{{ caddy_snippet_item }}"
+    dest: "{{ caddy_snippets_dir }}/{{ caddy_snippet_item | basename | regex_replace('\\.j2$', '') }}"
+    owner: "{{ caddy_user }}"
+    group: "{{ caddy_group }}"
+    mode: "0644"
+  notify: restart caddy service
+  loop: "{{ caddy_snippets }}"
+  loop_control:
+    label: "{{ caddy_snippet_item | basename }}"
+    loop_var: caddy_snippet_item
 
 - name: Generate main Caddyfile from template.
   ansible.builtin.template:
@@ -26,24 +44,32 @@
     mode: "0644"
   notify: restart caddy service
 
-- name: Generate sites from template.
-  ansible.builtin.template:
-    src: "site.caddy.j2"
-    dest: >-
-      {{
-        caddy_sites_dir
-      }}/{{
-        caddy_site_item.hostname |
-        replace('.', '_')
-      }}.caddy
+- name: Write Caddy site configs.
+  ansible.builtin.copy:
+    content: "{{ caddy_site_item.content }}"
+    dest: "{{ caddy_sites_dir }}/{{ caddy_site_item.name }}.caddy"
     owner: "{{ caddy_user }}"
     group: "{{ caddy_group }}"
     mode: "0644"
   notify: restart caddy service
   loop: "{{ caddy_sites }}"
   loop_control:
-    label: "{{ caddy_site_item.hostname }}"
-    loop_var: "caddy_site_item"
+    label: "{{ caddy_site_item.name }}"
+    loop_var: caddy_site_item
+
+- name: Validate Caddy configuration.
+  ansible.builtin.command: caddy validate --config {{ caddy_caddyfile_file }}
+  changed_when: false
+
+# caddy validate will create all missing log files; since the command
+# is run under root, the files will be unaccessible by the caddy user
+# crashing the executable
+- name: Fix ownership of Caddy log directory after validate.
+  ansible.builtin.file:
+    path: "{{ caddy_log_dir }}"
+    owner: "{{ caddy_user }}"
+    group: "{{ caddy_group }}"
+    recurse: true
 
 - name: Ensure handlers are notified now to avoid conflicts.
   ansible.builtin.meta: flush_handlers

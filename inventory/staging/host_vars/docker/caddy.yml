@@ -1,14 +1,38 @@
 ---
 caddy_sites:
-  - hostname: "ddns.{{ network.domain }}"
-    proxies:
-      - "{{ interfaces.lan.ip4.address }}:{{ ddns_port }}"
-  - hostname: "{{ vaultwarden_domain }}"
-    proxies:
-      - "{{ interfaces.lan.ip4.address }}:{{ vaultwarden_port }}"
-  - hostname: "lorenzo.{{ network.domain }}"
-    proxies:
-      - "{{ interfaces.lan.ip4.address }}:{{ portfolio_port }}"
-  - hostname: "photo.{{ network.domain }}"
-    proxies:
-      - "{{ interfaces.lan.ip4.address }}:{{ immich_port }}"
+  - name: "ddns"
+    content: |
+        https://ddns.{{ network.domain }} {
+          import logging "ddns.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ ddns_port }}"
+        }
+  - name: "vaultwarden"
+    content: |
+        https://{{ vaultwarden_domain }} {
+          import logging "vaultwarden.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ vaultwarden_port }}"
+        }
+  - name: "portfolio"
+    content: |
+        https://lorenzo.{{ network.domain }} {
+          import logging "portfolio.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ portfolio_port }}"
+        }
+  - name: "immich"
+    content: |
+        https://photo.{{ network.domain }} {
+          import logging "immich.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ immich_port }}"
+        }

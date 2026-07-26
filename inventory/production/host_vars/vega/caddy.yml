@@ -1,0 +1,15 @@
+---
+caddy_sites:
+  - name: "{{ inventory_hostname }}"
+    content: |
+        https://{{ inventory_hostname }}.{{ network.domain }} {
+          import logging "{{ inventory_hostname }}.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ ansible_host }}:8006" {
+            transport http {
+              tls_insecure_skip_verify
+            }
+          }
+        }

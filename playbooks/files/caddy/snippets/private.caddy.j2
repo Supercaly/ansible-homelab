@@ -1,0 +1,9 @@
+(private) {
+    # Block access to IPs outside private ranges.
+    @outside_ip not remote_ip private_ranges
+
+    respond @outside_ip 403 {
+        body "Access forbidden."
+        close
+    }
+}
