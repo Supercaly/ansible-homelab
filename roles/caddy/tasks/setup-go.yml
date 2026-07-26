@@ -1,0 +1,69 @@
+---
+- name: Fetch latest stable Go version from go.dev.
+  ansible.builtin.uri:
+    url: https://go.dev/dl/?mode=json
+    return_content: true
+  register: __go_releases
+  when: caddy_go_version | length == 0
+
+- name: Set Go version fact.
+  ansible.builtin.set_fact:
+    __go_version: >-
+      {{
+        caddy_go_version if caddy_go_version | length > 0
+        else (
+          __go_releases.json |
+          selectattr('stable', 'equalto', true) |
+          map(attribute='version') |
+          first |
+          regex_replace('^go', '')
+        )
+      }}
+
+- name: Set Go architecture fact.
+  ansible.builtin.set_fact:
+    __go_arch: >-
+      {{
+        {
+          'x86_64': 'amd64',
+          'aarch64': 'arm64',
+          'i386': '386',
+          'i686': '386'
+        }[ansible_facts['architecture']]
+      }}
+
+- name: Check installed Go version.
+  ansible.builtin.command: "{{ caddy_go_install_dir }}/bin/go version"
+  register: __go_installed
+  changed_when: false
+  failed_when: false
+
+- name: Install Go {{ __go_version }}.
+  when: __go_installed.rc != 0 or ('go' + __go_version) not in __go_installed.stdout
+  block:
+    - name: Download Go tarball.
+      ansible.builtin.get_url:
+        url: "https://go.dev/dl/go{{ __go_version }}.linux-{{ __go_arch }}.tar.gz"
+        dest: "/tmp/go{{ __go_version }}.linux-{{ __go_arch }}.tar.gz"
+        mode: "0644"
+
+    - name: Remove previous Go installation.
+      ansible.builtin.file:
+        path: "{{ caddy_go_install_dir }}"
+        state: absent
+
+    - name: Extract Go to {{ caddy_go_install_dir }}.
+      ansible.builtin.unarchive:
+        src: "/tmp/go{{ __go_version }}.linux-{{ __go_arch }}.tar.gz"
+        dest: "{{ caddy_go_install_dir | dirname }}"
+        remote_src: true
+
+    - name: Ensure Go binaries are on PATH.
+      ansible.builtin.file:
+        src: "{{ caddy_go_install_dir }}/bin/{{ item }}"
+        dest: "/usr/local/bin/{{ item }}"
+        state: link
+        force: true
+      loop:
+        - go
+        - gofmt

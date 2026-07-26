@@ -7,8 +7,8 @@
   changed_when:
     - "'already trusted' not in __caddy_trust_result.stderr"
 
-# TODO: Add changed_when to caddy untrust command.
-- name: Untrust Caddy local root CA. # noqa: no-changed-when
+- name: Untrust Caddy local root CA.
   ansible.builtin.command: caddy untrust
   become: true
   when: "not caddy_local_certs | bool"
+  changed_when: false
