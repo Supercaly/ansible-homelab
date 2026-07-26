@@ -1,0 +1,7 @@
+{{ ansible_managed | comment }}
+caddy_version: "{{ caddy_version }}"
+xcaddy_version: "{{ caddy_xcaddy_version }}"
+plugins:
+{% for plugin in caddy_plugins | sort %}
+  - {{ plugin }}
+{% endfor %}

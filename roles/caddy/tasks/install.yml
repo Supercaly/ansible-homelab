@@ -1,21 +1,13 @@
 ---
-# This part of the role is taken from:
-# https://github.com/maxhoesel-ansible/ansible-collection-caddy/blob/main/roles/caddy_server/tasks/install.yml
-- name: Install package requirements.
-  ansible.builtin.package:
-    name: "{{ caddy_requirements }}"
+- name: Install Caddy from package manager.
+  ansible.builtin.include_tasks: install-package.yml
+  when: caddy_plugins | length == 0
 
-- name: Perform distro-specific setup.
-  ansible.builtin.include_tasks: "setup-{{ ansible_facts['os_family'] }}.yml"
+- name: Install Caddy with xcaddy.
+  ansible.builtin.include_tasks: install-xcaddy.yml
+  when: caddy_plugins | length > 0
 
-- name: Install Caddy packages.
-  ansible.builtin.package:
-    name: "{{ caddy_packages }}"
-    state: present
-  notify: restart caddy service
-
-- name: Start and enable Caddy service at boot.
+- name: Enable Caddy service at boot.
   ansible.builtin.service:
-    name: "{{ caddy_service }}"
+    name: "{{ caddy_service_name }}"
     enabled: true
-    state: started

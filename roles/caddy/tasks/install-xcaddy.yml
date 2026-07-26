@@ -1,0 +1,148 @@
+---
+- name: Remove Caddy package if installed.
+  ansible.builtin.package:
+    name: caddy
+    state: absent
+
+- name: Remove orphaned dependencies (Debian).
+  ansible.builtin.apt:
+    autoremove: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Ensure caddy group exists.
+  ansible.builtin.group:
+    name: "{{ caddy_group }}"
+    system: true
+    state: present
+
+- name: Ensure caddy user exists.
+  ansible.builtin.user:
+    name: "{{ caddy_user }}"
+    group: "{{ caddy_group }}"
+    system: true
+    shell: /sbin/nologin
+    home: /var/lib/caddy
+    create_home: true
+    state: present
+
+- name: Install Go.
+  ansible.builtin.import_tasks: setup-go.yml
+
+- name: Fetch latest xcaddy release from GitHub.
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/caddyserver/xcaddy/releases/latest
+    return_content: true
+  register: __xcaddy_release
+  when: caddy_xcaddy_version | length == 0
+
+- name: Set xcaddy version fact.
+  ansible.builtin.set_fact:
+    __xcaddy_version: >-
+      {{
+        caddy_xcaddy_version if caddy_xcaddy_version | length > 0
+        else __xcaddy_release.json.tag_name | regex_replace('^v', '')
+      }}
+
+- name: Check installed xcaddy version.
+  ansible.builtin.command: "{{ caddy_xcaddy_bin }} version"
+  register: __xcaddy_installed
+  changed_when: false
+  failed_when: false
+
+- name: Install xcaddy {{ __xcaddy_version }}.
+  when: __xcaddy_installed.rc != 0 or __xcaddy_version not in __xcaddy_installed.stdout
+  block:
+    - name: Download xcaddy tarball.
+      ansible.builtin.get_url:
+        url: >-
+          https://github.com/caddyserver/xcaddy/releases/download/v{{ __xcaddy_version
+          }}/xcaddy_{{ __xcaddy_version }}_linux_{{ __go_arch }}.tar.gz
+        dest: "/tmp/xcaddy_{{ __xcaddy_version }}_linux_{{ __go_arch }}.tar.gz"
+        mode: "0644"
+
+    - name: Extract xcaddy binary.
+      ansible.builtin.unarchive:
+        src: "/tmp/xcaddy_{{ __xcaddy_version }}_linux_{{ __go_arch }}.tar.gz"
+        dest: "{{ caddy_xcaddy_bin | dirname }}"
+        include:
+          - xcaddy
+        remote_src: true
+
+    - name: Ensure xcaddy binary is executable.
+      ansible.builtin.file:
+        path: "{{ caddy_xcaddy_bin }}"
+        mode: "0755"
+
+- name: Write xcaddy build spec.
+  ansible.builtin.template:
+    src: xcaddy_build_spec.j2
+    dest: "{{ caddy_config_dir }}/.xcaddy_build_spec"
+    owner: root
+    group: root
+    mode: "0644"
+  register: __xcaddy_build_spec
+
+- name: Check if Caddy binary exists.
+  ansible.builtin.stat:
+    path: /usr/bin/caddy
+  register: __caddy_binary
+
+- name: Build Caddy with plugins.
+  ansible.builtin.shell:
+    cmd: >-
+      {{ caddy_xcaddy_bin }} build {{ caddy_version }}
+      --with {{ caddy_plugins | join(' --with ') }}
+      --output /usr/bin/caddy
+  environment:
+    HOME: /root
+    GOPATH: /root/go
+    PATH: "{{ caddy_go_install_dir }}/bin:/usr/local/bin:{{ ansible_facts['env']['PATH'] }}"
+  when: __xcaddy_build_spec is changed or not __caddy_binary.stat.exists
+  notify: restart caddy service
+
+- name: Install Caddy systemd service.
+  ansible.builtin.template:
+    src: caddy.service.j2
+    dest: "/etc/systemd/system/{{ caddy_service_name }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart caddy service
+
+- name: Reload systemd daemon.
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Remove build toolchain after build.
+  when: caddy_xcaddy_cleanup | bool
+  block:
+    - name: Remove Go installation.
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ caddy_go_install_dir }}"
+        - /usr/local/bin/go
+        - /usr/local/bin/gofmt
+        - /root/go
+
+    - name: Remove xcaddy binary.
+      ansible.builtin.file:
+        path: "{{ caddy_xcaddy_bin }}"
+        state: absent
+
+    - name: Find downloaded tarballs.
+      ansible.builtin.find:
+        paths: /tmp
+        patterns:
+          - "go*.linux-*.tar.gz"
+          - "xcaddy_*.tar.gz"
+      register: __build_tarballs
+
+    - name: Delete downloaded tarballs.
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ __build_tarballs.files }}"
+      loop_control:
+        label: "{{ item.path }}"

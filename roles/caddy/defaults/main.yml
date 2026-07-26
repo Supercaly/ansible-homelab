@@ -46,13 +46,34 @@ caddy_default_ca: "https://acme-v02.api.letsencrypt.org/directory"
 # Staging ACME API endpoint
 caddy_staging_ca: "https://acme-staging-v02.api.letsencrypt.org/directory"
 
-# List of sites to manage
-# caddy_sites:
-#   - hostname: my.domain.com
-#     protocol: 'https'
-#     public: false
-#     www_redir: false
-#     header_up: []
-#     proxies:
-#       - 172.0.0.10:8080
+# List of sites to manage.
 caddy_sites: []
+
+# -----------------------
+# xcaddy / plugin options
+# -----------------------
+
+# List of Caddy plugins to build with xcaddy.
+# When empty, Caddy is installed via the OS package manager.
+# When non-empty, Caddy is compiled with xcaddy and the listed plugins.
+caddy_plugins: []
+
+# Caddy version to build with xcaddy. Empty string means latest.
+caddy_version: ""
+
+# xcaddy version to install. Empty string means latest from GitHub releases.
+caddy_xcaddy_version: ""
+
+# Go version to install for building with xcaddy. Empty string means latest stable from go.dev.
+caddy_go_version: ""
+
+# Directory where Go is installed.
+caddy_go_install_dir: "/usr/local/go"
+
+# Path to the xcaddy binary.
+caddy_xcaddy_bin: "/usr/local/bin/xcaddy"
+
+# Remove Go, xcaddy, and build tarballs after a successful build.
+# Recommended for production: leaves only the Caddy binary on the server.
+# Set to false to keep the toolchain installed (useful for debugging).
+caddy_xcaddy_cleanup: true

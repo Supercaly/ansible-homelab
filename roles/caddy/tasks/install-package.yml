@@ -1,0 +1,47 @@
+---
+- name: Check if xcaddy build spec exists.
+  ansible.builtin.stat:
+    path: "{{ caddy_config_dir }}/.xcaddy_build_spec"
+  register: __caddy_xcaddy_build_spec
+
+- name: Remove xcaddy artifacts before package install.
+  when: __caddy_xcaddy_build_spec.stat.exists
+  block:
+    - name: Stop Caddy service.
+      ansible.builtin.service:
+        name: "{{ caddy_service_name }}"
+        state: stopped
+      failed_when: false
+
+    - name: Remove xcaddy-managed service file.
+      ansible.builtin.file:
+        path: /etc/systemd/system/{{ caddy_service_name }}.service
+        state: absent
+
+    - name: Remove xcaddy-managed Caddy binary.
+      ansible.builtin.file:
+        path: /usr/bin/caddy
+        state: absent
+
+    - name: Remove xcaddy build spec.
+      ansible.builtin.file:
+        path: "{{ caddy_config_dir }}/.xcaddy_build_spec"
+        state: absent
+
+    - name: Reload systemd daemon.
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+- name: Install package requirements.
+  ansible.builtin.package:
+    name: "{{ caddy_requirements }}"
+    state: present
+
+- name: Perform distro-specific setup.
+  ansible.builtin.include_tasks: "setup-{{ ansible_facts['os_family'] }}.yml"
+
+- name: Install Caddy package.
+  ansible.builtin.package:
+    name: "{{ caddy_packages }}"
+    state: present
+  notify: restart caddy service
