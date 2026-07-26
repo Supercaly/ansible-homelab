@@ -15,39 +15,41 @@ caddy_log_dir: "/var/log/caddy"
 # Path to the Caddyfile
 caddy_caddyfile_file: "{{ caddy_config_dir }}/Caddyfile"
 
+# Path to the snippets dir
+caddy_snippets_dir: "{{ caddy_config_dir }}/snippets"
+
 # Path to the sites dir
 caddy_sites_dir: "{{ caddy_config_dir }}/sites"
-
-# Remove all old sites not in the current config
-caddy_rm_unmanaged_sites: true
 
 # ---------------------------
 # Caddyfile-related variables
 # ---------------------------
 
-# Enable debug mode
-caddy_debug: false
-
-# Customize the admin API endpoint
-# If set to `off` the admin endpoint is disabled
+# Admin API endpoint. Set to `off` to disable.
 caddy_admin: "localhost:2019"
 
-# Email address used when creating an ACME account with the CA
-caddy_email: ""
+# Raw Caddyfile directives written inside the global options block.
+caddy_global_options: ""
 
-# Issue all certificates internally, rather than through a public ACME CA
-caddy_local_certs: false
+# Run `caddy trust` to add Caddy's local root CA to the system trust store.
+# Enable this when using local_certs in caddy_global_options.
+caddy_trust_local_ca: false
 
-# ACME endpoint to use
-# Possible values: [default, staging]
-caddy_ca: "default"
-# Default ACME API endpoint
-caddy_default_ca: "https://acme-v02.api.letsencrypt.org/directory"
-# Staging ACME API endpoint
-caddy_staging_ca: "https://acme-staging-v02.api.letsencrypt.org/directory"
+# List of snippet files to deploy to {{ caddy_snippets_dir }}.
+# Each entry is a path of a Jinja2 template file.
+caddy_snippets: []
+
+# Remove all old snippets not in caddy_snippets
+caddy_rm_unmanaged_snippets: true
 
 # List of sites to manage.
+# Each entry requires:
+#   name     (string) - used as the filename in caddy_sites_dir (without extension)
+#   content  (string) - raw Caddyfile block, processed as Jinja2 before writing
 caddy_sites: []
+
+# Remove all old sites not in caddy_sites
+caddy_rm_unmanaged_sites: true
 
 # -----------------------
 # xcaddy / plugin options

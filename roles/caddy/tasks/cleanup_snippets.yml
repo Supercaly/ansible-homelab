@@ -1,0 +1,26 @@
+---
+- name: Find all Caddy snippet files.
+  ansible.builtin.find:
+    paths: "{{ caddy_snippets_dir }}"
+  register: __caddy_existing_snippets
+
+- name: Build list of valid snippet filenames.
+  ansible.builtin.set_fact:
+    __caddy_valid_snippets: >-
+      {{
+        caddy_snippets |
+        map('basename') |
+        map('regex_replace', '\.j2$', '') |
+        list
+      }}
+
+- name: Delete unmanaged Caddy snippet files.
+  ansible.builtin.file:
+    path: "{{ __file.path }}"
+    state: absent
+  notify: restart caddy service
+  when: (__file.path | basename) not in __caddy_valid_snippets
+  loop: "{{ __caddy_existing_snippets.files | default([]) }}"
+  loop_control:
+    label: "{{ __file.path }}"
+    loop_var: __file

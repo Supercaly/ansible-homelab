@@ -9,8 +9,7 @@
     __caddy_valid_sites: >-
       {{
         caddy_sites |
-        map(attribute='hostname') |
-        map('replace', '.', '_') |
+        map(attribute='name') |
         map('regex_replace', '$', '.caddy') |
         list
       }}

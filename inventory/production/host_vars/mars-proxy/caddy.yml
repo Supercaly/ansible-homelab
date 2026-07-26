@@ -1,10 +1,26 @@
 ---
-caddy_email: "djonline96@gmail.com"
+caddy_global_options: |
+    email "djonline96@gmail.com"
+    acme_dns infomaniak "{{ vault_infomaniak_token }}"
 
-# Static Caddy sites.
-# These entries are defined explicitly and are not generated dynamically
-# from the distributed `caddy_sites` variables collected across the inventory.
-# They typically represent global or standalone configurations that do not
-# belong to a specific service host.
+caddy_snippets:
+  - "files/caddy/snippets/encode.caddy.j2"
+  - "files/caddy/snippets/logging.caddy.j2"
+  - "files/caddy/snippets/private.caddy.j2"
+
 caddy_sites:
-  - hostname: "{{ network.domain }}"
+  - name: "basesite"
+    content: |
+        https://{{ network.domain }} {
+          import logging "basesite.log"
+          import encode
+          import private
+
+          respond 200 {
+            body "Hi from {{ network.domain }}!!!"
+            close
+          }
+        }
+
+caddy_plugins:
+  - "github.com/caddy-dns/infomaniak"

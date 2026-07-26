@@ -1,4 +1,4 @@
 ---
 immich_root: /srv/stacks/immich
-ddns_port: 2283
+immich_port: 2283
 immich_db_password: "{{ vault_immich_db_password }}"

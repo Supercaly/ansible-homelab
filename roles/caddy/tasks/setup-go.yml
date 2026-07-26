@@ -3,7 +3,7 @@
   ansible.builtin.uri:
     url: https://go.dev/dl/?mode=json
     return_content: true
-  register: __go_releases
+  register: __caddy_go_releases
   when: caddy_go_version | length == 0
 
 - name: Set Go version fact.
@@ -12,7 +12,7 @@
       {{
         caddy_go_version if caddy_go_version | length > 0
         else (
-          __go_releases.json |
+          __caddy_go_releases.json |
           selectattr('stable', 'equalto', true) |
           map(attribute='version') |
           first |
@@ -34,12 +34,12 @@
 
 - name: Check installed Go version.
   ansible.builtin.command: "{{ caddy_go_install_dir }}/bin/go version"
-  register: __go_installed
+  register: __caddy_go_installed
   changed_when: false
   failed_when: false
 
 - name: Install Go {{ __go_version }}.
-  when: __go_installed.rc != 0 or ('go' + __go_version) not in __go_installed.stdout
+  when: __caddy_go_installed.rc != 0 or ('go' + __go_version) not in __caddy_go_installed.stdout
   block:
     - name: Download Go tarball.
       ansible.builtin.get_url:
@@ -60,10 +60,12 @@
 
     - name: Ensure Go binaries are on PATH.
       ansible.builtin.file:
-        src: "{{ caddy_go_install_dir }}/bin/{{ item }}"
-        dest: "/usr/local/bin/{{ item }}"
+        src: "{{ caddy_go_install_dir }}/bin/{{ __go_bin }}"
+        dest: "/usr/local/bin/{{ __go_bin }}"
         state: link
         force: true
       loop:
         - go
         - gofmt
+      loop_control:
+        loop_var: __go_bin

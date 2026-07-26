@@ -1,5 +1,11 @@
 ---
 caddy_sites:
-  - hostname: "adguard.{{ network.domain }}"
-    proxies:
-      - "{{ interfaces.lan.ip4.address }}:3000"
+  - name: "adguard"
+    content: |
+        https://adguard.{{ network.domain }} {
+          import logging "adguard.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:3000"
+        }

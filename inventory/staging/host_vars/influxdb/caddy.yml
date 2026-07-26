@@ -1,5 +1,11 @@
 ---
 caddy_sites:
-  - hostname: "influxdb.{{ network.domain }}"
-    proxies:
-      - "{{ interfaces.lan.ip4.address }}:8086"
+  - name: "influxdb"
+    content: |
+        https://influxdb.{{ network.domain }} {
+          import logging "influxdb.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:8086"
+        }
