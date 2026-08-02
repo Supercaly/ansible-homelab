@@ -77,7 +77,8 @@ All container-related settings are defined inside the `proxmox_lxc` dictionary.
 | `memory` | | int | | Amount of RAM in MB. |
 | `swap` | | int | | Size of the swap memory in MB. |
 | `disk_volume` | Yes | dict | | Main disk configuration (same syntax as `community.general.proxmox`). |
-| `mount_volumes` | | dict | `{}` | Additional mount points for the LXC. |
+| `mount_volumes` | | dict | `{}` | Additional bind mount points for the LXC. See [Mount volumes](#mount-volumes). |
+| `devices` | | dict | `{}` | Device passthrough configuration for the LXC. See [Device passthrough](#device-passthrough). |
 | `netif` | | dict | `{}` | Network interfaces of the LXC (same syntax as `community.general.proxmox`). |
 | `ostype` | | string | | OS type. |
 | `onboot` | | bool | `false` | Start container on host boot. |
@@ -87,6 +88,53 @@ All container-related settings are defined inside the `proxmox_lxc` dictionary.
 | `timezone` | | string | `"host"` | Container Timezone. |
 | `features` | | list | `[]` | Additional LXC features. |
 | `tags` | | list | `["ansible"]` | Container Tags. |
+
+### Mount volumes
+
+`mount_volumes` is a dict where each key is a Proxmox mount point identifier (e.g. `mp0`) and each value defines the bind mount.
+
+| Key | Required | Description |
+| - | - | - |
+| `host_path` | Yes | Absolute path on the Proxmox host to bind-mount into the container. |
+| `mountpoint` | Yes | Absolute path inside the container where the host path is mounted. |
+
+Example:
+
+```yaml
+proxmox_lxc:
+  mount_volumes:
+    mp0:
+      host_path: /mnt/tank/media
+      mountpoint: /media
+    mp1:
+      host_path: /mnt/tank/downloads
+      mountpoint: /downloads
+```
+
+### Device passthrough
+
+`devices` is a dict where each key is a Proxmox device identifier (e.g. `dev0`) and each value defines a host device to expose inside the container.
+
+| Key | Required | Description |
+| - | - | - |
+| `path` | Yes | Absolute path of the device on the Proxmox host (e.g. `/dev/dri/renderD128`). |
+| `gid` | | Group ID to assign to the device inside the container. |
+| `uid` | | User ID to assign to the device inside the container. |
+| `mode` | | Permission mode for the device (octal). |
+| `deny_write` | | If set, deny write access to the device. |
+
+Example:
+
+```yaml
+proxmox_lxc:
+  devices:
+    dev0:
+      path: /dev/dri/renderD128
+      gid: 104
+    dev1:
+      path: /dev/dri/card0
+      gid: 44
+```
 
 ## Dependencies
 

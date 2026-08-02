@@ -56,3 +56,6 @@
 - name: Set hookscript.
   ansible.builtin.include_tasks: hookscript.yml
   when: proxmox_lxc.hookscript is defined
+
+- name: Set device passthrough.
+  ansible.builtin.import_tasks: devices.yml
