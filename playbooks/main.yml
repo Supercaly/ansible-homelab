@@ -31,5 +31,8 @@
 - name: Configure monitoring services.
   ansible.builtin.import_playbook: monitoring.yml
 
+- name: Configure media services.
+  ansible.builtin.import_playbook: media.yml
+
 - name: Configure other services.
   ansible.builtin.import_playbook: services.yml

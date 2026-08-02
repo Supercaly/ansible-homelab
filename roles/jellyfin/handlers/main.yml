@@ -1,0 +1,4 @@
+---
+- name: update apt cache # noqa: name[casing]
+  ansible.builtin.apt:
+    update_cache: true

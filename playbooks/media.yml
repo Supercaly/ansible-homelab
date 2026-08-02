@@ -1,0 +1,8 @@
+---
+- name: Configure jellyfin server.
+  hosts: media
+  become: true
+  gather_facts: false
+  roles:
+    - role: jellyfin
+      tags: jellyfin

@@ -1,0 +1,38 @@
+---
+proxmox_host: altair
+proxmox_lxc:
+  vmid: 1060
+  hostname: "{{ inventory_hostname }}"
+  password: "{{ lxc_default_password }}"
+  hookscript: "{{ lxc_default_hookscript }}"
+  pubkey: "{{ lxc_default_pubkey }}"
+  template:
+    name: "{{ lxc_default_template }}"
+    timeout: "{{ lxc_default_template_timeout }}"
+    storage: "{{ lxc_default_template_storage }}"
+  disk_volume:
+    storage: "{{ lxc_default_disk_storage }}"
+    size: 16
+  cores: 2
+  memory: 2048
+  devices:
+    dev0:
+      path: "/dev/dri/renderD128"
+      gid: "104"
+  netif:
+    net0: >-
+      name={{ interfaces.lan.device }},ip={{
+        (interfaces.lan.ip4.address ~ '/' ~ interfaces.lan.ip4.prefix) |
+        ansible.utils.ipaddr('host/prefix')
+      }},gw={{
+        network.gw4
+      }},bridge=vmbr0
+  nameserver: "{{ dns.servers | join(',') }}"
+  searchdomain: "{{ dns.search_domains | join(',') }}"
+  onboot: true
+  startup: "order=60"
+  features:
+    - "keyctl=1"
+    - "nesting=1"
+  tags:
+    - "media"

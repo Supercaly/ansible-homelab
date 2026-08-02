@@ -1,0 +1,11 @@
+---
+caddy_sites:
+  - name: "jellyfin"
+    content: |
+        https://jellyfin.{{ network.domain }} {
+          import logging "jellyfin.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:8096"
+        }

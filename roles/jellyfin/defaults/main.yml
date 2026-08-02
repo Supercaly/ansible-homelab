@@ -1,0 +1,25 @@
+---
+jellyfin_user: "jellyfin"
+jellyfin_group: "adm"
+
+jellyfin_service_name: "jellyfin"
+
+jellyfin_conf_dir: "/etc/jellyfin"
+
+jellyfin_apt_gpg_key: "https://repo.jellyfin.org/jellyfin_team.gpg.key"
+jellyfin_apt_key_path: "/etc/apt/keyrings/jellyfin.asc"
+jellyfin_apt_arch: >-
+  {{
+    'arm64' if ansible_facts['architecture'] == 'aarch64'
+    else 'armhf' if ansible_facts['architecture'] == 'armv7l'
+    else 'amd64'
+  }}
+jellyfin_apt_url: "https://repo.jellyfin.org/{{ ansible_facts['distribution'] | lower }}"
+jellyfin_apt_suites: "{{ ansible_facts['distribution_release'] }}"
+
+jellyfin_ffmpeg_dir: "/usr/lib/jellyfin-ffmpeg"
+
+# Hardware acceleration: none, intel, amd
+# AMD: jellyfin-ffmpeg already includes Mesa drivers.
+# Intel: requires VA-API driver packages (non-free repo on Debian).
+jellyfin_hwaccel: "none"

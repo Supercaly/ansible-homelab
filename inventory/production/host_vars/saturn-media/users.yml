@@ -1,0 +1,5 @@
+---
+# Ensure render group exist for iGPU passthrough
+system_groups:
+  - name: render
+    gid: 104

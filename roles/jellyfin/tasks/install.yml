@@ -1,0 +1,28 @@
+---
+- name: Set up OS-specific repository.
+  ansible.builtin.include_tasks: "setup-{{ ansible_facts['os_family'] }}.yml"
+
+- name: Install Jellyfin.
+  ansible.builtin.apt:
+    name:
+      - jellyfin
+      - jellyfin-ffmpeg7
+    state: present
+
+- name: Ensure ffmpeg symlinks exist.
+  ansible.builtin.file:
+    src: "{{ jellyfin_ffmpeg_dir }}/{{ __path }}"
+    dest: "/usr/bin/{{ __path }}"
+    state: link
+  loop:
+    - ffmpeg
+    - ffprobe
+  loop_control:
+    loop_var: __path
+
+- name: Ensure config directory is owned by the Jellyfin user.
+  ansible.builtin.file:
+    path: "{{ jellyfin_conf_dir }}"
+    owner: "{{ jellyfin_user }}"
+    group: "{{ jellyfin_group }}"
+    recurse: true

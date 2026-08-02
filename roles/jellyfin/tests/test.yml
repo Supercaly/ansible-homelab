@@ -1,0 +1,6 @@
+---
+- name: Test jellyfin role.
+  hosts: localhost
+  remote_user: root
+  roles:
+    - role: jellyfin

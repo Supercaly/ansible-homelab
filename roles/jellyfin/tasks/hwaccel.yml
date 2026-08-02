@@ -1,0 +1,32 @@
+---
+- name: Add jellyfin user to DRI groups.
+  ansible.builtin.user:
+    name: "{{ jellyfin_user }}"
+    groups:
+      - render
+      - video
+    append: true
+
+- name: Configure hardware acceleration on Intel.
+  when: jellyfin_hwaccel == 'intel'
+  block:
+    - name: Enable Debian non-free repository.
+      when: ansible_facts['distribution'] | lower == 'debian'
+      ansible.builtin.deb822_repository:
+        name: debian-non-free
+        types: deb
+        uris: https://deb.debian.org/debian
+        suites: >-
+          {{ ansible_facts['distribution_release'] }}
+          {{ ansible_facts['distribution_release'] }}-updates
+        components: non-free
+        state: present
+      notify: update apt cache
+
+    - name: Flush handlers.
+      ansible.builtin.meta: flush_handlers
+
+    - name: Install Intel VA-API driver packages.
+      ansible.builtin.apt:
+        name: "{{ jellyfin_hwaccel_intel_packages }}"
+        state: present

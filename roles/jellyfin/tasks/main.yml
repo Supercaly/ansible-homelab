@@ -1,0 +1,16 @@
+---
+- name: Load distribution-specific variables.
+  ansible.builtin.include_vars: "{{ ansible_facts['distribution'] }}.yml"
+
+- name: Install Jellyfin.
+  ansible.builtin.import_tasks: install.yml
+
+- name: Configure hardware acceleration.
+  ansible.builtin.include_tasks: hwaccel.yml
+  when: jellyfin_hwaccel != 'none'
+
+- name: Ensure Jellyfin service is enabled and started.
+  ansible.builtin.service:
+    name: "{{ jellyfin_service_name }}"
+    state: started
+    enabled: true

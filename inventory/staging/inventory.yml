@@ -19,6 +19,7 @@ all:
         ntfy:
         influxdb:
         grafana:
+        jellyfin:
     kvm:
       hosts:
         docker:
@@ -31,3 +32,6 @@ all:
     proxy:
       hosts:
         caddy:
+    media:
+      hosts:
+        jellyfin:

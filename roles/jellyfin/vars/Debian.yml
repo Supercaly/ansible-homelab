@@ -1,0 +1,4 @@
+---
+jellyfin_hwaccel_intel_packages:
+  - intel-media-va-driver-non-free
+  - intel-opencl-icd
