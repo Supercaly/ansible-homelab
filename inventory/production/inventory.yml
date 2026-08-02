@@ -17,6 +17,7 @@ all:
       hosts:
         mercury-dns:
         mars-proxy:
+        saturn-media:
     kvm:
       hosts:
         earth-docker:
@@ -32,3 +33,6 @@ all:
     docker:
       hosts:
         earth-docker:
+    media:
+      hosts:
+        saturn-media:

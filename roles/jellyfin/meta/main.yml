@@ -1,0 +1,24 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: jellyfin
+  author: Lorenzo Calisti
+  description: Install Jellyfin media server on Debian.
+  license: MIT
+  min_ansible_version: "2.1"
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+        - trixie
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+        - resolute
+  galaxy_tags:
+    - jellyfin
+    - media
