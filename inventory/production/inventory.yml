@@ -6,6 +6,7 @@ all:
     hypervisor:
       hosts:
         vega:
+        altair:
 
     # All VMs and containers
     guest:
@@ -16,9 +17,9 @@ all:
       hosts:
         mercury-dns:
         mars-proxy:
-        earth-docker:
     kvm:
       hosts:
+        earth-docker:
 
     # --- Functional groups ---
     # Used by playbooks as targets across inventories.
