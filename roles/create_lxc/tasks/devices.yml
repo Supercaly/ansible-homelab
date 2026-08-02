@@ -1,0 +1,38 @@
+---
+# Set device passthrough manually because Proxmox APIs can't do it.
+- name: Set device passthrough.
+  when: >-
+    (
+      __lxc_current_config[__device.key] |
+      default('')
+    ) != options_string
+  ansible.builtin.command:
+    argv:
+      - pct
+      - set
+      - "{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}"
+      - "-{{ __device.key }}"
+      - "{{ options_string }}"
+  loop: >-
+    {{
+      proxmox_lxc.devices |
+      default({}) |
+      ansible.builtin.dict2items
+    }}
+  loop_control:
+    label: "{{ __device.key }}={{ options_string }}"
+    loop_var: __device
+  changed_when: true
+  vars:
+    options_string: >-
+      {{
+        __device.value.path | ansible.builtin.mandatory
+      }}{{
+        ',deny-write=' ~ __device.value.deny_write if __device.value.deny_write is defined else ''
+      }}{{
+        ',gid=' ~ __device.value.gid if __device.value.gid is defined else ''
+      }}{{
+        ',uid=' ~ __device.value.uid if __device.value.uid is defined else ''
+      }}{{
+        ',mode=' ~ __device.value.mode if __device.value.mode is defined else ''
+      }}
