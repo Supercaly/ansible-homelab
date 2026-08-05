@@ -18,7 +18,7 @@
   ansible.builtin.file:
     path: "{{ __file.path }}"
     state: "absent"
-  notify: restart caddy service
+  notify: caddy_restart_service
   when: "(__file.path | basename) not in __caddy_valid_sites"
   loop: "{{ __caddy_existing_sites.files | default([]) }}"
   loop_control:

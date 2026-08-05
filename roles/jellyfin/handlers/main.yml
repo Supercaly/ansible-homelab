@@ -1,4 +1,4 @@
 ---
-- name: update apt cache # noqa: name[casing]
+- name: jellyfin_update_apt_cache # noqa: name[casing]
   ansible.builtin.apt:
     update_cache: true

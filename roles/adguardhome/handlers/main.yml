@@ -1,9 +1,9 @@
 ---
-- name: reload systemd daemon # noqa: name[casing]
+- name: adguardhome_reload_systemd # noqa: name[casing]
   ansible.builtin.systemd_service:
     daemon_reload: true
 
-- name: restart systemd-resolved # noqa: name[casing]
+- name: adguardhome_restart_systemd_resolved # noqa: name[casing]
   ansible.builtin.service:
     name: "systemd-resolved"
     state: "restarted"

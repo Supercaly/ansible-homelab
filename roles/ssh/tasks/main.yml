@@ -44,8 +44,8 @@
   loop_control:
     loop_var: __config_line
   notify:
-    - reload systemd
-    - restart ssh
+    - ssh_reload_systemd
+    - ssh_restart_service
 
 - name: Add configured users allowed to connect over ssh.
   ansible.builtin.lineinfile:
@@ -57,7 +57,7 @@
     validate: "sshd -T -f %s"
     mode: "0644"
   when: ssh_allowed_users | length > 0
-  notify: restart ssh
+  notify: ssh_restart_service
 
 - name: Add configured groups allowed to connect over ssh.
   ansible.builtin.lineinfile:
@@ -69,4 +69,4 @@
     validate: "sshd -T -f %s"
     mode: "0644"
   when: ssh_allowed_groups | length > 0
-  notify: restart ssh
+  notify: ssh_restart_service

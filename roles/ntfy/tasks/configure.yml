@@ -14,4 +14,4 @@
     owner: "{{ ntfy_user }}"
     group: "{{ ntfy_group }}"
     mode: "0600"
-  notify: restart ntfy service
+  notify: ntfy_restart_service

@@ -99,7 +99,7 @@
     PATH: "{{ caddy_go_install_dir }}/bin:/usr/local/bin:{{ ansible_facts['env']['PATH'] }}"
   when: __caddy_xcaddy_build_spec is changed or not __caddy_binary.stat.exists
   changed_when: true
-  notify: restart caddy service
+  notify: caddy_restart_service
 
 - name: Install Caddy systemd service.
   ansible.builtin.template:
@@ -108,7 +108,7 @@
     owner: root
     group: root
     mode: "0644"
-  notify: restart caddy service
+  notify: caddy_restart_service
 
 - name: Reload systemd daemon.
   ansible.builtin.systemd:

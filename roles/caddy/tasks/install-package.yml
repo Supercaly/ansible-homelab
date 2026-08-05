@@ -44,4 +44,4 @@
   ansible.builtin.package:
     name: "{{ caddy_packages }}"
     state: present
-  notify: restart caddy service
+  notify: caddy_restart_service

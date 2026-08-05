@@ -36,7 +36,7 @@
     architectures: "{{ jellyfin_apt_arch }}"
     signed_by: "{{ jellyfin_apt_key_path }}"
     state: present
-  notify: update apt cache
+  notify: jellyfin_update_apt_cache
 
 - name: Flush handlers.
   ansible.builtin.meta: flush_handlers

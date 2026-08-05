@@ -21,7 +21,7 @@
           {{ ansible_facts['distribution_release'] }}-updates
         components: non-free
         state: present
-      notify: update apt cache
+      notify: jellyfin_update_apt_cache
 
     - name: Flush handlers.
       ansible.builtin.meta: flush_handlers

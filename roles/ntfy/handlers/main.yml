@@ -1,5 +1,5 @@
 ---
-- name: restart ntfy service # noqa: name[casing]
+- name: ntfy_restart_service # noqa: name[casing]
   ansible.builtin.service:
     name: "{{ ntfy_service_name }}"
     state: "restarted"
