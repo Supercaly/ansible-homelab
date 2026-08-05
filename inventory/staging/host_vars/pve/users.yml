@@ -4,12 +4,18 @@ system_groups:
     gid: 2000
 
 system_users:
+  # Shared data user
   - name: "shared_data"
     uid: 2000
+    comment: "Owns shared data directories (media, photos, backups)."
     group: "shared_data"
-    comment: "Access shared data folder."
+    password_lock: true
     system: true
     create_home: false
+    shell: /usr/sbin/nologin
+
+  # root user
   - name: "root"
     groups:
       - "shared_data"
+    append: true
