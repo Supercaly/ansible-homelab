@@ -39,29 +39,11 @@ ssh ansible@<host-ip> echo ok
 ## 4. Grant `ansible` passwordless sudo
 
 ```bash
-echo "ansible ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/ansible
-chmod 440 /etc/sudoers.d/ansible
+echo "ansible ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/users
+chmod 440 /etc/sudoers.d/users
 ```
 
-## 5. Create the `<admin>` management user
-
-```bash
-useradd -m -s /bin/bash <admin>
-passwd <admin>          # set a strong password
-
-# Add to sudoers
-echo "<admin> ALL=(ALL) ALL" > /etc/sudoers.d/<admin>
-chmod 440 /etc/sudoers.d/<admin>
-```
-
-Optionally copy your SSH key for password-less login:
-
-```bash
-# from the controller
-ssh-copy-id <admin>@<host-ip>
-```
-
-## 6. Create a Proxmox API token and add it to the inventory
+## 5. Create a Proxmox API token and add it to the inventory
 
 1. Log in to the Proxmox web UI as an administrator.
 2. Go to **Datacenter → Permissions → API Tokens**.

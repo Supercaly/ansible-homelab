@@ -3,13 +3,18 @@ system_users:
   # Ansible management user
   - name: ansible
     comment: "Ansible management user"
+    password_lock: true
+    generate_ssh_key: true
     authorized_keys:
       - "{{ controller_ssh_pubkey }}"
     sudo_options:
       - "ALL=(ALL) NOPASSWD: ALL"
+
   # Personal admin user
   - name: lorenzo
     comment: "Lorenzo Calisti"
+    password: "{{ vault_admin_password }}"
+    generate_ssh_key: true
     authorized_keys:
       - "{{ controller_ssh_pubkey }}"
     sudo_options:

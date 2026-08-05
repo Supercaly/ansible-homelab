@@ -41,6 +41,7 @@ The list `system_users` controls the users present on the system. Each entry is 
 |`comment`| | string | | Set the description (aka GECOS) of the user account.|
 |`group`| | string | | Set the user's primary group.|
 |`groups`| | list | | A list of supplementary groups which the user is also a member of.|
+|`append`| | bool | `false` | If true, add the user to the groups listed in `groups` without removing them from unlisted groups. If false, the user's group membership is set exclusively to `groups`.|
 |`home`| | string | | Set the user's home directory.|
 |`create_home`| | bool | | Create the user's home directory.|
 |`shell`| | string | | Set the user's shell.|
@@ -48,8 +49,14 @@ The list `system_users` controls the users present on the system. Each entry is 
 |`state`| | string | `present` | Whether the group should be present or not on the system.|
 |`password`| | string | | Set the user’s password to the provided encrypted hash.|
 |`expires`| | float | | An expiry time for the user in epoch.|
+|`password_lock`| | bool | | Lock the user's password (disables password login). |
 |`sudo_options`| | list| | List of sudoers options for the user. |
 |`authorized_keys`| | list | | List of SSH keys added to the user's authorized_keys file.|
+|`generate_ssh_key`| | bool | | Generate an SSH keypair for the user. |
+|`ssh_key_type`| | string | | Type of SSH key to generate (e.g. `ed25519`, `rsa`). |
+|`ssh_key_bits`| | int | | Number of bits in the generated key (e.g. `4096` for RSA). |
+|`ssh_key_file`| | string | | Path of the generated key file relative to the user's home (default `.ssh/id_rsa`). |
+|`ssh_key_passphrase`| | string | | Passphrase to protect the generated SSH key. |
 
 ## Dependencies
 
