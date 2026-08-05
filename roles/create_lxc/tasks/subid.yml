@@ -1,0 +1,18 @@
+---
+- name: Ensure subuid entries are present.
+  ansible.builtin.lineinfile:
+    path: /etc/subuid
+    line: "{{ __uid }}"
+    state: present
+  loop: "{{ proxmox_lxc.subuid | default([]) }}"
+  loop_control:
+    loop_var: __uid
+
+- name: Ensure subgid entries are present.
+  ansible.builtin.lineinfile:
+    path: /etc/subgid
+    line: "{{ __gid }}"
+    state: present
+  loop: "{{ proxmox_lxc.subgid | default([]) }}"
+  loop_control:
+    loop_var: __gid

@@ -79,6 +79,9 @@ All container-related settings are defined inside the `proxmox_lxc` dictionary.
 | `disk_volume` | Yes | dict | | Main disk configuration (same syntax as `community.general.proxmox`). |
 | `mount_volumes` | | dict | `{}` | Additional bind mount points for the LXC. See [Mount volumes](#mount-volumes). |
 | `devices` | | dict | `{}` | Device passthrough configuration for the LXC. See [Device passthrough](#device-passthrough). |
+| `raw_config` | | list | `[]` | Raw lines appended to `/etc/pve/lxc/<vmid>.conf`. See [Raw config](#raw-config). |
+| `subuid` | | list | `[]` | Entries to ensure in `/etc/subuid` on the host. See [UID/GID mapping](#uidgid-mapping). |
+| `subgid` | | list | `[]` | Entries to ensure in `/etc/subgid` on the host. See [UID/GID mapping](#uidgid-mapping). |
 | `netif` | | dict | `{}` | Network interfaces of the LXC (same syntax as `community.general.proxmox`). |
 | `ostype` | | string | | OS type. |
 | `onboot` | | bool | `false` | Start container on host boot. |
@@ -135,6 +138,38 @@ proxmox_lxc:
       path: /dev/dri/card0
       gid: 44
 ```
+
+### Raw config
+
+`raw_config` is a list of raw lines written directly to `/etc/pve/lxc/<vmid>.conf`. Use this for LXC options that the Proxmox API and `pct set` do not support, such as `lxc.idmap` and other `lxc.*` directives.
+
+Example:
+
+```yaml
+proxmox_lxc:
+  raw_config:
+    - "lxc.idmap: u 0 100000 65536"
+    - "lxc.idmap: g 0 100000 2000"
+    - "lxc.idmap: g 2000 2000 1"
+    - "lxc.idmap: g 2001 102001 63535"
+```
+
+### UID/GID mapping
+
+When using custom UID/GID mappings via `lxc.idmap`, the host must explicitly authorize the container to use any ID outside the default range (`100000-165535`). This is configured in `/etc/subuid` and `/etc/subgid`.
+
+`subuid` and `subgid` are lists of lines to ensure are present in those files. The format for each entry is `<user>:<id>:<count>`.
+
+Example:
+
+```yaml
+proxmox_lxc:
+  subgid:
+    - "root:1000:1"
+  subuid: []
+```
+
+Entries are managed with `lineinfile` and are idempotent: existing lines are not duplicated. Note that entries are never removed automatically; *if a mapping is no longer needed it must be cleaned up manually*.
 
 ## Dependencies
 
