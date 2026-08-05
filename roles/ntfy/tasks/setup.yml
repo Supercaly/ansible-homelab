@@ -18,7 +18,7 @@
   ansible.builtin.package:
     name: "{{ ntfy_service_name }}"
     state: "present"
-  notify: restart ntfy service
+  notify: ntfy_restart_service
 
 - name: Ensure NTFY is started and enabled at boot.
   ansible.builtin.service:

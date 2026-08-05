@@ -1,5 +1,5 @@
 ---
-- name: restart caddy service # noqa: name[casing]
+- name: caddy_restart_service # noqa: name[casing]
   # TODO: Reload caddy instead of restarting it on configuration changes.
   #   To avoid downtime, the [docs](https://caddyserver.com/docs/running#using-the-service) suggest to
   #   reload the caddy service instead of restarting it.

@@ -21,7 +21,7 @@
 - name: Upgrade packages.
   ansible.builtin.apt:
     upgrade: "{{ system_update_apt_upgrade_type }}"
-  notify: reboot system
+  notify: system_update_reboot_system
 
 - name: Remove unused dependency packages.
   when: system_update_autoremove | bool

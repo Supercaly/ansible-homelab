@@ -42,7 +42,7 @@
     src: adguardhome.service.j2
     dest: "/etc/systemd/system/{{ adguardhome_service_name }}.service"
     mode: "0644"
-  notify: reload systemd daemon
+  notify: adguardhome_reload_systemd
 
 - name: Ensure handlers are notified before enabling new service.
   ansible.builtin.meta: flush_handlers

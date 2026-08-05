@@ -22,7 +22,7 @@
   ansible.builtin.package:
     name: "*"
     state: "latest" # noqa: package-latest
-  notify: reboot system
+  notify: system_update_reboot_system
 
 - name: Remove unused dependency packages.
   when: system_update_autoremove | bool

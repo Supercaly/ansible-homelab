@@ -1,10 +1,10 @@
 ---
-- name: reload systemd # noqa: name[casing]
+- name: ssh_reload_systemd # noqa: name[casing]
   ansible.builtin.systemd_service:
     daemon_reload: true
   when: ansible_facts['service_mgr'] == "systemd"
 
-- name: restart ssh # noqa: name[casing]
+- name: ssh_restart_service # noqa: name[casing]
   ansible.builtin.service:
     name: "{{ ssh_sshd_name }}"
     state: "restarted"

@@ -29,7 +29,7 @@
     owner: "{{ caddy_user }}"
     group: "{{ caddy_group }}"
     mode: "0644"
-  notify: restart caddy service
+  notify: caddy_restart_service
   loop: "{{ caddy_snippets }}"
   loop_control:
     label: "{{ caddy_snippet_item | basename }}"
@@ -42,7 +42,7 @@
     owner: "{{ caddy_user }}"
     group: "{{ caddy_group }}"
     mode: "0644"
-  notify: restart caddy service
+  notify: caddy_restart_service
 
 - name: Write Caddy site configs.
   ansible.builtin.copy:
@@ -51,7 +51,7 @@
     owner: "{{ caddy_user }}"
     group: "{{ caddy_group }}"
     mode: "0644"
-  notify: restart caddy service
+  notify: caddy_restart_service
   loop: "{{ caddy_sites }}"
   loop_control:
     label: "{{ caddy_site_item.name }}"
