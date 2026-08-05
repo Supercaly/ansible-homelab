@@ -13,6 +13,10 @@ proxmox_lxc:
   disk_volume:
     storage: "{{ lxc_default_disk_storage }}"
     size: 16
+  mount_volumes:
+    mp0:
+      host_path: "/tank/media"
+      mountpoint: "/mnt/media"
   cores: 2
   memory: 2048
   devices:
@@ -34,5 +38,12 @@ proxmox_lxc:
   features:
     - "keyctl=1"
     - "nesting=1"
+  raw_config:
+    - "lxc.idmap: u 0 100000 65536"
+    - "lxc.idmap: g 0 100000 2000"
+    - "lxc.idmap: g 2000 2000 1"
+    - "lxc.idmap: g 2001 102001 63535"
+  subgid:
+    - "root:2000:1"
   tags:
     - "media"

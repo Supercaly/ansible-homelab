@@ -1,0 +1,10 @@
+---
+system_groups:
+  - name: "shared_data"
+    gid: 2000
+
+system_users:
+  - name: "jellyfin"
+    groups:
+      - "shared_data"
+    append: true
