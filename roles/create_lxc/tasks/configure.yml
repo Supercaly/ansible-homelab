@@ -59,3 +59,9 @@
 
 - name: Set device passthrough.
   ansible.builtin.import_tasks: devices.yml
+
+- name: Set raw LXC config.
+  ansible.builtin.import_tasks: raw_config.yml
+
+- name: Set subuid/subgid entries.
+  ansible.builtin.import_tasks: subid.yml
