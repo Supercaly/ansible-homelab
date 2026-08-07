@@ -1,0 +1,44 @@
+---
+# Kernel module options passed to modprobe as a string.
+zfs_kernel_options: ""
+
+# Pools and datasets
+zfs_pools: []
+zfs_filesystems: []
+
+# Additional services to manage
+zfs_service_import_cache_enabled: true
+zfs_service_import_scan_enabled: false
+zfs_service_mount_enabled: true
+zfs_service_share_enabled: false
+zfs_service_volume_wait_enabled: true
+zfs_service_zed_enabled: false
+
+# Scrub and trim schedule in systemd OnCalendar format.
+# See: https://www.freedesktop.org/software/systemd/man/systemd.time.html#Calendar%20Events
+zfs_scrub_schedule: monthly
+zfs_trim_schedule: weekly
+
+# ZED configuration
+zfs_zed_email: "root"
+zfs_zed_email_prog: "mail"
+zfs_zed_email_opts: "-s '@(SUBJECT)@' @(ADDRESS)@"
+zfs_zed_notify_interval: 3600
+zfs_zed_notify_verbose: false
+zfs_zed_ntfy_topic: ""
+zfs_zed_ntfy_access_token: ""
+zfs_zed_ntfy_url: "https://ntfy.sh"
+
+#  ZRepl configuration
+zfs_zrepl_enabled: false
+zfs_zrepl_config: {}
+zfs_zrepl_apt_gpg_key: "https://zrepl.cschwarz.com/apt/apt-key.asc"
+zfs_zrepl_apt_key_path: "/etc/apt/keyrings/zrepl.asc"
+zfs_zrepl_apt_arch: >-
+  {{
+    'arm64' if ansible_facts['architecture'] == 'aarch64'
+    else 'armhf' if ansible_facts['architecture'] == 'armv7l'
+    else 'amd64'
+  }}
+zfs_zrepl_apt_url: "https://zrepl.cschwarz.com/apt/{{ ansible_facts['distribution'] | lower }}"
+zfs_zrepl_apt_suites: "{{ ansible_facts['distribution_release'] }}"

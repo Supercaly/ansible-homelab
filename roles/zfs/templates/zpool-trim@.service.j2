@@ -1,0 +1,9 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=Run zpool trim on pool %i (SSD/NVMe only)
+Documentation=man:zpool-trim(8)
+ConditionACPower=true
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/zpool trim %i

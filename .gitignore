@@ -8,3 +8,6 @@
 
 # --- Ansible secrets ---
 .vault-password
+
+# --- Other ---
+**/__pycache__/

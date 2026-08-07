@@ -1,0 +1,27 @@
+---
+# ZFS is already present on Proxmox (included in the pve kernel), so this only
+# loads the module with optional custom options — no installation logic.
+
+- name: Load ZFS kernel module.
+  community.general.modprobe:
+    name: zfs
+    params: "{{ zfs_kernel_options | default(omit) }}"
+    state: present
+
+- name: Ensure ZFS module is loaded on boot.
+  ansible.builtin.copy:
+    content: "zfs\n"
+    dest: /etc/modules-load.d/zfs.conf
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: Configure ZFS module options.
+  ansible.builtin.copy:
+    content: "options zfs {{ zfs_kernel_options }}\n"
+    dest: /etc/modprobe.d/zfs.conf
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: zfs_update_initramfs
+  when: zfs_kernel_options is defined and zfs_kernel_options | length > 0

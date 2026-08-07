@@ -1,0 +1,36 @@
+---
+- name: Configure ZFS kernel module.
+  ansible.builtin.import_tasks: kernel_module.yml
+
+- name: Manage ZFS pools.
+  when: zfs_pools | length > 0
+  block:
+    - name: Retrieve existing ZFS pools.
+      ansible.builtin.command: zpool list -H -o name
+      register: __zfs_existing_pools
+      changed_when: false
+      check_mode: false
+
+    - name: Manage ZFS pool.
+      ansible.builtin.include_tasks: manage_pool.yml
+      loop: "{{ zfs_pools }}"
+      loop_control:
+        loop_var: __zfs_pool
+        label: "{{ __zfs_pool.name }}"
+
+- name: Manage ZFS datasets.
+  when: zfs_filesystems | length > 0
+  block:
+    - name: Manage ZFS dataset.
+      ansible.builtin.include_tasks: manage_dataset.yml
+      loop: "{{ zfs_filesystems }}"
+      loop_control:
+        loop_var: __zfs_dataset
+        label: "{{ __zfs_dataset.name }}"
+
+- name: Manage services.
+  ansible.builtin.import_tasks: manage_services.yml
+
+- name: Configure zrepl.
+  ansible.builtin.include_tasks: zrepl.yml
+  when: zfs_zrepl_enabled | bool

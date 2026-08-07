@@ -1,0 +1,9 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=Run zpool scrub on pool %i
+Documentation=man:zpool-scrub(8)
+ConditionACPower=true
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/zpool scrub %i

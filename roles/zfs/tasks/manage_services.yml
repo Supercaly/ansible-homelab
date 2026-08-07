@@ -1,0 +1,136 @@
+---
+- name: Manage ZFS services.
+  ansible.builtin.systemd:
+    name: "{{ __service.name }}"
+    enabled: "{{ __service.enabled }}"
+    state: "{{ __service.enabled | ternary('started', 'stopped') }}"
+  loop:
+    - name: zfs.target
+      enabled: true
+    - name: zfs-import.target
+      enabled: true
+    - name: zfs-import-cache
+      enabled: "{{ zfs_service_import_cache_enabled | bool }}"
+    - name: zfs-import-scan
+      enabled: "{{ zfs_service_import_scan_enabled | bool }}"
+    - name: zfs-mount
+      enabled: "{{ zfs_service_mount_enabled | bool }}"
+    - name: zfs-share
+      enabled: "{{ zfs_service_share_enabled | bool }}"
+    - name: zfs-volume-wait
+      enabled: "{{ zfs_service_volume_wait_enabled | bool }}"
+    - name: zfs-zed
+      enabled: "{{ zfs_service_zed_enabled | bool }}"
+  loop_control:
+    loop_var: __service
+    label: "{{ __service.name }}"
+
+- name: Manage scrub service.
+  block:
+    - name: Remove scrub cron job.
+      ansible.builtin.file:
+        path: /etc/cron.d/zfsutils-linux
+        state: absent
+
+    - name: Create scrub service.
+      ansible.builtin.template:
+        src: zpool-scrub@.service.j2
+        dest: /etc/systemd/system/zpool-scrub@.service
+        owner: "root"
+        group: "root"
+        mode: "0644"
+      register: __zfs_scrub_service
+
+    - name: Create scrub timer.
+      ansible.builtin.template:
+        src: zpool-scrub@.timer.j2
+        dest: /etc/systemd/system/zpool-scrub@.timer
+        owner: "root"
+        group: "root"
+        mode: "0644"
+      register: __zfs_scrub_timer
+
+    - name: Reload systemd.
+      ansible.builtin.systemd:
+        daemon_reload: true
+      when: __zfs_scrub_service.changed or __zfs_scrub_timer.changed
+
+    - name: Enable or disable scrub timer for each pool.
+      ansible.builtin.systemd:
+        name: "zpool-scrub@{{ __pool.name }}.timer"
+        enabled: "{{ __pool.scrub | default(true) }}"
+        state: "{{ 'started' if (__pool.scrub | default(true)) else 'stopped' }}"
+      loop: "{{ zfs_pools }}"
+      loop_control:
+        loop_var: __pool
+        label: "{{ __pool.name }}"
+
+# TRIM is only useful on SSD/NVMe. Units are deployed regardless so they are
+# ready when solid state disks are added in the future.
+- name: Manage trim service.
+  block:
+    - name: Remove trim cron job.
+      ansible.builtin.file:
+        path: /etc/cron.d/zfsutils-linux
+        state: absent
+
+    - name: Create trim service.
+      ansible.builtin.template:
+        src: zpool-trim@.service.j2
+        dest: /etc/systemd/system/zpool-trim@.service
+        owner: "root"
+        group: "root"
+        mode: "0644"
+      register: __zfs_trim_service
+
+    - name: Create trim timer.
+      ansible.builtin.template:
+        src: zpool-trim@.timer.j2
+        dest: /etc/systemd/system/zpool-trim@.timer
+        owner: "root"
+        group: "root"
+        mode: "0644"
+      register: __zfs_trim_timer
+
+    - name: Reload systemd.
+      ansible.builtin.systemd:
+        daemon_reload: true
+      when: __zfs_trim_service.changed or __zfs_trim_timer.changed
+
+    - name: Enable or disable trim timer for each pool.
+      ansible.builtin.systemd:
+        name: "zpool-trim@{{ __pool.name }}.timer"
+        enabled: "{{ __pool.trim | default(false) }}"
+        state: "{{ 'started' if (__pool.trim | default(false)) else 'stopped' }}"
+      loop: "{{ zfs_pools }}"
+      loop_control:
+        loop_var: __pool
+        label: "{{ __pool.name }}"
+
+- name: Configure ZED notifications.
+  when: zfs_service_zed_enabled | bool
+  ansible.builtin.lineinfile:
+    dest: /etc/zfs/zed.d/zed.rc
+    line: "{{ __config.line }}"
+    regexp: "{{ __config.regexp }}"
+  loop:
+    - regexp: "^#?ZED_EMAIL_ADDR="
+      line: 'ZED_EMAIL_ADDR="{{ zfs_zed_email }}"'
+    - regexp: "^#?ZED_EMAIL_PROG="
+      line: 'ZED_EMAIL_PROG="{{ zfs_zed_email_prog }}"'
+    - regexp: "^#?ZED_EMAIL_OPTS="
+      line: 'ZED_EMAIL_OPTS="{{ zfs_zed_email_opts }}"'
+    - regexp: "^#?ZED_NOTIFY_INTERVAL_SECS="
+      line: 'ZED_NOTIFY_INTERVAL_SECS={{ zfs_zed_notify_interval }}'
+    - regexp: "^#?ZED_NOTIFY_VERBOSE="
+      line: 'ZED_NOTIFY_VERBOSE={{ 1 if zfs_zed_notify_verbose else 0 }}'
+    - regexp: "^#?ZED_NTFY_TOPIC="
+      line: 'ZED_NTFY_TOPIC="{{ zfs_zed_ntfy_topic }}"'
+    - regexp: "^#?ZED_NTFY_ACCESS_TOKEN="
+      line: 'ZED_NTFY_ACCESS_TOKEN="{{ zfs_zed_ntfy_access_token }}"'
+    - regexp: "^#?ZED_NTFY_URL="
+      line: 'ZED_NTFY_URL="{{ zfs_zed_ntfy_url }}"'
+  loop_control:
+    label: "{{ __config.regexp }}"
+    loop_var: __config
+  notify: zfs_restart_zed

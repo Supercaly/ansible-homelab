@@ -1,5 +1,5 @@
 ---
-- name: Configure Proxmox PVEs.
+- name: Configure Proxmox hosts.
   hosts: hypervisor
   become: true
   gather_facts: false
@@ -21,6 +21,14 @@
       tags: ssh
     - role: motd
       tags: motd
+
+- name: Configure ZFS on Proxmox hosts.
+  hosts: hypervisor
+  become: true
+  gather_facts: false
+  roles:
+    - role: zfs
+      tags: zfs
 
 - name: Create Proxmox LXCs.
   hosts: hypervisor

@@ -1,0 +1,93 @@
+---
+# Parts of this tasks are inspired by https://github.com/aisbergg/ansible-role-zfs
+- name: Assert correctness of zpool parameters.
+  ansible.builtin.assert:
+    that:
+      - __zfs_pool.name is defined and __zfs_pool.name is string
+      - __zfs_pool.vdev is defined and __zfs_pool.vdev is string
+      - (__zfs_pool.properties | default({})) is mapping
+      - (__zfs_pool.filesystem_properties | default({})) is mapping
+    quiet: true
+    fail_msg: ZFS pool parameters are invalid
+
+- name: Create new ZFS pool '{{ __zfs_pool.name }}'.
+  when: __zfs_pool.name not in __zfs_existing_pools.stdout_lines
+  block:
+    - name: Prepare pool properties for new pool '{{ __zfs_pool.name }}'.
+      zfs_prepare_properties:
+        new_properties: "{{ __zfs_pool.properties | default({}) }}"
+        type: zpool
+      register: __zfs_prepared_zpool_properties
+
+    - name: Prepare filesystem properties for new pool '{{ __zfs_pool.name }}'.
+      zfs_prepare_properties:
+        new_properties: "{{ __zfs_pool.filesystem_properties | default({}) }}"
+        type: filesystem
+      register: __zfs_prepared_filesystem_properties
+
+    - name: Prepare 'zpool create' command.
+      ansible.builtin.set_fact:
+        __zfs_zpool_create_command: >-
+          zpool create
+          {% for property, value in (__zfs_prepared_zpool_properties.properties | dictsort) %}
+          -o {{ (property ~ '=' ~ value) | quote }}
+          {% endfor %}
+          {% for property, value in (__zfs_prepared_filesystem_properties.properties | dictsort) %}
+          -O {{ (property ~ '=' ~ value) | quote }}
+          {% endfor %}
+          {{ __zfs_pool.name }}
+          {{ __zfs_pool.vdev | regex_replace('\n\s*', ' ') | trim }}
+
+    - name: Print 'zpool create' command.
+      ansible.builtin.debug:
+        msg: "{{ __zfs_zpool_create_command }}"
+        verbosity: 1
+
+    - name: Create ZFS pool '{{ __zfs_pool.name }}'.
+      ansible.builtin.command: "{{ __zfs_zpool_create_command }}"
+      changed_when: true
+
+- name: Set properties on existing ZFS pool.
+  when: __zfs_pool.name in __zfs_existing_pools.stdout_lines
+  block:
+    - name: Gather ZFS properties for existing pool '{{ __zfs_pool.name }}'.
+      community.general.zpool_facts:
+        name: "{{ __zfs_pool.name }}"
+        parsable: true
+      failed_when: false
+      changed_when: false
+
+    - name: Gather filesystem properties for existing pool '{{ __zfs_pool.name }}'.
+      community.general.zfs_facts:
+        name: "{{ __zfs_pool.name }}"
+        parsable: true
+      failed_when: false
+      changed_when: false
+
+    - name: Prepare pool properties for existing pool '{{ __zfs_pool.name }}'.
+      zfs_prepare_properties:
+        new_properties: "{{ __zfs_pool.properties | default({}) }}"
+        current_properties: "{{ ansible_facts['zfs_pools'][0] | default({}) }}"
+        type: zpool
+      register: __zfs_prepared_zpool_properties
+
+    - name: Prepare filesystem properties for existing pool '{{ __zfs_pool.name }}'.
+      zfs_prepare_properties:
+        new_properties: "{{ __zfs_pool.filesystem_properties | default({}) }}"
+        current_properties: "{{ ansible_facts['zfs_datasets'][0] | default({}) }}"
+        type: filesystem
+      register: __zfs_prepared_filesystem_properties
+
+    - name: Update pool properties of existing pool '{{ __zfs_pool.name }}'.
+      ansible.builtin.command: zpool set {{ (__prop.key ~ '=' ~ __prop.value) | quote }} {{ __zfs_pool.name }}
+      changed_when: true
+      loop: "{{ __zfs_prepared_zpool_properties.properties | default({}) | dict2items }}"
+      loop_control:
+        label: "{{ __prop.key }}={{ __prop.value }}"
+        loop_var: __prop
+
+    - name: Update filesystem properties of existing pool '{{ __zfs_pool.name }}'.
+      community.general.zfs:
+        name: "{{ __zfs_pool.name }}"
+        state: present
+        extra_zfs_properties: "{{ __zfs_prepared_filesystem_properties.properties }}"
