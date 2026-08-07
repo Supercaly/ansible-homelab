@@ -1,0 +1,14 @@
+---
+- name: zfs_update_initramfs # noqa: name[casing]
+  ansible.builtin.command: update-initramfs -u
+  changed_when: true
+
+- name: zfs_restart_zed # noqa: name[casing]
+  ansible.builtin.systemd:
+    name: zfs-zed
+    state: restarted
+
+- name: zfs_restart_zrepl # noqa: name[casing]
+  ansible.builtin.systemd:
+    name: zrepl
+    state: restarted

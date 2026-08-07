@@ -1,0 +1,46 @@
+---
+# Parts of this tasks are inspired by https://github.com/aisbergg/ansible-role-zfs
+- name: Assert correctness of ZFS filesystem parameters.
+  ansible.builtin.assert:
+    that:
+      - __zfs_dataset.name is defined and __zfs_dataset.name is string
+      - (__zfs_dataset.properties | default({})) is mapping
+      - (__zfs_dataset.state | default('present')) in ['present', 'absent']
+    quiet: true
+    fail_msg: ZFS filesystem parameters are invalid
+
+- name: Gather properties of dataset '{{ __zfs_dataset.name }}'.
+  community.general.zfs_facts:
+    name: "{{ __zfs_dataset.name }}"
+  register: __zfs_dataset_facts_result
+  failed_when: false
+  changed_when: false
+
+- name: Prepare dataset properties for dataset '{{ __zfs_dataset.name }}'.
+  zfs_prepare_properties:
+    new_properties: "{{ __zfs_dataset.properties | default({}) }}"
+    current_properties: >-
+      {{
+        __zfs_dataset_facts_result.ansible_facts.ansible_zfs_datasets[0] |
+        default({})
+      }}
+    type: filesystem
+  register: __zfs_prepared_filesystem_properties
+
+- name: Manage ZFS dataset '{{ __zfs_dataset.name }}'.
+  community.general.zfs:
+    name: "{{ __zfs_dataset.name }}"
+    state: "{{ __zfs_dataset.state | default('present') }}"
+    extra_zfs_properties: "{{ __zfs_prepared_filesystem_properties.properties }}"
+
+- name: Set mountpoint ownership and permissions for dataset '{{ __zfs_dataset.name }}'.
+  when: >-
+    __zfs_dataset.state | default('present') == 'present' and
+    __zfs_dataset.properties is defined and
+    __zfs_dataset.properties.mountpoint is defined
+  ansible.builtin.file:
+    path: "{{ __zfs_dataset.properties.mountpoint }}"
+    owner: "{{ __zfs_dataset.owner | default(omit) }}"
+    group: "{{ __zfs_dataset.group | default(omit) }}"
+    mode: "{{ __zfs_dataset.mode | default(omit) }}"
+    state: directory

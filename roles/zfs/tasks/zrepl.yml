@@ -1,0 +1,61 @@
+---
+- name: Ensure dependencies are present.
+  ansible.builtin.apt:
+    name:
+      - python3-debian
+    state: present
+
+- name: Remove legacy zrepl.list repository if present.
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/zrepl.list
+    state: absent
+
+- name: Ensure /ect/apt/keyrings directory exists.
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Add zrepl apt key.
+  ansible.builtin.get_url:
+    url: "{{ zfs_zrepl_apt_gpg_key }}"
+    dest: "{{ zfs_zrepl_apt_key_path }}"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Add zrepl apt repository.
+  ansible.builtin.deb822_repository:
+    name: zrepl
+    types: deb
+    uris: "{{ zfs_zrepl_apt_url }}"
+    suites: "{{ zfs_zrepl_apt_suites }}"
+    components: main
+    architectures: "{{ zfs_zrepl_apt_arch }}"
+    signed_by: "{{ zfs_zrepl_apt_key_path }}"
+    state: present
+  register: __zfs_zrepl_repository
+
+- name: Install zrepl.
+  ansible.builtin.apt:
+    name: zrepl
+    state: present
+    update_cache: "{{ __zfs_zrepl_repository.changed }}"
+
+- name: Configure zrepl.
+  ansible.builtin.copy:
+    content: "{{ zfs_zrepl_config | to_nice_yaml(indent=2) }}"
+    dest: /etc/zrepl/zrepl.yml
+    owner: root
+    group: root
+    mode: "0600"
+    validate: zrepl configcheck --config %s
+  notify: zfs_restart_zrepl
+
+- name: Enable and start zrepl service.
+  ansible.builtin.systemd:
+    name: zrepl
+    enabled: true
+    state: started
