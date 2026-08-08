@@ -14,8 +14,8 @@ proxmox_lxc:
     size: 16
   mount_volumes:
     mp0:
-      host_path: "/share"
-      mountpoint: "/mnt"
+      host_path: "/mnt/test_tank/test_media"
+      mountpoint: "/mnt/media"
   cores: 2
   memory: 2048
   netif:
