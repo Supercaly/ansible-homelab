@@ -1,6 +1,7 @@
 ---
 # Written directly to the conf file because Proxmox APIs and pct set don't support lxc.* raw config.
 - name: Set raw LXC config.
+  when: proxmox_lxc.raw_config is defined
   ansible.builtin.blockinfile:
     path: "/etc/pve/lxc/{{ proxmox_lxc.vmid | ansible.builtin.mandatory }}.conf"
     marker: "# {mark} ANSIBLE MANAGED BLOCK raw_config"
