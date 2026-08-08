@@ -1,0 +1,24 @@
+---
+zfs_pools:
+  - name: test_tank
+    vdev: /dev/loop0
+    scrub: true
+    properties:
+      ashift: 12
+    filesystem_properties:
+      mountpoint: /mnt/test_tank
+      compression: lz4
+      atime: "off"
+
+zfs_filesystems:
+  - name: test_tank/test_data
+  - name: test_tank/test_media
+    owner: shared_data
+    group: shared_data
+    mode: "2775"
+    state: present
+    properties:
+      mountpoint: /mnt/test_tank/test_media
+      quota: 1G
+
+zfs_service_zed_enabled: true

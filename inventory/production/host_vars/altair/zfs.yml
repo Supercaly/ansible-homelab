@@ -1,0 +1,62 @@
+---
+# Set ARC_MAX to 30% of available RAM.
+# https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/Module%20Parameters.html
+zfs_kernel_options: "zfs_arc_max={{ (ansible_memtotal_mb * 1024 * 1024 * 0.3) | int }}"
+
+zfs_pools:
+  - name: "tank"
+    vdev: >-
+      raidz
+      /dev/disk/by-id/wwn-0x5000c500fdab4576
+      /dev/disk/by-id/wwn-0x5000c500fdc61cda
+      /dev/disk/by-id/wwn-0x5000c500fdc74450
+    scrub: true
+    properties:
+      ashift: 12
+    filesystem_properties:
+      mountpoint: "/tank"
+      compression: "lz4"
+      atime: "off"
+
+zfs_filesystems:
+  - name: "tank/media"
+    owner: "media"
+    group: "media"
+    mode: "2775"
+    properties:
+      mountpoint: "/tank/media"
+
+# Enable ZED for pools monitoring
+zfs_service_zed_enabled: true
+
+# Automatic Snapthots Using ZREPL
+zfs_zrepl_enabled: true
+zfs_zrepl_config:
+  jobs:
+    - name: "snapshot_job"
+      type: "snap"
+      filesystems: {
+        "tank<": false,
+        "tank/media<": false,
+        # TODO: Configure snapshot for more datasets
+      }
+      snapshotting:
+        type: "periodic"
+        interval: "12h"
+        prefix: "zrepl_"
+      pruning:
+        keep:
+          # prune automatic snapshots
+          - type: "grid"
+            # in first 24 hours keep all snapshots
+            # in first 7 days 1 snapshot each day
+            # in first month keep 1 snapshot each week
+            # discard the rest
+            # details see: https://zrepl.github.io/configuration/prune.html#policy-grid
+            grid: 1x24h(keep=all) | 7x1d(keep=1) | 3x7d(keep=1)
+            regex: "^zrepl_.*"
+
+          # keep manual snapshots
+          - type: regex
+            negate: true
+            regex: "^zrepl_.*"
