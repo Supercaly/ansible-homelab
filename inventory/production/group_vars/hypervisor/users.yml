@@ -1,4 +1,8 @@
 ---
+system_groups:
+  - name: "media"
+    gid: 2000
+
 system_users:
   # Ansible management user
   - name: ansible
@@ -19,3 +23,13 @@ system_users:
       - "{{ controller_ssh_pubkey }}"
     sudo_options:
       - "ALL=(ALL) ALL"
+
+  # Shared media user
+  - name: "media"
+    uid: 2000
+    comment: "Owns shared media directories"
+    group: "media"
+    password_lock: true
+    system: true
+    create_home: false
+    shell: /usr/sbin/nologin
