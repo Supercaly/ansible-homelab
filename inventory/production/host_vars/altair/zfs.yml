@@ -25,6 +25,14 @@ zfs_filesystems:
     mode: "2775"
     properties:
       mountpoint: "/tank/media"
+      quota: "1T"
+  - name: "tank/photo"
+    owner: "photo"
+    group: "photo"
+    mode: "2775"
+    properties:
+      mountpoint: "/tank/photo"
+      quota: "1T"
 
 # Enable ZED for pools monitoring
 zfs_service_zed_enabled: true
@@ -38,6 +46,7 @@ zfs_zrepl_config:
       filesystems: {
         "tank<": false,
         "tank/media<": false,
+        "tank/photo<": true,
         # TODO: Configure snapshot for more datasets
       }
       snapshotting:

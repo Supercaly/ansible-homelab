@@ -1,8 +1,28 @@
 ---
 system_groups:
   - name: "docker"
+  - name: "photo"
+    gid: 2001
 
 system_users:
+  # root user
+  - name: "root"
+    groups:
+      - "photo"
+    append: true
+
+  # Ansible management user
   - name: "ansible"
     groups:
       - "docker"
+    append: true
+
+  # Shared photo user
+  - name: "photo"
+    uid: 2001
+    comment: "Owns shared photo directories"
+    group: "photo"
+    password_lock: true
+    system: true
+    create_home: false
+    shell: /usr/sbin/nologin

@@ -1,0 +1,4 @@
+---
+nfs_exports:
+  # Export photo only for earth-docker
+  - /tank/photo earth-docker.{{ dns.search_domains | first }}(rw,sync,no_subtree_check,no_root_squash)

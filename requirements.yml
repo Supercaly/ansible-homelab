@@ -1,6 +1,7 @@
 ---
 roles:
   - name: geerlingguy.docker
+  - name: geerlingguy.nfs
   - name: lae.proxmox
 
 collections:
