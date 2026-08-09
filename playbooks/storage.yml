@@ -1,0 +1,32 @@
+---
+- name: Configure NFS servers.
+  hosts: nfs-server
+  become: true
+  gather_facts: false
+  roles:
+    - role: geerlingguy.nfs
+      tags: nfs
+
+- name: Configure NFS clients.
+  hosts: nfs-client
+  become: true
+  gather_facts: false
+  tags:
+    - nfs
+  tasks:
+    - name: Ensure NFS client service is present.
+      ansible.builtin.package:
+        name: nfs-common
+        state: present
+
+    - name: Mount NFS exports.
+      ansible.posix.mount:
+        src: "{{ __mount.src | ansible.builtin.mandatory }}"
+        path: "{{ __mount.path | ansible.builtin.mandatory }}"
+        fstype: "{{ __mount.fstype | ansible.builtin.mandatory }}"
+        opts: "{{ __mount.opts | default(omit) }}"
+        state: "{{ __mount.state | default('mounted') }}"
+      loop: "{{ nfs_mounts | default([]) }}"
+      loop_control:
+        loop_var: "__mount"
+        label: "{{ __mount.src }}"

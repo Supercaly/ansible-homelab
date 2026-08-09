@@ -26,12 +26,26 @@ all:
 
     # --- Functional groups ---
     # Used by playbooks as targets across inventories.
+
+    # DNS servers
     dns:
       hosts:
         adguard:
+
+    # Reverse proxies
     proxy:
       hosts:
         caddy:
+
+    # Media servers
     media:
       hosts:
         jellyfin:
+
+    # NFS hosts
+    nfs-server:
+      hosts:
+        pve:
+    nfs-client:
+      hosts:
+        docker:

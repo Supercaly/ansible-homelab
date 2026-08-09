@@ -34,5 +34,8 @@
 - name: Configure media services.
   ansible.builtin.import_playbook: media.yml
 
-- name: Configure other services.
+- name: Configure docker services.
   ansible.builtin.import_playbook: services.yml
+
+- name: Configure shared storage services.
+  ansible.builtin.import_playbook: storage.yml

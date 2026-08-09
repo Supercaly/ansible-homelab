@@ -2,6 +2,8 @@
 system_groups:
   - name: "media"
     gid: 2000
+  - name: "photo"
+    gid: 2001
 
 system_users:
   # Ansible management user
@@ -29,6 +31,16 @@ system_users:
     uid: 2000
     comment: "Owns shared media directories"
     group: "media"
+    password_lock: true
+    system: true
+    create_home: false
+    shell: /usr/sbin/nologin
+
+  # Shared photo user
+  - name: "photo"
+    uid: 2001
+    comment: "Owns shared photo directories"
+    group: "photo"
     password_lock: true
     system: true
     create_home: false

@@ -24,15 +24,31 @@ all:
 
     # --- Functional groups ---
     # Used by playbooks as targets across inventories.
+
+    # DNS servers
     dns:
       hosts:
         mercury-dns:
+
+    # Reverse proxies
     proxy:
       hosts:
         mars-proxy:
+
+    # Docker hosts
     docker:
       hosts:
         earth-docker:
+
+    # Media servers
     media:
       hosts:
         saturn-media:
+
+    # NFS hosts
+    nfs-server:
+      hosts:
+        altair:
+    nfs-client:
+      hosts:
+        earth-docker:
