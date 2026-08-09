@@ -6,17 +6,24 @@ adguardhome_config:
   users: "{{ vault_adguard_users }}"
   language: "en"
   dns:
+    upstream_mode: "parallel"
     upstream_dns:
-      - "https://dns.quad9.net/dns-query"
-      - "https://protective.joindns4.eu/dns-query"
+      # Use unfiltered DNS servers for unrestricted access
+      - "https://dns10.quad9.net/dns-query"
+      - "https://unfiltered.joindns4.eu/dns-query"
+      - "https://doh.dns.sb/dns-query"
     bootstrap_dns:
-      - "9.9.9.9"
-      - "149.112.112.112"
+      # For bootstrapping we use the IPv4 address of the same servers
+      - "9.9.9.10"
+      - "86.54.11.100"
+      - "185.222.222.222"
       - "1.1.1.1"
+      - "8.8.8.8"
     fallback_dns:
-      - "9.9.9.9"
-      - "149.112.112.112"
-      - "86.54.11.1"
+      # In case the European DNS servers are not available
+      # fallback to Google and Cloudflare
+      - "https://dns.google/dns-query"
+      - "https://cloudflare-dns.com/dns-query"
   dhcp:
     enabled: true
     interface_name: "{{ interfaces.lan.device }}"
