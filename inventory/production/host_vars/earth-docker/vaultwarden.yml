@@ -1,5 +1,6 @@
 ---
 vaultwarden_server_version: "1.36.0"
+vaultwarden_timezone: "{{ system_locale_timezone }}"
 vaultwarden_backup_version: "1.26.11"
 
 vaultwarden_domain: "pwd.{{ network.domain }}"

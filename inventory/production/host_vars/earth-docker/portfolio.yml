@@ -1,3 +1,4 @@
 ---
+portfolio_timezone: "{{ system_locale_timezone }}"
 portfolio_root: /srv/stacks/portfolio
 portfolio_port: 8002

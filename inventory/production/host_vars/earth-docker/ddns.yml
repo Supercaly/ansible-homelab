@@ -1,5 +1,6 @@
 ---
 ddns_version: "v2.10.0"
+ddns_timezone: "{{ system_locale_timezone }}"
 
 ddns_root: /srv/stacks/ddns
 ddns_port: 8000
