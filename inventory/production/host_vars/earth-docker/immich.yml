@@ -1,0 +1,9 @@
+---
+immich_version: "v3"
+
+immich_root: "/srv/stacks/immich"
+immich_port: 2283
+immich_timezone: "{{ system_locale_timezone }}"
+
+immich_upload_location: "/mnt/photo"
+immich_db_password: "{{ vault_immich_db_password }}"

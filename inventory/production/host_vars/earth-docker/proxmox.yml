@@ -8,8 +8,9 @@ proxmox_kvm:
   ciuser: "{{ kvm_default_user }}"
   cipassword: "{{ kvm_default_password }}"
   sshkeys: "{{ kvm_default_pubkey }}"
-  cores: 2
-  memory: 2048
+  cpu: "x86-64-v2"
+  cores: 6
+  memory: 8192
   ipconfig:
     ipconfig0: >-
       ip={{
@@ -21,7 +22,7 @@ proxmox_kvm:
   scsi:
     scsi0:
       storage: "{{ kvm_default_disk_storage }}"
-      size: 10 # TODO: Increase disk size
+      size: 50
   rng0: "/dev/urandom"
   nameservers: "{{ dns.servers | join(',') }}"
   searchdomains: "{{ dns.search_domains | join(',') }}"
