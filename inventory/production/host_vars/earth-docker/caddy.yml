@@ -30,3 +30,12 @@ caddy_sites:
 
           reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ vaultwarden_port }}"
         }
+  - name: "immich"
+    content: |
+        https://photo.{{ network.domain }} {
+          import logging "immich.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ immich_port }}"
+        }
