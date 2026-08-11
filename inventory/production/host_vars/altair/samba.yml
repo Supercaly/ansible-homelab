@@ -1,0 +1,14 @@
+---
+samba_users:
+  - name: "backup"
+    password: "{{ vault_samba_backup_user_pass }}"
+
+samba_shares:
+  - name: "backup"
+    path: "/tank/backup"
+    valid_users: "backup"
+    force_group: "backup"
+    read_only: false
+    browseable: false
+    force_create_mode: "0644"
+    force_directory_mode: "2775"

@@ -1,0 +1,11 @@
+---
+samba_users:
+  - name: "shared_data"
+    password: "{{ vault_samba_user_password }}"
+
+samba_shares:
+  - name: "test-data"
+    path: "/mnt/test_tank/test_data"
+    valid_users: "shared_data"
+    read_only: false
+    browseable: true
