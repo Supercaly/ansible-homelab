@@ -19,6 +19,14 @@ zfs_pools:
       atime: "off"
 
 zfs_filesystems:
+  # Backups datasets
+  - name: "tank/backup"
+    owner: "backup"
+    group: "backup"
+    mode: "2775"
+    properties:
+      mountpoint: "/tank/backup"
+  # Media dataset
   - name: "tank/media"
     owner: "media"
     group: "media"
@@ -26,6 +34,7 @@ zfs_filesystems:
     properties:
       mountpoint: "/tank/media"
       quota: "1T"
+  # Photo dataset
   - name: "tank/photo"
     owner: "photo"
     group: "photo"
@@ -45,6 +54,7 @@ zfs_zrepl_config:
       type: "snap"
       filesystems: {
         "tank<": false,
+        "tank/backup<": false,
         "tank/media<": false,
         "tank/photo<": true,
         # TODO: Configure snapshot for more datasets

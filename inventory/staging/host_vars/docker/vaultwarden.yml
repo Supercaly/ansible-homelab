@@ -3,8 +3,12 @@ vaultwarden_domain: "vaultwarden.{{ network.domain }}"
 vaultwarden_port: 8001
 
 vaultwarden_root: /srv/stacks/vaultwarden
+vaultwarden_remote_dir: "/test-data/vaultwarden_backup"
 vaultwarden_rclone_config:
-  type: local
+  type: "smb"
+  host: "{{ network.ip4 | ansible.utils.nthhost(1) }}"
+  user: "shared_data"
+  pass: "{{ vault_vaultwarden_smb_pass }}"
 vaultwarden_config:
   domain: "https://{{ vaultwarden_domain }}"
   signups_allowed: true

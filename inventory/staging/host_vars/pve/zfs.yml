@@ -12,6 +12,13 @@ zfs_pools:
 
 zfs_filesystems:
   - name: test_tank/test_data
+    owner: shared_data
+    group: shared_data
+    mode: "2775"
+    state: present
+    properties:
+      mountpoint: /mnt/test_tank/test_data
+      quota: 500M
   - name: test_tank/test_media
     owner: shared_data
     group: shared_data

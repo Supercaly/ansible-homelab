@@ -4,6 +4,8 @@ system_groups:
     gid: 2000
   - name: "photo"
     gid: 2001
+  - name: "backup"
+    gid: 2010
 
 system_users:
   # Ansible management user
@@ -41,6 +43,16 @@ system_users:
     uid: 2001
     comment: "Owns shared photo directories"
     group: "photo"
+    password_lock: true
+    system: true
+    create_home: false
+    shell: /usr/sbin/nologin
+
+  # Backup user
+  - name: "backup"
+    uid: 2010
+    comment: "Owns shared backup directories"
+    group: "backup"
     password_lock: true
     system: true
     create_home: false
