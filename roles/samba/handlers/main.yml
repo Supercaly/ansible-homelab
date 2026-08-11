@@ -1,0 +1,5 @@
+---
+- name: samba_reload_service # noqa: name[casing]
+  ansible.builtin.systemd:
+    name: "{{ samba_service }}"
+    state: reloaded

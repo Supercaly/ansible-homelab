@@ -49,3 +49,8 @@ all:
     nfs-client:
       hosts:
         docker:
+
+    # Samba hosts
+    samba-server:
+      hosts:
+        pve:

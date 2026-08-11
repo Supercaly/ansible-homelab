@@ -1,0 +1,68 @@
+{{ ansible_managed | comment(decoration='#') }}
+
+[global]
+  netbios name = {{ samba_netbios_name }}
+  workgroup = {{ samba_workgroup }}
+  server string = {{ samba_server_string }}
+
+  security = user
+  passdb backend = tdbsam
+  map to guest = never
+
+  log file = /var/log/samba/log.%m
+  max log size = 1000
+
+  server min protocol = {{ samba_server_min_protocol }}
+
+{% if samba_interfaces | length > 0 %}
+  interfaces = {{ samba_interfaces }}
+  bind interfaces only = {{ 'yes' if samba_bind_interfaces_only else 'no' }}
+{% endif %}
+
+  # No NetBIOS resulution
+  wins support = no
+  local master = no
+  domain master = no
+  preferred master = no
+
+  # No printer
+  load printers = no
+  printing = bsd
+  printcap name = /dev/null
+  disable spoolss = yes
+
+  dns proxy = no
+
+{% for share in samba_shares %}
+[{{ share.name | ansible.builtin.mandatory }}]
+{% if share.comment is defined %}
+  comment = {{ share.comment }}
+{% endif %}
+  path = {{ share.path | ansible.builtin.mandatory }}
+{% if share.valid_users is defined %}
+  valid users = {{ share.valid_users }}
+{% endif %}
+  guest ok = no
+  read only = {{ 'yes' if share.read_only | default(true) else 'no' }}
+  browseable = {{ 'yes' if share.browseable | default(true) else 'no' }}
+{% if share.write_list is defined %}
+  write list = {{ share.write_list }}
+{% endif %}
+{% if share.force_group is defined %}
+  force group = {{ share.force_group }}
+{% endif %}
+  force create mode = {{ share.force_create_mode | default('0640') }}
+  force directory mode = {{ share.force_directory_mode | default('0750') }}
+{% if share.vfs_objects is defined and share.vfs_objects | length > 0 %}
+  vfs objects = {% for obj in share.vfs_objects %}{{ obj.name }} {% endfor %}
+
+{% for obj in share.vfs_objects %}
+{% if obj.options is defined %}
+{% for opt in obj.options %}
+  {{ obj.name }}:{{ opt.name }} = {{ opt.value }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% endfor %}

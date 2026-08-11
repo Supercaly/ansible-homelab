@@ -1,0 +1,9 @@
+---
+samba_packages:
+  - "samba"
+  - "samba-common"
+
+samba_vfs_packages:
+  - "samba-vfs-modules"
+
+samba_service: "smbd"
