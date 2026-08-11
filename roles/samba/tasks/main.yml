@@ -1,0 +1,56 @@
+---
+- name: Include OS-specific variables.
+  ansible.builtin.include_vars: "{{ ansible_facts['os_family'] }}.yml"
+
+- name: Ensure Samba packagess are installed.
+  ansible.builtin.package:
+    name: "{{ samba_packages }}"
+    state: present
+
+- name: Install Samba VFS extensions packages.
+  ansible.builtin.package:
+    name: "{{ samba_vfs_packages }}"
+    state: present
+
+- name: Check if Samba account exists.
+  ansible.builtin.command: "pdbedit -L -u {{ __user.name | ansible.builtin.mandatory }}"
+  register: __samba_user_check
+  failed_when: false
+  changed_when: false
+  loop: "{{ samba_users }}"
+  loop_control:
+    loop_var: __user
+    label: "{{ __user.name | ansible.builtin.mandatory }}"
+
+- name: Create Samba account.
+  ansible.builtin.shell: >-
+    set -o nounset -o pipefail -o errexit &&
+    printf '%s\n%s\n' '{{
+      __result.__user.password | ansible.builtin.mandatory
+    }}' '{{
+      __result.__user.password | ansible.builtin.mandatory
+    }}' | smbpasswd -s -a {{
+      __result.__user.name | ansible.builtin.mandatory
+    }}
+  loop: "{{ __samba_user_check.results }}"
+  loop_control:
+    loop_var: __result
+    label: "{{ __result.__user.name | ansible.builtin.mandatory }}"
+  when: __result.rc != 0
+  changed_when: true
+
+- name: Deploy smb.conf.
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: "0644"
+    validate: "testparm -s %s"
+  notify: samba_reload_service
+
+- name: Ensure Samba is running and enabled.
+  ansible.builtin.systemd:
+    name: "{{ samba_service }}"
+    enabled: true
+    state: started

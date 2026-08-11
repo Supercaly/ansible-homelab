@@ -30,3 +30,11 @@
       loop_control:
         loop_var: "__mount"
         label: "{{ __mount.src }}"
+
+- name: Configure Samba servers.
+  hosts: samba-server
+  become: true
+  gather_facts: false
+  roles:
+    - role: samba
+      tags: samba

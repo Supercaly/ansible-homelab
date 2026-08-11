@@ -1,0 +1,12 @@
+---
+samba_workgroup: "WORKGROUP"
+samba_server_string: "{{ inventory_hostname }}"
+samba_netbios_name: "{{ inventory_hostname }}"
+
+samba_server_min_protocol: "SMB2_10"
+
+samba_interfaces: ""
+samba_bind_interfaces_only: "{{ samba_interfaces | length > 0 }}"
+
+samba_users: []
+samba_shares: []

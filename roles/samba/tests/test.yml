@@ -1,0 +1,5 @@
+---
+- name: Test samba role.
+  hosts: localhost
+  roles:
+    - samba

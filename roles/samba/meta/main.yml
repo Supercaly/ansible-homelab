@@ -1,0 +1,23 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: samba
+  author: Lorenzo Calisti
+  description: Install and configure Samba on Linux.
+  license: MIT
+  min_ansible_version: "2.1"
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+  galaxy_tags:
+    - samba
+    - smb
+    - fileshare
