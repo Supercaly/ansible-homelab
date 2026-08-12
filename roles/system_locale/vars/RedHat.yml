@@ -1,4 +1,5 @@
 ---
 system_locale_packages:
   - "glibc-langpack-{{ system_locale_lang.split('_')[0] | lower }}"
-  - "tzdata"
+  - tzdata
+system_locale_file: /etc/locale.conf

@@ -20,32 +20,23 @@
   community.general.locale_gen:
     name: "{{ system_locale_lang }}"
 
-- name: Get current locale.
-  block:
-    - name: Query current locale.
-      ansible.builtin.command: "localectl status"
-      register: __system_locale_status
-      changed_when: false
-
-    - name: Set '__current_locale_lang' with current locale.
-      ansible.builtin.set_fact:
-        __current_locale_lang: >-
-          {{
-            __system_locale_status.stdout |
-            regex_findall(
-              'LANG=([^\n]+)',
-              ignorecase=true,
-              multiline=true
-            ) |
-            first |
-            default('')
-          }}
-
 - name: Set locale.
-  ansible.builtin.command: >-
-    localectl set-locale {{ system_locale_lang }}
-  when: system_locale_lang != __current_locale_lang
-  changed_when: true
+  ansible.builtin.lineinfile:
+    path: "{{ system_locale_file }}"
+    regexp: "{{ __lang.regexp }}"
+    line: "{{ __lang.line }}"
+    create: true
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - regexp: '^LANG='
+      line: "LANG={{ system_locale_lang }}"
+    - regexp: '^LC_ALL='
+      line: "LC_ALL={{ system_locale_lang }}"
+  loop_control:
+    loop_var: __lang
+    label: "{{ __lang.line }}"
 
 - name: Set timezone.
   community.general.timezone:
