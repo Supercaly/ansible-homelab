@@ -21,7 +21,7 @@ system_users:
   # Personal admin user
   - name: lorenzo
     comment: "Lorenzo Calisti"
-    password: "{{ vault_admin_password }}"
+    password: "{{ vault_admin_user_password }}"
     generate_ssh_key: true
     authorized_keys:
       - "{{ controller_ssh_pubkey }}"
