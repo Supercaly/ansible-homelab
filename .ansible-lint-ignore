@@ -6,3 +6,7 @@
 playbooks/proxmox.yml var-naming[no-role-prefix]
 roles/create_lxc/defaults/main.yml var-naming[no-role-prefix]
 roles/create_kvm/defaults/main.yml var-naming[no-role-prefix]
+
+# This violations are related to `system_users` and `system_groups` variables
+# that do not follow the roles' naming conventions
+playbooks/linux.yml var-naming[no-role-prefix]

@@ -1,9 +1,9 @@
 ---
-system_groups:
+system_groups_host:
   - name: "shared_data"
     gid: 2000
 
-system_users:
+system_users_host:
   # Shared data user
   - name: "shared_data"
     uid: 2000

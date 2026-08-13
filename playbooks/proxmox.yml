@@ -12,18 +12,6 @@
         # Would remove Proxmox completely.
         # https://github.com/lae/ansible-role-proxmox/issues/223
         pve_remove_old_kernels: false
-      tags: pve_system
-    - role: system_locale
-      tags: locale
-    - role: system_users
-      tags: users
-    - role: ssh
-      tags: ssh
-    - role: motd
-      tags: motd
-    - role: bash_alias
-      tags: alias
-
 
 - name: Configure ZFS on Proxmox hosts.
   hosts: hypervisor
