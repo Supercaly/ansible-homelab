@@ -1,5 +1,5 @@
 ---
-system_groups:
+system_groups_host:
   # Ensure render group exist for iGPU passthrough
   - name: render
     gid: 104
@@ -7,9 +7,15 @@ system_groups:
   - name: media
     gid: 2000
 
-system_users:
+system_users_host:
   # Ensure jellyfin user can access shared media
   - name: jellyfin
     groups:
       - media
+    append: true
+
+  # Ensure admin user can access shared media
+  - name: "lorenzo"
+    groups:
+      - "media"
     append: true

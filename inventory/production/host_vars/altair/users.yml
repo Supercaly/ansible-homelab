@@ -1,5 +1,6 @@
 ---
-system_groups:
+system_groups_host:
+  # Groups for shared media, photos, and backups
   - name: "media"
     gid: 2000
   - name: "photo"
@@ -7,28 +8,8 @@ system_groups:
   - name: "backup"
     gid: 2010
 
-system_users:
-  # Ansible management user
-  - name: ansible
-    comment: "Ansible management user"
-    password_lock: true
-    generate_ssh_key: true
-    authorized_keys:
-      - "{{ controller_ssh_pubkey }}"
-    sudo_options:
-      - "ALL=(ALL) NOPASSWD: ALL"
-
-  # Personal admin user
-  - name: lorenzo
-    comment: "Lorenzo Calisti"
-    password: "{{ vault_admin_password }}"
-    generate_ssh_key: true
-    authorized_keys:
-      - "{{ controller_ssh_pubkey }}"
-    sudo_options:
-      - "ALL=(ALL) ALL"
-
-  # Shared media user
+system_users_host:
+  # Users for shared media, photos, and backups
   - name: "media"
     uid: 2000
     comment: "Owns shared media directories"
@@ -38,7 +19,6 @@ system_users:
     create_home: false
     shell: /usr/sbin/nologin
 
-  # Shared photo user
   - name: "photo"
     uid: 2001
     comment: "Owns shared photo directories"
@@ -48,7 +28,6 @@ system_users:
     create_home: false
     shell: /usr/sbin/nologin
 
-  # Backup user
   - name: "backup"
     uid: 2010
     comment: "Owns shared backup directories"

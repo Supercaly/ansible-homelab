@@ -1,6 +1,6 @@
 ---
 - name: Configure Linux systems.
-  hosts: all:!hypervisor
+  hosts: all
   become: true
   gather_facts: false
   tags: linux
@@ -10,6 +10,25 @@
     - role: system_update
       tags: update
     - role: system_users
+      vars:
+        # Collect list variables for groups and users spread amongs all hosts,
+        # group_vars and host_vars.
+        #
+        # Ansible overwrites variables defined inside group_vars with the one
+        # found in host_vars. This mechanism lets us split list variable definition
+        # across groups and hosts.
+        system_groups: >-
+          {{
+            system_groups_all | default([]) +
+            system_groups_group | default([]) +
+            system_groups_host | default([])
+          }}
+        system_users: >-
+          {{
+            system_users_all | default([]) +
+            system_users_group | default([]) +
+            system_users_host | default([])
+          }}
       tags: users
     - role: ssh
       tags: ssh

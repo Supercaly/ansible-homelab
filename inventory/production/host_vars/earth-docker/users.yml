@@ -1,20 +1,22 @@
 ---
-system_groups:
+system_groups_host:
   - name: "docker"
+    # Ensure shared photo group exists
   - name: "photo"
     gid: 2001
 
-system_users:
-  # root user
+system_users_host:
+  # Ensure root user can access photo
   - name: "root"
     groups:
       - "photo"
     append: true
 
-  # Ansible management user
-  - name: "ansible"
+  # Ensure admin user can access docker and photo
+  - name: "lorenzo"
     groups:
       - "docker"
+      - "photo"
     append: true
 
   # Shared photo user
