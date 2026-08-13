@@ -1,0 +1,6 @@
+---
+system_update_autoupdate_enabled: false
+system_update_autoupdate_reboot: false
+system_update_install_packages:
+  - "vim"
+  - "dnsutils"

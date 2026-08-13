@@ -24,7 +24,6 @@ These variables control how system updates are executed.
 | Name | Type | Default | Description |
 | - | - | - | - |
 |`system_update_reboot`| bool | `false` | Reboot the system after the update. |
-|`system_update_print_upgradable` | bool | `true` | Print a list of upgradable packages. |
 |`system_update_autoremove` | bool | `true` | Remove unused packages after update. |
 |`system_update_install_packages` | list | `[]` | Additional packages to install on the system. |
 |`system_update_apt_upgrade_type` | string | `"safe"` | APT update type, one of: `yes`, `safe`, `dist`, `full`. |

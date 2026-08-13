@@ -13,9 +13,6 @@ system_update_network_http_status_codes:
 system_update_network_http_urls:
   - "https://google.com/generate_204"
 
-# Print upgradable packages
-system_update_print_upgradable: true
-
 # Clean old packages
 system_update_autoremove: true
 

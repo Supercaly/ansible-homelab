@@ -3,20 +3,18 @@
   ansible.builtin.apt:
     update_cache: true
 
-- name: List upgradable packages.
-  when: system_update_print_upgradable | bool
-  block:
-    - name: Retrieve upgradable packages.
-      ansible.builtin.command:
-        cmd: "{{ system_update_list_upgradable_cmd }}"
-      register: __system_update_upgradable_result
-      changed_when: false
-      failed_when: false
+- name: Retrieve upgradable packages.
+  ansible.builtin.command:
+    cmd: "{{ system_update_list_upgradable_cmd }}"
+  register: __system_update_upgradable_result
+  changed_when: false
+  failed_when: false
 
-    - name: List upgradable packages.
-      when: __system_update_upgradable_result.stdout_lines[1] is defined
-      ansible.builtin.debug:
-        msg: "{{ __system_update_upgradable_result.stdout }}"
+- name: List upgradable packages.
+  when: __system_update_upgradable_result.stdout_lines[1] is defined
+  ansible.builtin.debug:
+    msg: "{{ __system_update_upgradable_result.stdout }}"
+    verbosity: 1
 
 - name: Upgrade packages.
   ansible.builtin.apt:
