@@ -1,0 +1,4 @@
+---
+system_update_install_packages:
+  - "vim"
+  - "dnsutils"
