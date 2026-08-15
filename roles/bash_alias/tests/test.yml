@@ -1,0 +1,6 @@
+---
+- name: Test bash_alias role.
+  hosts: localhost
+  remote_user: root
+  roles:
+    - bash_alias

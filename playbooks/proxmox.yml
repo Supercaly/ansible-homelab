@@ -21,6 +21,9 @@
       tags: ssh
     - role: motd
       tags: motd
+    - role: bash_alias
+      tags: alias
+
 
 - name: Configure ZFS on Proxmox hosts.
   hosts: hypervisor

@@ -1,0 +1,6 @@
+---
+bash_alias_file_path: "/home/lorenzo/.bash_aliases"
+bash_alias_aliases:
+  ll: "ls -la --color"
+  ..: "cd .."
+  grep: "grep --color"
