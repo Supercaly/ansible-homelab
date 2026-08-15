@@ -1,0 +1,5 @@
+{{ ansible_managed | comment(decoration='#') }}
+
+{% for alias, command in bash_alias_aliases.items() %}
+alias {{ alias }}='{{ command }}'
+{% endfor %}

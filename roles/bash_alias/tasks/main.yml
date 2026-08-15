@@ -1,0 +1,6 @@
+---
+- name: Deploy bash aliases.
+  ansible.builtin.template:
+    src: bash_aliases.j2
+    dest: "{{ bash_alias_file_path }}"
+    mode: "0644"

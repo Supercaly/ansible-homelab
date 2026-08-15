@@ -15,3 +15,5 @@
       tags: ssh
     - role: motd
       tags: motd
+    - role: bash_alias
+      tags: alias
