@@ -11,3 +11,4 @@ collections:
   - name: community.general
   - name: community.proxmox
   - name: grafana.grafana
+  - name: prometheus.prometheus
