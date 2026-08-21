@@ -63,3 +63,7 @@ all:
     prometheus:
       hosts:
         neptune-metrics:
+    exporter:
+      children:
+        hypervisor:
+        guest:
