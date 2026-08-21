@@ -17,6 +17,7 @@ all:
       hosts:
         mercury-dns:
         mars-proxy:
+        neptune-metrics:
         saturn-media:
     kvm:
       hosts:
@@ -62,3 +63,8 @@ all:
     samba-server:
       hosts:
         altair:
+
+    # Monitoring
+    prometheus:
+      hosts:
+        neptune-metrics:
