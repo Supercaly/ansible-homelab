@@ -1,4 +1,22 @@
 ---
+- name: Configure Prometheus.
+  hosts: prometheus
+  become: true
+  gather_facts: false
+  roles:
+    - role: prometheus.prometheus.prometheus
+      vars:
+        prometheus_scrape_configs: >-
+          {{
+            groups['all'] |
+            map('ansible.builtin.extract', hostvars) |
+            selectattr('prometheus_scrape_configs', 'defined') |
+            map(attribute='prometheus_scrape_configs') |
+            list |
+            flatten
+          }}
+      tags: prometheus
+
 - name: Configure Grafana.
   hosts: grafana
   become: true
