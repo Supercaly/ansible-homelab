@@ -20,6 +20,7 @@ all:
         influxdb:
         grafana:
         jellyfin:
+        prometheus:
     kvm:
       hosts:
         docker:
