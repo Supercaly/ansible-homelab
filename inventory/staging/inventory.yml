@@ -55,3 +55,9 @@ all:
     samba-server:
       hosts:
         pve:
+
+    # Monitored hosts
+    exporter:
+      children:
+        hypervisor:
+        guest:
