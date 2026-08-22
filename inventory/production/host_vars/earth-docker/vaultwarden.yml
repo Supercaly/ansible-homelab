@@ -14,7 +14,7 @@ vaultwarden_backup_cron: "0 0 * * *"
 vaultwarden_backup_keep_days: 30
 vaultwarden_rclone_config:
   type: "smb"
-  host: "{{ network.ip4 | ansible.utils.nthhost(3) }}"
+  host: "{{ smb_server_address }}"
   user: "backup"
   pass: "{{ vault_vaultwarden_smb_pass }}"
 vaultwarden_config:

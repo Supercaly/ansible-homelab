@@ -1,7 +1,7 @@
 ---
 proxmox_host: pve
 proxmox_kvm:
-  vmid: 1030
+  vmid: 202
   name: "{{ inventory_hostname }}"
   template_vmid: "{{ kvm_default_template_vmid }}"
   template_name: "{{ kvm_default_template_name }}"
