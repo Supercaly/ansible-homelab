@@ -3,5 +3,6 @@ dns:
   search_domains:
     - "home.arpa"
   servers:
+    # TODO: Find a way to avoid using the DNS server of the router
     - "{{ network.ip4 | ansible.utils.nthhost(10) | ansible.builtin.mandatory }}"
     - "{{ network.ip4 | ansible.utils.nthhost(1) | ansible.builtin.mandatory }}"
