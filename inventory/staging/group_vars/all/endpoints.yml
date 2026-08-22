@@ -1,0 +1,13 @@
+---
+# Well-known service addresses, consumed by roles that need to reach other hosts
+# (e.g. NFS mounts, reverse proxy upstreams, monitoring endpoints).
+#
+# Addresses are derived from network.ip4 via nthhost() rather than referencing
+# other hosts through hostvars. Using hostvars inside inventory variables is
+# unreliable: they are evaluated before the playbook runs, so a host's variables
+# may not be loaded yet — especially when the LXC does not exist yet or
+# gather_facts is disabled. nthhost() depends only on the shared network variable,
+# which is always available, at the cost of duplicating the host number.
+nfs_server_address: "{{ network.ip4 | ansible.utils.nthhost(1) }}"
+smb_server_address: "{{ network.ip4 | ansible.utils.nthhost(1) }}"
+reverse_proxy_address: "{{ network.ip4 | ansible.utils.nthhost(11) }}"

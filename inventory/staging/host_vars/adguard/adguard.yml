@@ -27,9 +27,9 @@ adguardhome_config:
       lease_duration: 86400
   filtering:
     rewrites:
-      - answer: "192.168.1.21"
+      - answer: "{{ reverse_proxy_address }}"
         domain: "{{ network.domain }}"
         enabled: true
-      - answer: "192.168.1.21"
+      - answer: "{{ reverse_proxy_address }}"
         domain: "*.{{ network.domain }}"
         enabled: true

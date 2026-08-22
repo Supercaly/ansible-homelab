@@ -6,7 +6,7 @@ vaultwarden_root: /srv/stacks/vaultwarden
 vaultwarden_remote_dir: "/test-data/vaultwarden_backup"
 vaultwarden_rclone_config:
   type: "smb"
-  host: "{{ network.ip4 | ansible.utils.nthhost(1) }}"
+  host: "{{ smb_server_address }}"
   user: "shared_data"
   pass: "{{ vault_vaultwarden_smb_pass }}"
 vaultwarden_config:

@@ -41,9 +41,9 @@ adguardhome_config:
       lease_duration: 86400
   filtering:
     rewrites:
-      - answer: "{{ network.ip4 | ansible.utils.nthhost(20) }}"
+      - answer: "{{ reverse_proxy_address }}"
         domain: "{{ network.domain }}"
         enabled: true
-      - answer: "{{ network.ip4 | ansible.utils.nthhost(20) }}"
+      - answer: "{{ reverse_proxy_address }}"
         domain: "*.{{ network.domain }}"
         enabled: true

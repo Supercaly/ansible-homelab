@@ -1,7 +1,7 @@
 ---
 proxmox_host: pve
 proxmox_lxc:
-  vmid: 1060
+  vmid: 205
   hostname: "{{ inventory_hostname }}"
   password: "{{ lxc_default_password }}"
   hookscript: "{{ lxc_default_hookscript }}"
@@ -28,8 +28,6 @@ proxmox_lxc:
       }},bridge=vmbr0
   nameserver: "{{ dns.servers | join(',') }}"
   searchdomain: "{{ dns.search_domains | join(',') }}"
-  onboot: true
-  startup: "order=60"
   features:
     - "keyctl=1"
     - "nesting=1"
