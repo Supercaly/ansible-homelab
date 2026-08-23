@@ -25,6 +25,14 @@
     - role: prometheus.prometheus.node_exporter
       tags: node_exporter
 
+- name: Configure cAdvisor exporter on Docker hosts.
+  hosts: docker
+  become: true
+  gather_facts: false
+  roles:
+    - role: prometheus.prometheus.cadvisor
+      tags: cadvisor
+
 - name: Configure Grafana.
   hosts: grafana
   become: true
