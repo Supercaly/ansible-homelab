@@ -1,0 +1,44 @@
+---
+- name: Deploy homepage Docker Compose stack.
+  ansible.builtin.import_role:
+    name: docker_compose
+  vars:
+    docker_compose_root: "{{ homepage_root }}"
+    docker_compose_subdirs:
+      - path: config
+        owner: "{{ homepage_user }}"
+        group: "{{ homepage_group }}"
+        mode: "0755"
+    docker_compose_templates:
+      - src: compose.yml.j2
+        dest: compose.yml
+      - src: settings.yml.j2
+        dest: config/settings.yaml
+        owner: "{{ homepage_user }}"
+        group: "{{ homepage_group }}"
+        mode: "0644"
+      - src: services.yml.j2
+        dest: config/services.yaml
+        owner: "{{ homepage_user }}"
+        group: "{{ homepage_group }}"
+        mode: "0644"
+      - src: widgets.yml.j2
+        dest: config/widgets.yaml
+        owner: "{{ homepage_user }}"
+        group: "{{ homepage_group }}"
+        mode: "0644"
+      - src: bookmarks.yml.j2
+        dest: config/bookmarks.yaml
+        owner: "{{ homepage_user }}"
+        group: "{{ homepage_group }}"
+        mode: "0644"
+      - src: docker.yml.j2
+        dest: config/docker.yaml
+        owner: "{{ homepage_user }}"
+        group: "{{ homepage_group }}"
+        mode: "0644"
+      - src: proxmox.yml.j2
+        dest: config/proxmox.yaml
+        owner: "{{ homepage_user }}"
+        group: "{{ homepage_group }}"
+        mode: "0644"
