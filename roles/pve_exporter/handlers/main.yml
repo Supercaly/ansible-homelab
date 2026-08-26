@@ -1,0 +1,9 @@
+---
+- name: pve_exporter_systemd_reload # noqa: name[casing]
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: pve_exporter_restart_service # noqa: name[casing]
+  ansible.builtin.service:
+    name: "{{ pve_exporter_service_name }}"
+    state: restarted
