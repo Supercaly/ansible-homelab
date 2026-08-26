@@ -1,0 +1,11 @@
+---
+pve_exporter_version: "latest"
+pve_exporter_venv_path: "/opt/prometheus-pve-exporter"
+pve_exporter_config_dir: "/etc/prometheus"
+pve_exporter_config_file: "{{ pve_exporter_config_dir }}/pve.yml"
+pve_exporter_service_name: "prometheus-pve-exporter"
+pve_exporter_port: 9221
+pve_exporter_user: "prometheus"
+pve_exporter_group: "prometheus"
+pve_exporter_pve_user: "prometheus@pve"
+pve_exporter_verify_ssl: false
