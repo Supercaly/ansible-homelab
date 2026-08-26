@@ -1,0 +1,27 @@
+[Unit]
+Description=Prometheus PVE Exporter
+Documentation=https://github.com/prometheus-pve/prometheus-pve-exporter
+After=network.target
+
+[Service]
+User={{ pve_exporter_user }}
+Group={{ pve_exporter_group }}
+ExecStart={{ pve_exporter_venv_path }}/bin/pve_exporter \
+    --config.file {{ pve_exporter_config_file }} \
+    --web.listen-address 0.0.0.0:{{ pve_exporter_port }}
+SyslogIdentifier=pve_exporter
+Restart=always
+RestartSec=1
+StartLimitBurst=5
+StartLimitInterval=30s
+
+NoNewPrivileges=true
+ProtectHome=true
+ProtectSystem=strict
+PrivateTmp=true
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+
+[Install]
+WantedBy=multi-user.target
