@@ -1,0 +1,10 @@
+default:
+{% if pve_exporter_pve_token_name | default('') and pve_exporter_pve_token_value | default('') %}
+    user: {{ pve_exporter_pve_user }}
+    token_name: {{ pve_exporter_pve_token_name | ansible.builtin.mandatory() }}
+    token_value: {{ pve_exporter_pve_token_value | ansible.builtin.mandatory() }}
+{% else %}
+    user: {{ pve_exporter_pve_user }}
+    password: {{ pve_exporter_pve_password | ansible.builtin.mandatory() }}
+{% endif %}
+    verify_ssl: {{ pve_exporter_verify_ssl | lower }}
