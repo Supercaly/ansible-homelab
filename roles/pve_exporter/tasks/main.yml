@@ -1,0 +1,65 @@
+---
+- name: Install Python dependencies.
+  ansible.builtin.apt:
+    name:
+      - python3-pip
+      - python3-venv
+    state: present
+    update_cache: true
+
+- name: Ensure prometheus system group exists.
+  ansible.builtin.group:
+    name: "{{ pve_exporter_group }}"
+    system: true
+    state: present
+
+- name: Ensure prometheus system user exists.
+  ansible.builtin.user:
+    name: "{{ pve_exporter_user }}"
+    group: "{{ pve_exporter_group }}"
+    system: true
+    shell: /usr/sbin/nologin
+    create_home: false
+    state: present
+
+- name: Ensure config directory exists.
+  ansible.builtin.file:
+    path: "{{ pve_exporter_config_dir }}"
+    state: directory
+    owner: "{{ pve_exporter_user }}"
+    group: "{{ pve_exporter_group }}"
+    mode: "0750"
+
+- name: Install prometheus-pve-exporter in venv.
+  ansible.builtin.pip:
+    name: "prometheus-pve-exporter{{ '==' + pve_exporter_version if pve_exporter_version != 'latest' else '' }}"
+    virtualenv: "{{ pve_exporter_venv_path }}"
+    virtualenv_command: "python3 -m venv"
+    state: present
+  notify: pve_exporter_restart_service
+
+- name: Configure pve_exporter.
+  ansible.builtin.template:
+    src: pve.yml.j2
+    dest: "{{ pve_exporter_config_file }}"
+    owner: "{{ pve_exporter_user }}"
+    group: "{{ pve_exporter_group }}"
+    mode: "0600"
+  notify: pve_exporter_restart_service
+
+- name: Install systemd service.
+  ansible.builtin.template:
+    src: prometheus-pve-exporter.service.j2
+    dest: "/etc/systemd/system/{{ pve_exporter_service_name }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - pve_exporter_systemd_reload
+    - pve_exporter_restart_service
+
+- name: Ensure pve_exporter is started and enabled at boot.
+  ansible.builtin.service:
+    name: "{{ pve_exporter_service_name }}"
+    enabled: true
+    state: started
