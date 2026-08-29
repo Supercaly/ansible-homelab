@@ -4,6 +4,8 @@ pve_exporter_user: "node-exp"
 pve_exporter_group: "node-exp"
 zfs_exporter_user: "node-exp"
 zfs_exporter_group: "node-exp"
+smartctl_exporter_system_user: "root"
+smartctl_exporter_system_group: "root"
 
 prometheus_file_sd:
   node:
@@ -16,5 +18,9 @@ prometheus_file_sd:
         hostname: "{{ inventory_hostname }}"
   zfs:
     - targets: ["{{ ansible_host }}:9134"]
+      labels:
+        hostname: "{{ inventory_hostname }}"
+  smartctl:
+    - targets: ["{{ ansible_host }}:9633"]
       labels:
         hostname: "{{ inventory_hostname }}"
