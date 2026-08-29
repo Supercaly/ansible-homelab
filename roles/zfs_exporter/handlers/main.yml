@@ -1,0 +1,9 @@
+---
+- name: zfs_exporter_systemd_reload # noqa: name[casing]
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: zfs_exporter_restart_service # noqa: name[casing]
+  ansible.builtin.service:
+    name: "{{ zfs_exporter_service_name }}"
+    state: restarted
