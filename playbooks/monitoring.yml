@@ -34,6 +34,8 @@
       tags: pve_exporter
     - role: zfs_exporter
       tags: zfs_exporter
+    - role: prometheus.prometheus.smartctl_exporter
+      tags: smartctl_exporter
 
 - name: Configure cAdvisor exporter on Docker hosts.
   hosts: docker
