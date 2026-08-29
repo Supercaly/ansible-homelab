@@ -32,6 +32,8 @@
   roles:
     - role: pve_exporter
       tags: pve_exporter
+    - role: zfs_exporter
+      tags: zfs_exporter
 
 - name: Configure cAdvisor exporter on Docker hosts.
   hosts: docker
