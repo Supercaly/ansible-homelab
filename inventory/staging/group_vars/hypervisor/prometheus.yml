@@ -4,6 +4,8 @@ pve_exporter_user: "node-exp"
 pve_exporter_group: "node-exp"
 zfs_exporter_user: "node-exp"
 zfs_exporter_group: "node-exp"
+smartctl_exporter_system_user: "root"
+smartctl_exporter_system_group: "root"
 
 prometheus_scrape_configs:
   - job_name: "{{ inventory_hostname }}"
@@ -23,3 +25,7 @@ prometheus_scrape_configs:
     static_configs:
       - targets:
           - "{{ ansible_host }}:9134"
+  - job_name: "{{ inventory_hostname }}-smartctl"
+    static_configs:
+      - targets:
+          - "{{ ansible_host }}:9633"
