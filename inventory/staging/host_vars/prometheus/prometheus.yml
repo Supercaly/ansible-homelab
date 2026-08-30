@@ -12,6 +12,8 @@ prometheus_global:
 prometheus_external_labels:
   env: staging
 
+prometheus_alert_rules: []
+
 prometheus_alertmanager_config:
   - static_configs:
       - targets:
@@ -22,6 +24,12 @@ prometheus_scrape_configs:
     static_configs:
       - targets:
           - "localhost:{{ prometheus_port }}"
+        labels:
+          hostname: "{{ inventory_hostname }}"
+  - job_name: "alertmanager"
+    static_configs:
+      - targets:
+          - "localhost:9093"
         labels:
           hostname: "{{ inventory_hostname }}"
   - job_name: "node"
