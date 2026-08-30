@@ -25,13 +25,15 @@
     - role: prometheus.prometheus.node_exporter
       tags: node_exporter
 
-- name: Configure pve_exporter on Proxmox VE hosts.
+- name: Configure Exporters on Proxmox VE hosts.
   hosts: hypervisor
   become: true
   gather_facts: false
   roles:
     - role: pve_exporter
       tags: pve_exporter
+    - role: zfs_exporter
+      tags: zfs_exporter
 
 - name: Configure cAdvisor exporter on Docker hosts.
   hosts: docker
