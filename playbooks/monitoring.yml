@@ -17,6 +17,14 @@
           }}
       tags: prometheus
 
+- name: Configure node_exporter on all hosts.
+  hosts: exporter
+  become: true
+  gather_facts: false
+  roles:
+    - role: prometheus.prometheus.node_exporter
+      tags: node_exporter
+
 - name: Configure Grafana.
   hosts: grafana
   become: true

@@ -11,7 +11,11 @@ prometheus_external_labels:
   env: staging
 
 prometheus_scrape_configs:
-  - job_name: "{{ inventory_hostname }}"
+  - job_name: "prometheus"
     static_configs:
       - targets:
           - "localhost:9090"
+  - job_name: "{{ inventory_hostname }}"
+    static_configs:
+      - targets:
+          - "{{ ansible_host }}:9100"
