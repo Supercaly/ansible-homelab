@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=none
-prometheus_port: 9090
+prometheus_file_sd_dir: "/etc/prometheus/file_sd"
 prometheus_storage_retention: "30d"
 
 prometheus_global:
@@ -16,3 +16,6 @@ prometheus_scrape_configs:
     static_configs:
       - targets:
           - "localhost:{{ prometheus_port }}"
+  - job_name: "node"
+    file_sd_configs:
+      - files: ["{{ prometheus_file_sd_dir }}/node.yml"]
