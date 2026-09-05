@@ -1,0 +1,11 @@
+---
+caddy_sites:
+  - name: "prometheus"
+    content: |
+        https://prometheus.{{ network.domain }} {
+          import logging "prometheus.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ prometheus_port }}"
+        }
