@@ -1,4 +1,12 @@
 ---
+- name: Configure Prometheus.
+  hosts: prometheus
+  become: true
+  gather_facts: false
+  roles:
+    - role: prometheus.prometheus.prometheus
+      tags: prometheus
+
 - name: Configure Grafana.
   hosts: grafana
   become: true
