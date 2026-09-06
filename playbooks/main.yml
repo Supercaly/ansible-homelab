@@ -25,6 +25,9 @@
 - name: Configure all Linux systems.
   ansible.builtin.import_playbook: linux.yml
 
+- name: Configure shared storage services.
+  ansible.builtin.import_playbook: storage.yml
+
 - name: Configure networking services.
   ansible.builtin.import_playbook: networking.yml
 
@@ -36,6 +39,3 @@
 
 - name: Configure docker services.
   ansible.builtin.import_playbook: services.yml
-
-- name: Configure shared storage services.
-  ansible.builtin.import_playbook: storage.yml
