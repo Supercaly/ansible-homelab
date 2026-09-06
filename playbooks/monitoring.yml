@@ -5,7 +5,31 @@
   gather_facts: false
   roles:
     - role: prometheus.prometheus.prometheus
+      vars:
+        # Conbine all targets defined in the distributed `prometheus_file_sd` variable.
+        # Each host can define a targets for jobs using this dictionary where the key is
+        # the job name and the value is a `file_sd_config`.
+        # Note: The jobs must be also declared in `prometheus_scrape_configs`.
+        prometheus_targets: >-
+          {{
+            {} |
+            combine(
+              groups['exporter'] |
+                map('ansible.builtin.extract', hostvars) |
+                selectattr('prometheus_file_sd', 'defined') |
+                map(attribute='prometheus_file_sd'),
+              list_merge='append'
+            )
+          }}
       tags: prometheus
+
+- name: Configure node_exporter on all enabled hosts.
+  hosts: exporter
+  become: true
+  gather_facts: false
+  roles:
+    - role: prometheus.prometheus.node_exporter
+      tags: node_exporter
 
 - name: Configure Grafana.
   hosts: grafana
