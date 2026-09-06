@@ -29,11 +29,12 @@
     - proxmox
     - lxc
   vars:
-    # Select all hosts with `proxmox_lxc` defined and `proxmox_host`
-    # pointing to the current host.
+    # Select hosts with `proxmox_lxc` defined and `proxmox_host` pointing to
+    # the current host. Defaults to all hosts; pass `target_guests` (list of
+    # inventory hostnames) to restrict which guests are created.
     lxc_guests: >-
       {{
-        groups['all'] |
+        target_guests | default(groups['all']) |
         map('ansible.builtin.extract', hostvars) |
         selectattr('proxmox_lxc', 'defined') |
         selectattr('proxmox_host', 'defined') |
@@ -68,11 +69,12 @@
     - proxmox
     - kvm
   vars:
-    # Select all hosts with `proxmox_kvm` defined and `proxmox_host`
-    # pointing to the current host.
+    # Select hosts with `proxmox_kvm` defined and `proxmox_host` pointing to
+    # the current host. Defaults to all hosts; pass `target_guests` (list of
+    # inventory hostnames) to restrict which guests are created.
     kvm_guests: >-
       {{
-        groups['all'] |
+        target_guests | default(groups['all']) |
         map('ansible.builtin.extract', hostvars) |
         selectattr('proxmox_kvm', 'defined') |
         selectattr('proxmox_host', 'defined') |
