@@ -1,0 +1,16 @@
+---
+zfs_exporter_version: "latest"
+zfs_exporter_binary_install_dir: "/usr/local/bin"
+zfs_exporter_service_name: "prometheus-zfs-exporter"
+
+zfs_exporter_arch: "{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}"
+
+zfs_exporter_web_listen_address: "0.0.0.0:9134"
+zfs_exporter_web_telemetry_path: "/metrics"
+zfs_exporter_deadline: "8s"
+
+zfs_exporter_user: "prometheus"
+zfs_exporter_group: "prometheus"
+
+# Local path to cache the downloaded archive
+zfs_exporter_local_cache_path: "/tmp/zfs_exporter-{{ zfs_exporter_version }}"

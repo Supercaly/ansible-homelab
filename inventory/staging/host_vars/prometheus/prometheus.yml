@@ -28,6 +28,9 @@ prometheus_scrape_configs:
       module: [default]
       cluster: ['1']
       node: ['1']
+  - job_name: "zfs"
+    file_sd_configs:
+      - files: ["{{ prometheus_file_sd_dir }}/zfs.yml"]
   - job_name: "docker"
     file_sd_configs:
       - files: ["{{ prometheus_file_sd_dir }}/docker.yml"]
