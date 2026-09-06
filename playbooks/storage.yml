@@ -1,4 +1,12 @@
 ---
+- name: Configure ZFS on Proxmox hosts.
+  hosts: hypervisor
+  become: true
+  gather_facts: false
+  roles:
+    - role: zfs
+      tags: zfs
+
 - name: Configure NFS servers.
   hosts: nfs-server
   become: true
