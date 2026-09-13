@@ -4,6 +4,9 @@ system_groups_host:
     # Ensure shared photo group exists
   - name: "photo"
     gid: 2001
+  # Group for non-root docker containers
+  - name: "apps"
+    gid: 1010
 
 system_users_host:
   # Ensure root user can access photo
@@ -24,6 +27,16 @@ system_users_host:
     uid: 2001
     comment: "Owns shared photo directories"
     group: "photo"
+    password_lock: true
+    system: true
+    create_home: false
+    shell: /usr/sbin/nologin
+
+  # User for non-root docker containers
+  - name: "apps"
+    uid: 1010
+    comment: "Manage non-root Docker containers"
+    group: "apps"
     password_lock: true
     system: true
     create_home: false
