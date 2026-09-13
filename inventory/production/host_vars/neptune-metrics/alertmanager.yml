@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=none
+alertmanager_domain: "alerts.{{ network.domain }}"
+alertmanager_web_external_url: "https://{{ alertmanager_domain }}/"
+
+alertmanager_smtp:
+  from: "{{ vault_alertmanager_smtp_from }}"
+  smarthost: "smtp.gmail.com:587"
+  auth_username: "{{ vault_alertmanager_smtp_username }}"
+  auth_password: "{{ vault_alertmanager_smtp_password }}"
+  require_tls: "true"
+
+alertmanager_receivers:
+  - name: "null"
+  - name: email
+    email_configs:
+      - to: "{{ vault_alertmanager_smtp_to }}"
+        send_resolved: true
+
+alertmanager_time_intervals:
+  # Suppress alerts outside working hours
+  - name: offhours
+    time_intervals:
+      - times:
+          - start_time: "22:00"
+            end_time: "24:00"
+        weekdays: ["monday:friday"]
+      - times:
+          - start_time: "00:00"
+            end_time: "08:00"
+        weekdays: ["monday:friday"]
+      - weekdays: ["saturday", "sunday"]
+  # Suppress alerts during the night
+  - name: night
+    time_intervals:
+      - times:
+          - start_time: "01:00"
+            end_time: "07:00"
+
+alertmanager_route:
+  receiver: email
+  group_by: ['alertname', 'hostname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    # Suppress watchdog notifications to avoid noise
+    # TODO: Add external dead men's switch in case the monitoring stack falls down.
+    - matchers:
+        - alertname="Watchdog"
+      receiver: "null"
+
+    # Critical alerts:
+    #   - notify quickly
+    #   - repeat every hour
+    #   - silent during deep night
+    - matchers:
+        - severity="critical"
+      receiver: email
+      group_wait: 10s
+      repeat_interval: 1h
+      mute_time_intervals:
+        - night
+
+    # Warning alerts:
+    #   - repeat with low priority
+    #   - suppress during off hours to avoid noise
+    - matchers:
+        - severity="warning"
+      receiver: email
+      repeat_interval: 6h
+      mute_time_intervals:
+        - offhours
+
+alertmanager_inhibit_rules:
+  # If a node is unreachable (node_exporter down), suppress all other alerts from that host
+  - source_matchers:
+      - alertname="InstanceDown"
+      - job="node"
+    target_matchers:
+      - alertname!="InstanceDown"
+    equal: ['hostname']
