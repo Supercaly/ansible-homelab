@@ -1,0 +1,124 @@
+---
+homepage_url: "homepage.{{ network.domain }}"
+homepage_port: 3000
+homepage_root: "/srv/stacks/homepage"
+# We don't fix the container to a specific version since it will autoupdate
+homepage_version: "latest"
+homepage_timezone: "{{ system_locale_timezone }}"
+
+homepage_user: "apps"
+homepage_group: "apps"
+homepage_uid: 1010
+homepage_gid: 1010
+
+homepage_allowed_hosts: >-
+  {{
+    [
+      interfaces.lan.ip4.address ~ ':' ~ homepage_port,
+      homepage_url
+    ] | join(',')
+  }}
+
+homepage_settings:
+  title: "Homelab Homepage"
+  description: "The homepage for my personal homelab"
+  base: "https://{{ homepage_url }}"
+  theme: "dark"
+  color: "zinc"
+  headerStyle: "boxed"
+  language: "it"
+  target: "_self"
+  statusStyle: "dot"
+  showStats: true
+  hideVersion: true
+  disableCollapse: true
+  layout:
+    Proxmox Hosts:
+      style: "column"
+      icon: "mdi-server"
+    Networking:
+      style: "column"
+      icon: "mdi-network"
+    Media:
+      style: "column"
+      icon: "mdi-multimedia"
+    Services:
+      style: "column"
+      icon: "mdi-google-cloud"
+    _hidden:
+      style: "column"
+
+homepage_widgets:
+  - datetime:
+      text_size: "4xl"
+      format:
+        timeStyle: "short"
+        hour12: false
+  - datetime:
+      text_size: "md"
+      format:
+        dateStyle: "long"
+        hour12: false
+  - search:
+      provider: "google"
+      focus: true
+      showSearchSuggestions: true
+      target: "_parent"
+  - openmeteo:
+      label: "Monte Cerignone"
+      latitude: 43.8411
+      longitude: 12.4128
+      timezone: "{{ homepage_timezone }}"
+      units: metric
+      cache: 5
+      format:
+        maximumFractionDigits: 0
+
+homepage_services:
+  - Proxmox Hosts:
+      - Vega:
+          icon: "proxmox.png"
+          href: "https://vega.{{ network.domain }}"
+          description: "Proxmox VE host"
+      - Altair:
+          icon: "proxmox.png"
+          href: "https://altair.{{ network.domain }}"
+          description: "Proxmox VE host"
+  - Networking:
+      - DNS:
+          icon: "adguard-home.png"
+          href: "https://adguard.{{ network.domain }}"
+          description: "DNS and ad-blocking"
+      - Proxy:
+          icon: "caddy.png"
+          href: "https://{{ network.domain }}"
+          description: "Reverse proxy"
+      - DDNS:
+          icon: "ddns-updater.png"
+          href: "https://ddns.{{ network.domain }}"
+          description: "Dynamic DNS updater"
+  - Media:
+      - Jellyfin:
+          icon: "jellyfin.png"
+          href: "https://media.{{ network.domain }}"
+          description: "Multimedia streaming library"
+      - Immich:
+          icon: "immich.png"
+          href: "https://photo.{{ network.domain }}"
+          description: "Photo backup library"
+  - Services:
+      - Bitwarden:
+          icon: "bitwarden.png"
+          href: "https://pwd.{{ network.domain }}"
+          description: "Password management"
+      - Portfolio:
+          icon: "mdi-web"
+          href: "https://lorenzo.{{ network.domain }}"
+          description: "Personal portfolio"
+
+homepage_bookmarks:
+  - Links:
+      - Repository:
+          - icon: "github.png"
+            description: "Ansible homelab repository on GitHub"
+            href: "https://github.com/Supercaly/ansible-homelab"

@@ -39,3 +39,12 @@ caddy_sites:
 
           reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ immich_port }}"
         }
+  - name: "homepage"
+    content: |
+        https://{{ homepage_url }} {
+          import logging "homepage.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ homepage_port }}"
+        }
