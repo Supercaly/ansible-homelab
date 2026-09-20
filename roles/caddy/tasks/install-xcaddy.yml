@@ -25,8 +25,38 @@
     create_home: true
     state: present
 
-- name: Install Go.
-  ansible.builtin.import_tasks: setup-go.yml
+- name: Set architecture fact.
+  ansible.builtin.set_fact:
+    __caddy_arch: >-
+      {{
+        {
+          'x86_64': 'amd64',
+          'aarch64': 'arm64',
+          'i386': '386',
+          'i686': '386'
+        }[ansible_facts['architecture']]
+      }}
+
+- name: Fetch latest stable Go version from go.dev.
+  ansible.builtin.uri:
+    url: https://go.dev/dl/?mode=json
+    return_content: true
+  register: __caddy_go_releases
+  when: caddy_go_version | length == 0
+
+- name: Set Go version fact.
+  ansible.builtin.set_fact:
+    __go_version: >-
+      {{
+        caddy_go_version if caddy_go_version | length > 0
+        else (
+          __caddy_go_releases.json |
+          selectattr('stable', 'equalto', true) |
+          map(attribute='version') |
+          first |
+          regex_replace('^go', '')
+        )
+      }}
 
 - name: Fetch latest xcaddy release from GitHub.
   ansible.builtin.uri:
@@ -43,36 +73,6 @@
         else __caddy_xcaddy_release.json.tag_name | regex_replace('^v', '')
       }}
 
-- name: Check installed xcaddy version.
-  ansible.builtin.command: "{{ caddy_xcaddy_bin }} version"
-  register: __caddy_xcaddy_installed
-  changed_when: false
-  failed_when: false
-
-- name: Install xcaddy {{ __xcaddy_version }}.
-  when: __caddy_xcaddy_installed.rc != 0 or __xcaddy_version not in __caddy_xcaddy_installed.stdout
-  block:
-    - name: Download xcaddy tarball.
-      ansible.builtin.get_url:
-        url: >-
-          https://github.com/caddyserver/xcaddy/releases/download/v{{ __xcaddy_version
-          }}/xcaddy_{{ __xcaddy_version }}_linux_{{ __go_arch }}.tar.gz
-        dest: "/tmp/xcaddy_{{ __xcaddy_version }}_linux_{{ __go_arch }}.tar.gz"
-        mode: "0644"
-
-    - name: Extract xcaddy binary.
-      ansible.builtin.unarchive:
-        src: "/tmp/xcaddy_{{ __xcaddy_version }}_linux_{{ __go_arch }}.tar.gz"
-        dest: "{{ caddy_xcaddy_bin | dirname }}"
-        include:
-          - xcaddy
-        remote_src: true
-
-    - name: Ensure xcaddy binary is executable.
-      ansible.builtin.file:
-        path: "{{ caddy_xcaddy_bin }}"
-        mode: "0755"
-
 - name: Write xcaddy build spec.
   ansible.builtin.template:
     src: xcaddy_build_spec.j2
@@ -87,34 +87,56 @@
     path: /usr/bin/caddy
   register: __caddy_binary
 
-- name: Build Caddy with plugins.
-  ansible.builtin.command:
-    cmd: >-
-      {{ caddy_xcaddy_bin }} build {{ caddy_version }}
-      --with {{ caddy_plugins | join(' --with ') }}
-      --output /usr/bin/caddy
-  environment:
-    HOME: /root
-    GOPATH: /root/go
-    PATH: "{{ caddy_go_install_dir }}/bin:/usr/local/bin:{{ ansible_facts['env']['PATH'] }}"
+- name: Build Caddy with xcaddy.
   when: __caddy_xcaddy_build_spec is changed or not __caddy_binary.stat.exists
-  changed_when: true
-  notify: caddy_restart_service
+  block:
+    - name: Install Go.
+      ansible.builtin.import_tasks: setup-go.yml
 
-- name: Install Caddy systemd service.
-  ansible.builtin.template:
-    src: caddy.service.j2
-    dest: "/etc/systemd/system/{{ caddy_service_name }}.service"
-    owner: root
-    group: root
-    mode: "0644"
-  notify: caddy_restart_service
+    - name: Check installed xcaddy version.
+      ansible.builtin.command: "{{ caddy_xcaddy_bin }} version"
+      register: __caddy_xcaddy_installed
+      changed_when: false
+      failed_when: false
 
-- name: Reload systemd daemon.
-  ansible.builtin.systemd:
-    daemon_reload: true
+    - name: Install xcaddy {{ __xcaddy_version }}.
+      when: __caddy_xcaddy_installed.rc != 0 or __xcaddy_version not in __caddy_xcaddy_installed.stdout
+      block:
+        - name: Download xcaddy tarball.
+          ansible.builtin.get_url:
+            url: >-
+              https://github.com/caddyserver/xcaddy/releases/download/v{{ __xcaddy_version
+              }}/xcaddy_{{ __xcaddy_version }}_linux_{{ __caddy_arch }}.tar.gz
+            dest: "/tmp/xcaddy_{{ __xcaddy_version }}_linux_{{ __caddy_arch }}.tar.gz"
+            mode: "0644"
 
-- name: Remove build toolchain after build.
+        - name: Extract xcaddy binary.
+          ansible.builtin.unarchive:
+            src: "/tmp/xcaddy_{{ __xcaddy_version }}_linux_{{ __caddy_arch }}.tar.gz"
+            dest: "{{ caddy_xcaddy_bin | dirname }}"
+            include:
+              - xcaddy
+            remote_src: true
+
+        - name: Ensure xcaddy binary is executable.
+          ansible.builtin.file:
+            path: "{{ caddy_xcaddy_bin }}"
+            mode: "0755"
+
+    - name: Build Caddy with plugins.
+      ansible.builtin.command:
+        cmd: >-
+          {{ caddy_xcaddy_bin }} build {{ caddy_version }}
+          --with {{ caddy_plugins | join(' --with ') }}
+          --output /usr/bin/caddy
+      environment:
+        HOME: /root
+        GOPATH: /root/go
+        PATH: "{{ caddy_go_install_dir }}/bin:/usr/local/bin:{{ ansible_facts['env']['PATH'] }}"
+      changed_when: true
+      notify: caddy_restart_service
+
+- name: Remove build toolchain.
   when: caddy_xcaddy_cleanup | bool
   block:
     - name: Remove Go installation.
@@ -150,3 +172,16 @@
       loop_control:
         label: "{{ __tar_files.path }}"
         loop_var: __tar_files
+
+- name: Install Caddy systemd service.
+  ansible.builtin.template:
+    src: caddy.service.j2
+    dest: "/etc/systemd/system/{{ caddy_service_name }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: caddy_restart_service
+
+- name: Reload systemd daemon.
+  ansible.builtin.systemd:
+    daemon_reload: true
