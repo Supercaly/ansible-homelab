@@ -1,7 +1,7 @@
 ---
 # Installation options
 adguardhome_arch: "{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}"
-adguardhome_download_url: "https://static.adguard.com/adguardhome/release/AdGuardHome_linux_{{ adguardhome_arch }}.tar.gz"
+adguardhome_version: ""  # leave empty to install the latest release, or set to a specific version like "v0.107.63"
 
 # AdGuardHome user and group
 adguardhome_user: "adguardhome"
