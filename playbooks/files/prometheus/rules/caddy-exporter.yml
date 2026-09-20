@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=none
+groups:
+- name: CaddyExporter
+  rules:
+    - alert: CaddyDown
+      expr: 'up{job="caddy"} == 0'
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: Caddy is down ({{ $labels.hostname }})
+        description: "Caddy process is not reachable by Prometheus\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    - alert: CaddyReverseProxyDown
+      expr: 'caddy_reverse_proxy_upstreams_healthy == 0'
+      for: 0m
+      labels:
+        severity: critical
+      annotations:
+        summary: Caddy Reverse Proxy Down ({{ $labels.hostname }})
+        description: "Caddy reverse proxy upstream {{ $labels.upstream }} is unhealthy\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
