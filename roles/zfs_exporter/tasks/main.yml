@@ -1,0 +1,73 @@
+---
+- name: Resolve latest zfs_exporter version from GitHub.
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/pdf/zfs_exporter/releases/latest"
+    return_content: true
+  register: __zfs_exporter_latest
+  delegate_to: localhost
+  become: false
+  when: zfs_exporter_version == 'latest'
+
+- name: Set resolved zfs_exporter version.
+  ansible.builtin.set_fact:
+    __zfs_exporter_resolved_version: >-
+      {{ __zfs_exporter_latest.json.tag_name | regex_replace('^v', '')
+         if zfs_exporter_version == 'latest'
+         else zfs_exporter_version }}
+
+- name: Create local cache directory.
+  ansible.builtin.file:
+    path: "{{ zfs_exporter_local_cache_path }}"
+    state: directory
+    mode: "0755"
+  delegate_to: localhost
+  become: false
+
+- name: Download zfs_exporter archive.
+  ansible.builtin.get_url:
+    url: >-
+      https://github.com/pdf/zfs_exporter/releases/download/v{{
+        __zfs_exporter_resolved_version
+      }}/zfs_exporter-{{
+        __zfs_exporter_resolved_version
+      }}.linux-{{ zfs_exporter_arch }}.tar.gz
+    dest: "{{ zfs_exporter_local_cache_path }}/zfs_exporter.tar.gz"
+    mode: "0644"
+  delegate_to: localhost
+  become: false
+
+- name: Unpack zfs_exporter archive.
+  ansible.builtin.unarchive:
+    src: "{{ zfs_exporter_local_cache_path }}/zfs_exporter.tar.gz"
+    dest: "{{ zfs_exporter_local_cache_path }}"
+    mode: "0755"
+  delegate_to: localhost
+  become: false
+
+- name: Install zfs_exporter binary.
+  ansible.builtin.copy:
+    src: "{{ zfs_exporter_local_cache_path }}/zfs_exporter-{{ __zfs_exporter_resolved_version }}.linux-{{ zfs_exporter_arch }}/zfs_exporter"
+    dest: "{{ zfs_exporter_binary_install_dir }}/zfs_exporter"
+    owner: root
+    group: root
+    mode: "0755"
+  notify: zfs_exporter_restart_service
+
+# zfs_exporter is configured entirely via command-line flags in the systemd
+# service unit — there is no separate config file.
+- name: Install systemd service.
+  ansible.builtin.template:
+    src: prometheus-zfs-exporter.service.j2
+    dest: "/etc/systemd/system/{{ zfs_exporter_service_name }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - zfs_exporter_systemd_reload
+    - zfs_exporter_restart_service
+
+- name: Ensure zfs_exporter is started and enabled at boot.
+  ansible.builtin.service:
+    name: "{{ zfs_exporter_service_name }}"
+    enabled: true
+    state: started
