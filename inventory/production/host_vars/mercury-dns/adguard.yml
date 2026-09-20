@@ -40,6 +40,10 @@ adguardhome_config:
       range_start: "{{ network.ip4 | ansible.utils.nthhost(150) }}"
       range_end: "{{ network.ip4 | ansible.utils.nthhost(250) }}"
       lease_duration: 86400
+  querylog:
+    enabled: true
+    file_enabled: true
+    interval: "30d"
   filtering:
     rewrites:
       - answer: "{{ reverse_proxy_address }}"
