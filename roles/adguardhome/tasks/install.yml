@@ -1,7 +1,35 @@
 ---
-- name: Download latest version of AdGuardHome.
+- name: Fetch latest AdGuardHome release from GitHub.
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/AdguardTeam/AdGuardHome/releases/latest
+    return_content: true
+  register: __adguardhome_latest_release
+  when: adguardhome_version | length == 0
+
+- name: Set AdGuardHome version fact.
+  ansible.builtin.set_fact:
+    __adguardhome_version: >-
+      {{
+        adguardhome_version if adguardhome_version | length > 0
+        else __adguardhome_latest_release.json.tag_name
+      }}
+
+- name: Set AdGuardHome download URL fact.
+  ansible.builtin.set_fact:
+    __adguardhome_download_url: >-
+      https://github.com/AdguardTeam/AdGuardHome/releases/download/{{
+        __adguardhome_version }}/AdGuardHome_linux_{{ adguardhome_arch }}.tar.gz
+
+- name: Check installed AdGuardHome version.
+  ansible.builtin.command:
+    cmd: "{{ adguardhome_bin_file }} --version"
+  register: __adguardhome_installed
+  changed_when: false
+  failed_when: false
+
+- name: "Download AdGuardHome {{ __adguardhome_version }}."
   ansible.builtin.unarchive:
-    src: "{{ adguardhome_download_url }}"
+    src: "{{ __adguardhome_download_url }}"
     dest: "{{ adguardhome_bin_dir }}"
     remote_src: true
     include:
@@ -11,7 +39,9 @@
     owner: "{{ adguardhome_user }}"
     group: "{{ adguardhome_group }}"
     mode: "0755"
-    creates: "{{ adguardhome_bin_dir }}/AdGuardHome"
+  when: >-
+    __adguardhome_installed.rc != 0
+    or __adguardhome_version not in __adguardhome_installed.stdout
 
 - name: Allow binary to bind to privileged ports as non-root user.
   community.general.capabilities:
