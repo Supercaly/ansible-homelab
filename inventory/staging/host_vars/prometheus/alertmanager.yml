@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=none
+alertmanager_domain: "alertmanager.{{ network.domain }}"
+alertmanager_web_external_url: "https://{{ alertmanager_domain }}/"
+
+alertmanager_smtp:
+  from: "root@{{ inventory_hostname }}"
+  smarthost: "localhost:25"
+  require_tls: "false"
+
+alertmanager_receivers:
+  - name: email
+    email_configs:
+      - to: "lorenzo@pve.{{ network.domain }}"
+
+alertmanager_route:
+  receiver: email
+  group_by: ['alertname', 'hostname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+alertmanager_inhibit_rules:
+  # If a node is down, suppress all other alerts from that same instance
+  - source_matchers:
+      - alertname="InstanceDown"
+      - job="node"
+    target_matchers:
+      - alertname!="InstanceDown"
+    equal: ['hostname']

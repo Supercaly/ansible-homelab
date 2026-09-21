@@ -1,5 +1,5 @@
 ---
-- name: Configure Prometheus.
+- name: Configure Prometheus and Alertmanager.
   hosts: prometheus
   become: true
   gather_facts: false
@@ -22,6 +22,8 @@
             )
           }}
       tags: prometheus
+    - role: prometheus.prometheus.alertmanager
+      tags: alertmanager
 
 - name: Configure node_exporter on all enabled hosts.
   hosts: exporter
