@@ -1,0 +1,8 @@
+---
+# yaml-language-server: $schema=none
+prometheus_caddy_port: "9180"
+prometheus_file_sd:
+  caddy:
+    - targets: ["{{ interfaces.lan.ip4.address }}:{{ prometheus_caddy_port }}"]
+      labels:
+        hostname: "{{ inventory_hostname }}"
