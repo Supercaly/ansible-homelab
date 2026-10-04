@@ -9,3 +9,11 @@ caddy_sites:
 
           reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ prometheus_port }}"
         }
+
+        https://{{ alertmanager_domain }} {
+          import logging "alertmanager.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:9093"
+        }
