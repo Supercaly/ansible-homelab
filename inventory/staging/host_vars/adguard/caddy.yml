@@ -2,7 +2,7 @@
 caddy_sites:
   - name: "adguard"
     content: |
-        https://adguard.{{ network.domain }} {
+        https://{{ adguardhome_domain }} {
           import logging "adguard.log"
           import encode
           import private
