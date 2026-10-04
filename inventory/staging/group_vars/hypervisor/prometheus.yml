@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=none
+pve_exporter_user: "node-exp"
+pve_exporter_group: "node-exp"
+
+prometheus_file_sd:
+  node:
+    - targets: ["{{ ansible_host }}:{{ node_exporter_port }}"]
+      labels:
+        hostname: "{{ inventory_hostname }}"
+  pve:
+    - targets: ["{{ ansible_host }}:9221"]
+      labels:
+        hostname: "{{ inventory_hostname }}"

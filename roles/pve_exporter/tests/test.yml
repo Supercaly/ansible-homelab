@@ -1,0 +1,6 @@
+---
+- name: Test pve_exporter role.
+  hosts: localhost
+  remote_user: root
+  roles:
+    - pve_exporter
