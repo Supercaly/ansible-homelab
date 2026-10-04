@@ -13,3 +13,8 @@ immich_db_data_location: "{{ immich_root }}/postgres"
 # Database credentials
 immich_db_username: "postgres"
 immich_db_name: "immich"
+
+# Prometheus metrics
+immich_metrics_enabled: false
+immich_metrics_port_server: 8081
+immich_metrics_port_microservices: 8082
