@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=none
+groups:
+  - name: Immich
+    rules:
+      - alert: ImmichDown
+        expr: 'up{job="immich"} == 0'
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Immich endpoint down"
+          description: "Immich target {{ $labels.instance }} has been down for more than 2 minutes."
+
+      - alert: ImmichHighMemory
+        expr: 'process_memory_usage{job="immich"} > 3 * 1024 * 1024 * 1024'
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Immich process memory usage is high"
+          description: "Immich process on {{ $labels.instance }} is using {{ $value | humanize1024 }}B of memory."
+
+      - alert: ImmichHighCPU
+        expr: >
+          sum by (instance) (
+            system_cpu_utilization{job="immich", system_cpu_state=~"user|system"}
+          ) / count by (instance) (
+            system_cpu_utilization{job="immich", system_cpu_state="idle"}
+          ) > 0.8
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Immich CPU usage is sustained high"
+          description: "Immich on {{ $labels.instance }} has been using more than 80% CPU for 15 minutes. A background job (ML, transcoding) may be stuck."
+
+      - alert: ImmichNetworkErrors
+        expr: 'rate(system_network_errors_total{job="immich"}[5m]) > 0'
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Immich container network errors"
+          description: "Immich container on {{ $labels.instance }} is seeing network errors on {{ $labels.system_device }} ({{ $labels.network_io_direction }})."

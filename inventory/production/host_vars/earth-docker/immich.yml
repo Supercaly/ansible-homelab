@@ -8,3 +8,7 @@ immich_timezone: "{{ system_locale_timezone }}"
 
 immich_upload_location: "/mnt/photo"
 immich_db_password: "{{ vault_immich_db_password }}"
+
+immich_metrics_enabled: true
+immich_metrics_port_server: 8081
+immich_metrics_port_microservices: 8082
