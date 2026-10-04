@@ -2,7 +2,7 @@
 caddy_sites:
   - name: "prometheus"
     content: |
-        https://metrics.{{ network.domain }} {
+        https://{{ prometheus_domain }} {
           import logging "prometheus.log"
           import encode
           import private
