@@ -18,28 +18,32 @@ alertmanager_receivers:
         send_resolved: true
 
 alertmanager_time_intervals:
-  # Suppress alerts outside working hours
+  # Suppress warning/info alerts outside reasonable hours (every day)
   - name: offhours
     time_intervals:
       - times:
           - start_time: "22:00"
             end_time: "24:00"
-        weekdays: ["monday:friday"]
+        location: "{{ system_locale_timezone }}"
       - times:
           - start_time: "00:00"
             end_time: "08:00"
-        weekdays: ["monday:friday"]
-      - weekdays: ["saturday", "sunday"]
-  # Suppress alerts during the night
+        location: "{{ system_locale_timezone }}"
+  # Suppress critical alerts during deep night (every day)
   - name: night
     time_intervals:
       - times:
-          - start_time: "01:00"
+          - start_time: "23:00"
+            end_time: "24:00"
+        location: "{{ system_locale_timezone }}"
+      - times:
+          - start_time: "00:00"
             end_time: "07:00"
+        location: "{{ system_locale_timezone }}"
 
 alertmanager_route:
   receiver: email
-  group_by: ['alertname', 'hostname']
+  group_by: ['alertname']
   group_wait: 30s
   group_interval: 5m
   repeat_interval: 4h
@@ -47,7 +51,13 @@ alertmanager_route:
     # Suppress watchdog notifications to avoid noise
     # TODO: Add external dead men's switch in case the monitoring stack falls down.
     - matchers:
-        - alertname="Watchdog"
+        - alertname=~"Watchdog|PrometheusAlertmanagerE2eDeadManSwitch"
+      receiver: "null"
+
+    # Templates have IDs >= 9000 by convention — they are always stopped
+    - matchers:
+        - alertname="PveGuestDown"
+        - id=~"(qemu|lxc)/9[0-9]+"
       receiver: "null"
 
     # Critical alerts:
@@ -72,11 +82,21 @@ alertmanager_route:
       mute_time_intervals:
         - offhours
 
+    # Info alerts:
+    #   - repeat once per day
+    #   - low priority diagnostic signals
+    - matchers:
+        - severity="info"
+      receiver: email
+      repeat_interval: 24h
+      mute_time_intervals:
+        - offhours
+
 alertmanager_inhibit_rules:
   # If a node is unreachable (node_exporter down), suppress all other alerts from that host
   - source_matchers:
-      - alertname="InstanceDown"
+      - alertname="PrometheusTargetMissing"
       - job="node"
     target_matchers:
-      - alertname!="InstanceDown"
+      - alertname!="PrometheusTargetMissing"
     equal: ['hostname']

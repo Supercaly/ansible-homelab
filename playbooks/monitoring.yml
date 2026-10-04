@@ -6,6 +6,9 @@
   roles:
     - role: prometheus.prometheus.prometheus
       vars:
+        prometheus_alert_rules_files:
+          - "{{ playbook_dir }}/files/prometheus/rules/*.yml"
+          - "{{ playbook_dir }}/files/prometheus/rules/*.yaml"
         # Conbine all targets defined in the distributed `prometheus_file_sd` variable.
         # Each host can define a targets for jobs using this dictionary where the key is
         # the job name and the value is a `file_sd_config`.
