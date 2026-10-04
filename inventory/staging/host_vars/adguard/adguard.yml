@@ -1,4 +1,6 @@
 ---
+adguardhome_domain: "adguard.{{ network.domain }}"
+
 adguardhome_config:
   schema_version: 34
   http:
