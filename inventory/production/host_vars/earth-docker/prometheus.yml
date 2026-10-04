@@ -9,3 +9,11 @@ prometheus_file_sd:
     - targets: ["{{ interfaces.lan.ip4.address }}:8080"]
       labels:
         hostname: "{{ inventory_hostname }}"
+  blackbox:
+    - targets:
+        - "https://{{ ddns_domain }}"
+        - "https://{{ vaultwarden_domain }}"
+        - "https://{{ portfolio_domain }}"
+        - "https://{{ immich_domain }}"
+      labels:
+        module: http_2xx
