@@ -9,6 +9,12 @@ prometheus_file_sd:
     - targets: ["{{ interfaces.lan.ip4.address }}:8080"]
       labels:
         hostname: "{{ inventory_hostname }}"
+  immich:
+    - targets:
+        - "{{ interfaces.lan.ip4.address }}:{{ immich_metrics_port_server }}"
+        - "{{ interfaces.lan.ip4.address }}:{{ immich_metrics_port_microservices }}"
+      labels:
+        hostname: "{{ inventory_hostname }}"
   blackbox:
     - targets:
         - "https://{{ ddns_domain }}"
