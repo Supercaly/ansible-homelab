@@ -1,5 +1,6 @@
 ---
 # yaml-language-server: $schema=none
+prometheus_domain: "metrics.{{ network.domain }}"
 prometheus_file_sd_dir: "/etc/prometheus/file_sd"
 prometheus_storage_retention: "30d"
 prometheus_storage_retention_size: "18GB"
@@ -18,6 +19,18 @@ prometheus_alertmanager_config:
   - static_configs:
       - targets:
           - "localhost:9093"
+
+prometheus_file_sd:
+  node:
+    - targets: ["{{ interfaces.lan.ip4.address }}:{{ node_exporter_port }}"]
+      labels:
+        hostname: "{{ inventory_hostname }}"
+  blackbox:
+    - targets:
+        - "https://{{ prometheus_domain }}"
+        - "https://{{ alertmanager_domain }}"
+      labels:
+        module: http_2xx
 
 prometheus_scrape_configs:
   - job_name: "prometheus"
@@ -55,3 +68,16 @@ prometheus_scrape_configs:
   - job_name: "caddy"
     file_sd_configs:
       - files: ["{{ prometheus_file_sd_dir }}/caddy.yml"]
+  - job_name: "blackbox"
+    metrics_path: /probe
+    file_sd_configs:
+      - files: ["{{ prometheus_file_sd_dir }}/blackbox.yml"]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - source_labels: [module]
+        target_label: __param_module
+      - target_label: __address__
+        replacement: "localhost:9115"

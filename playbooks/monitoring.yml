@@ -27,6 +27,8 @@
       tags: prometheus
     - role: prometheus.prometheus.alertmanager
       tags: alertmanager
+    - role: prometheus.prometheus.blackbox_exporter
+      tags: blackbox_exporter
 
 - name: Configure node_exporter on all enabled hosts.
   hosts: exporter

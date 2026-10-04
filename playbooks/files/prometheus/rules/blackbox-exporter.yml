@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=none
+groups:
+- name: BlackboxExporter
+  rules:
+    - alert: EndpointDown
+      expr: 'probe_success == 0'
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: Endpoint down (instance {{ $labels.instance }})
+        description: "Endpoint {{ $labels.instance }} is unreachable\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    - alert: SslCertExpired
+      expr: 'probe_ssl_earliest_cert_expiry - time() <= 0'
+      for: 0m
+      labels:
+        severity: critical
+      annotations:
+        summary: SSL certificate expired (instance {{ $labels.instance }})
+        description: "SSL certificate for {{ $labels.instance }} has expired\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
