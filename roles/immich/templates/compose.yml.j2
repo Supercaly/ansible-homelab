@@ -7,6 +7,10 @@ services:
     restart: "{{ immich_restart }}"
     ports:
       - "{{ immich_port }}:2283"
+{% if immich_metrics_enabled %}
+      - "{{ immich_metrics_port_server }}:8081"
+      - "{{ immich_metrics_port_microservices }}:8082"
+{% endif %}
     volumes:
       - "${UPLOAD_LOCATION}:/usr/src/app/upload"
       - "/etc/localtime:/etc/localtime:ro"
