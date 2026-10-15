@@ -1,0 +1,9 @@
+---
+smtp_host: "{{ vault_smtp_host }}"
+smtp_port: "{{ vault_smtp_port }}"
+
+smtp_username: "{{ vault_smtp_username }}"
+smtp_password: "{{ vault_smtp_password }}"
+
+smtp_from: "{{ vault_smtp_from }}"
+smtp_to: "djonline96@gmail.com"
