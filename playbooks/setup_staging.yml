@@ -62,6 +62,7 @@
 #   nic      Stop guest VM, attach net1 → vmbr1 via API, restart
 #   router   Write /etc/network/interfaces, enable NAT, configure dnsmasq+DHCP
 #   zfsdev   Create sparse image file on guest for ZFS vdev (idempotent)
+#   mailpit  Install Mailpit mail catcher on guest (SMTP :1025, UI :8025)
 #   route    Add static route on the Mac: guest_lan_network via guest_wan_ip
 #
 # ─── Usage ───────────────────────────────────────────────────────────────────
@@ -170,7 +171,7 @@
 - name: Register guest VM as Ansible target.
   hosts: localhost
   gather_facts: false
-  tags: [bridge, nic, router, route, zfsdev]
+  tags: [bridge, nic, router, route, zfsdev, mailpit]
   vars:
     guest_proxmox_name: pve
     guest_vm_user: root
@@ -326,7 +327,53 @@
         creates: "{{ zfs_img_path }}"
 
 # ---------------------------------------------------------------------------
-# Play 6 — Add route to lab network on Mac
+# Play 6 — Install Mailpit on guest VM
+# ---------------------------------------------------------------------------
+- name: Install Mailpit on guest VM.
+  hosts: lab_pve
+  gather_facts: false
+  become: true
+  tags: mailpit
+  vars:
+    mailpit_version: "1.21.6"
+    mailpit_smtp_port: 1025
+    mailpit_ui_port: 8025
+  tasks:
+    - name: Download and extract Mailpit binary.
+      ansible.builtin.unarchive:
+        src: "https://github.com/axllent/mailpit/releases/download/v{{ mailpit_version }}/mailpit-linux-amd64.tar.gz"
+        dest: /usr/local/bin
+        remote_src: true
+        include:
+          - mailpit
+
+    - name: Deploy Mailpit systemd service.
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/mailpit.service
+        mode: "0644"
+        content: |
+          [Unit]
+          Description=Mailpit
+          After=network.target
+
+          [Service]
+          ExecStart=/usr/local/bin/mailpit \
+            --smtp 0.0.0.0:{{ mailpit_smtp_port }} \
+            --listen 0.0.0.0:{{ mailpit_ui_port }}
+          Restart=on-failure
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Enable and start Mailpit.
+      ansible.builtin.systemd:
+        name: mailpit
+        daemon_reload: true
+        enabled: true
+        state: started
+
+# ---------------------------------------------------------------------------
+# Play 7 — Add route to lab network on Mac
 # ---------------------------------------------------------------------------
 - name: Add route to lab network on Mac.
   hosts: localhost
