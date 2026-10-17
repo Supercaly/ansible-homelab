@@ -8,3 +8,7 @@ ddns_config:
       username: "{{ vault_ddns_username }}"
       password: "{{ vault_ddns_password }}"
       ip_version: "ipv4"
+ddns_shoutrrr_address: >-
+  smtp://{{ smtp_username }}:{{ smtp_password | ansible.builtin.urlencode }}@{{
+    smtp_host }}:{{ smtp_port }}/?from={{ smtp_from }}&to={{
+    smtp_to }}&FromName=DDNS&useStartTLS=No&auth=None
