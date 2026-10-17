@@ -19,6 +19,8 @@ Available variables are listed below, along with default values (see `defaults/m
 |`ddns_port` | | int | `8000` | Port exposed by the DDNS service.|
 |`ddns_timezone` | | string | `"UTC"` | Timezone used by the DDNS service container. |
 |`ddns_dns_servers` | | list | `[]` | List of DNS servers for the container (e.g. `["1.1.1.1", "8.8.8.8"]`). If empty, Docker's default DNS is used. Useful when the DDNS provider requires a specific resolver. |
+|`ddns_shoutrrr_address` | | string | `""` | [Shoutrrr](https://containrrr.dev/shoutrrr/) notification URL (e.g. `smtp://`, `ntfy://`). Leave empty to disable notifications. |
+|`ddns_shoutrrr_default_title` | | string | `""` | Default title for Shoutrrr notifications. |
 
 ## Dependencies
 
