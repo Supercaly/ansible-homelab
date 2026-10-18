@@ -12,6 +12,8 @@
         # Would remove Proxmox completely.
         # https://github.com/lae/ansible-role-proxmox/issues/223
         pve_remove_old_kernels: false
+    - role: pve_notifications
+      tags: [notifications]
 
 - name: Create Proxmox LXCs.
   hosts: hypervisor

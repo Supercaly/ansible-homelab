@@ -1,0 +1,13 @@
+{% for entry in pve_notifications_private %}
+{{ entry.type }}: {{ entry.name }}
+{% for key, value in entry.items() if key not in ['type', 'name'] %}
+{% if value is iterable and value is not string %}
+{% for v in value %}
+	{{ key }} {{ v }}
+{% endfor %}
+{% else %}
+	{{ key }} {{ value }}
+{% endif %}
+{% endfor %}
+
+{% endfor %}
