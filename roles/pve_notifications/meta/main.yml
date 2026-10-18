@@ -1,0 +1,13 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: pve_notifications
+  author: Lorenzo Calisti
+  description: Configure Proxmox VE notification targets and matchers.
+  license: MIT
+  min_ansible_version: "2.1"
+  galaxy_tags:
+    - proxmox
+    - notifications
+    - smtp

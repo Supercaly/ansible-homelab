@@ -1,0 +1,31 @@
+---
+# List of notification objects for /etc/pve/notifications.cfg.
+# Each entry must have 'type' (smtp, sendmail, gotify, webhook, matcher)
+# and 'name'. All other keys map directly to Proxmox config properties.
+# Use a list for properties that can repeat (e.g. mailto, target).
+#
+# Example:
+#   pve_notifications_public:
+#     - type: smtp
+#       name: my-smtp
+#       server: mail.example.com
+#       port: 587
+#       mode: tls
+#       username: user@example.com
+#       from-address: noreply@example.com
+#       mailto:
+#         - admin@example.com
+#     - type: matcher
+#       name: default-matcher
+#       target: my-smtp
+pve_notifications_public: []
+
+# List of notification objects for /etc/pve/priv/notifications.cfg.
+# Same structure as above, only sensitive fields (password, token, secret).
+#
+# Example:
+#   pve_notifications_private:
+#     - type: smtp
+#       name: my-smtp
+#       password: secret
+pve_notifications_private: []

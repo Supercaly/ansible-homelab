@@ -1,0 +1,20 @@
+---
+pve_notifications_public:
+  - type: smtp
+    name: smtp
+    server: "{{ smtp_host }}"
+    port: "{{ smtp_port }}"
+    mode: starttls
+    username: "{{ smtp_username }}"
+    from-address: "{{ smtp_from }}"
+    mailto:
+      - "{{ smtp_to }}"
+    author: "Proxmox VE"
+  - type: matcher
+    name: default-matcher
+    target: smtp
+
+pve_notifications_private:
+  - type: smtp
+    name: smtp
+    password: "{{ smtp_password }}"
