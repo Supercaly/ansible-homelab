@@ -6,7 +6,6 @@ vaultwarden_backup_version: "1.27.0"
 vaultwarden_domain: "pwd.{{ network.domain }}"
 vaultwarden_port: 8001
 
-# TODO: Configure notifications on backup jobs
 vaultwarden_root: "/srv/stacks/vaultwarden"
 vaultwarden_remote_dir: "/backup/vaultwarden"
 vaultwarden_zip_password: "{{ vault_vaultwarden_zip_password }}"
@@ -26,3 +25,14 @@ vaultwarden_config:
   password_hints_allowed: false
   show_password_hint: false
   admin_token: "{{ vault_vaultwarden_admin_token }}"
+
+vaultwarden_mail_smtp_enable: true
+vaultwarden_mail_smtp_variables: >-
+  -S v15-compat
+  -S from='Vaultwarden Backup <{{ smtp_from }}>'
+  -S mta='smtp://{{ smtp_host }}:{{ smtp_port }}'
+  -S smtp-use-starttls
+  -S user='{{ smtp_username }}'
+  -S password='{{ smtp_password }}'
+vaultwarden_mail_to: "{{ smtp_to }}"
+vaultwarden_mail_when_success: false
