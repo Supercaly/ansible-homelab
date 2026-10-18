@@ -17,3 +17,12 @@ vaultwarden_config:
   password_hints_allowed: true
   show_password_hint: true
   admin_token: "{{ vault_vaultwarden_admin_token }}"
+
+vaultwarden_mail_smtp_enable: true
+vaultwarden_mail_smtp_variables: >-
+  -S v15-compat
+  -S from='VW Backup <{{ smtp_from }}>'
+  -S mta='smtp://{{ smtp_host }}:{{ smtp_port }}'
+  -S smtp-auth=none
+vaultwarden_mail_to: "{{ smtp_to }}"
+vaultwarden_mail_when_success: false
