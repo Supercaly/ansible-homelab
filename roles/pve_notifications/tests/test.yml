@@ -1,0 +1,5 @@
+---
+- name: Test pve_notifications role.
+  hosts: localhost
+  roles:
+    - pve_notifications
