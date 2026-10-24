@@ -24,6 +24,7 @@
     # Select hosts with `proxmox_lxc` defined and `proxmox_host` pointing to
     # the current host. Defaults to all hosts; pass `target_guests` (list of
     # inventory hostnames) to restrict which guests are created.
+    # Use -e "{'target_guests':['guest1', 'guest2', ...]}"
     lxc_guests: >-
       {{
         target_guests | default(groups['all']) |
@@ -64,6 +65,7 @@
     # Select hosts with `proxmox_kvm` defined and `proxmox_host` pointing to
     # the current host. Defaults to all hosts; pass `target_guests` (list of
     # inventory hostnames) to restrict which guests are created.
+    # Use -e "{'target_guests':['guest1', 'guest2', ...]}"
     kvm_guests: >-
       {{
         target_guests | default(groups['all']) |
