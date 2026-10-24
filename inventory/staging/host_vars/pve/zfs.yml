@@ -1,7 +1,7 @@
 ---
 zfs_pools:
   - name: test_tank
-    vdev: /dev/loop0
+    vdev: "/var/lib/zfs-test.img"
     scrub: true
     properties:
       ashift: 12
