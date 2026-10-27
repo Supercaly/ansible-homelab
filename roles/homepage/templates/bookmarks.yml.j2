@@ -1,0 +1,6 @@
+---
+{{ ansible_managed | comment(decoration='# ') }}
+
+{% if homepage_bookmarks %}
+{{ homepage_bookmarks | to_nice_yaml(indent=2) }}
+{% endif %}

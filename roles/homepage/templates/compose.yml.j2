@@ -1,0 +1,19 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+services:
+  homepage:
+    image: "ghcr.io/gethomepage/homepage:{{ homepage_version }}"
+    container_name: "homepage"
+    restart: "{{ homepage_restart }}"
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: "{{ homepage_allowed_hosts }}"
+      TZ: "{{ homepage_timezone }}"
+      PUID: "{{ homepage_uid }}"
+      PGID: "{{ homepage_gid }}"
+    volumes:
+      - "{{ homepage_root }}/config:/app/config"
+{% if homepage_docker_socket | bool %}
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+{% endif %}
+    ports:
+      - "{{ homepage_port }}:3000"
