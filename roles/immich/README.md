@@ -22,6 +22,9 @@ Available variables are listed below, along with default values (see `defaults/m
 | `immich_db_username` | | string | `"postgres"` | PostgreSQL username. |
 | `immich_db_password` | Yes | string | | PostgreSQL password. |
 | `immich_db_name` | | string | `"immich"` | PostgreSQL database name. |
+| `immich_metrics_enabled` | | bool | `false` | Enable Prometheus metrics. Exposes metrics on dedicated ports and sets `IMMICH_TELEMETRY_INCLUDE=all`. |
+| `immich_metrics_port_server` | | int | `8081` | Host port for server metrics (API request rates, response times). Only used when `immich_metrics_enabled` is true. |
+| `immich_metrics_port_microservices` | | int | `8082` | Host port for microservices metrics (job queues, ML inference latency). Only used when `immich_metrics_enabled` is true. |
 
 ## Dependencies
 
