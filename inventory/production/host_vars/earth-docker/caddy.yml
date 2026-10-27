@@ -2,7 +2,7 @@
 caddy_sites:
   - name: "ddns"
     content: |
-        https://ddns.{{ network.domain }} {
+        https://{{ ddns_domain }} {
           import logging "ddns.log"
           import encode
           import private
@@ -12,11 +12,11 @@ caddy_sites:
   - name: "portfolio"
     content: |
         # Redirect www to the non-www domain.
-        https://www.lorenzo.{{ network.domain }} {
-          redir https://lorenzo.{{ network.domain }}{uri} permanent
+        https://www.{{ portfolio_domain }} {
+          redir https://{{ portfolio_domain }}{uri} permanent
         }
 
-        https://lorenzo.{{ network.domain }} {
+        https://{{ portfolio_domain }} {
           import logging "portfolio.log"
           import encode
 
@@ -32,7 +32,7 @@ caddy_sites:
         }
   - name: "immich"
     content: |
-        https://photo.{{ network.domain }} {
+        https://{{ immich_domain }} {
           import logging "immich.log"
           import encode
           import private
