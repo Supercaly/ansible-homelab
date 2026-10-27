@@ -4,6 +4,11 @@ proxmox_api_user: "{{ vault_proxmox_api_user }}"
 proxmox_api_token_id: "{{ vault_proxmox_api_token_id }}"
 proxmox_api_token_secret: "{{ vault_proxmox_api_token_secret }}"
 
+# API token for Prometheus PVE Exporter
+pve_exporter_pve_user: "{{ vault_pve_exporter_pve_user }}"
+pve_exporter_pve_token_name: "{{ vault_pve_exporter_pve_token_name }}"
+pve_exporter_pve_token_value: "{{ vault_pve_exporter_pve_token_value }}"
+
 # Disable SSL certificate validation to avoid problems
 # with Proxmox API connection.
 proxmox_validate_certs: false
@@ -13,20 +18,24 @@ pve_fqdn: "{{ inventory_hostname }}.{{ network.domain | ansible.builtin.mandator
 pve_groups:
   - name: admin
     comment: System Administrators
+  - name: auditor
+    comment: Read-only access for monitoring
 pve_users:
   # User password is the same as the Linux password.
   - name: lorenzo@pam
     email: l.calisti96@gmail.com
     firstname: Lorenzo
     lastname: Calisti
-    groups:
-      - admin
+    groups: [admin]
+  - name: "{{ pve_exporter_pve_user }}"
+    groups: [auditor]
 pve_acls:
   - path: /
-    roles:
-      - Administrator
-    groups:
-      - admin
+    roles: [Administrator]
+    groups: [admin]
+  - path: /
+    roles: [PVEAuditor]
+    groups: [auditor]
 
 pve_pcie_passthrough_enabled: true
 pve_iommu_passthrough_mode: true
