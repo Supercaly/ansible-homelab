@@ -1,7 +1,7 @@
 ---
 # yaml-language-server: $schema=none
 groups:
-  - name: Immich
+  - name: ImmichExporter
     rules:
       - alert: ImmichDown
         expr: 'up{job="immich"} == 0'
