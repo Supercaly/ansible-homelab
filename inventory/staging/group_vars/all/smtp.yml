@@ -1,5 +1,5 @@
 ---
-smtp_host: "192.168.1.1"
+smtp_host: "{{ network.gw4 }}"
 smtp_port: 1025
 
 smtp_username: "staging"
