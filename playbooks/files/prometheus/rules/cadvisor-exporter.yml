@@ -1,7 +1,7 @@
 ---
 # yaml-language-server: $schema=none
 groups:
-- name: GoogleCadvisor
+- name: CadvisorExporter
   rules:
     # name!="" filters out system cgroups (id="/", "/init.scope", etc.) — only real Docker containers have a name.
     # Fires if a container has not been seen for over 5 minutes. Brief restarts are tolerated.
