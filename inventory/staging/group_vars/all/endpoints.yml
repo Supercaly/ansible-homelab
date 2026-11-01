@@ -11,3 +11,4 @@
 nfs_server_address: "{{ network.ip4 | ansible.utils.nthhost(1) }}"
 smb_server_address: "{{ network.ip4 | ansible.utils.nthhost(1) }}"
 reverse_proxy_address: "{{ network.ip4 | ansible.utils.nthhost(11) }}"
+prometheus_address: "{{ network.ip4 | ansible.utils.nthhost(17) }}"
