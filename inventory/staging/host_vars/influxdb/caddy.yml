@@ -2,7 +2,7 @@
 caddy_sites:
   - name: "influxdb"
     content: |
-        https://influxdb.{{ network.domain }} {
+        https://{{ influxdb2_domain }} {
           import logging "influxdb.log"
           import encode
           import private

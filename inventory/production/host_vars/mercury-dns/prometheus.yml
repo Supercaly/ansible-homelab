@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=none
+prometheus_file_sd:
+  node:
+    - targets: ["{{ ansible_host }}:{{ node_exporter_port }}"]
+      labels:
+        hostname: "{{ inventory_hostname }}"
+  blackbox:
+    - targets: ["https://{{ adguardhome_domain }}"]
+      labels:
+        module: http_2xx
+    - targets: ["{{ ansible_host }}:53"]
+      labels:
+        module: dns_public
+    - targets: ["{{ ansible_host }}:53"]
+      labels:
+        module: dns_internal

@@ -2,7 +2,7 @@
 caddy_sites:
   - name: "ddns"
     content: |
-        https://ddns.{{ network.domain }} {
+        https://{{ ddns_domain }} {
           import logging "ddns.log"
           import encode
           import private
@@ -20,7 +20,7 @@ caddy_sites:
         }
   - name: "portfolio"
     content: |
-        https://lorenzo.{{ network.domain }} {
+        https://{{ portfolio_domain }} {
           import logging "portfolio.log"
           import encode
           import private
@@ -29,7 +29,7 @@ caddy_sites:
         }
   - name: "immich"
     content: |
-        https://photo.{{ network.domain }} {
+        https://{{ immich_domain }} {
           import logging "immich.log"
           import encode
           import private

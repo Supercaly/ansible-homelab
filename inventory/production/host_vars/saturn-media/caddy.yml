@@ -2,7 +2,7 @@
 caddy_sites:
   - name: "jellyfin"
     content: |
-        https://media.{{ network.domain }} {
+        https://{{ jellyfin_domain }} {
           import logging "jellyfin.log"
           import encode
           import private
