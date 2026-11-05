@@ -1,0 +1,11 @@
+---
+caddy_sites:
+  - name: "grafana"
+    content: |
+        https://{{ grafana_dashboard_domain }} {
+          import logging "grafana.log"
+          import encode
+          import private
+
+          reverse_proxy "{{ interfaces.lan.ip4.address }}:{{ grafana_dashboard_port }}"
+        }

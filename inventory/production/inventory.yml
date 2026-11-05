@@ -18,6 +18,7 @@ all:
         mercury-dns:
         mars-proxy:
         neptune-metrics:
+        uranus-dashboard:
         saturn-media:
     kvm:
       hosts:
@@ -59,7 +60,7 @@ all:
       hosts:
         altair:
 
-    # Monitoring
+    # Monitoring hosts
     prometheus:
       hosts:
         neptune-metrics:
@@ -67,3 +68,6 @@ all:
       children:
         hypervisor:
         guest:
+    grafana:
+      hosts:
+        uranus-dashboard:
