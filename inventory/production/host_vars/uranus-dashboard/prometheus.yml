@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=none
 prometheus_file_sd:
   node:
-    - targets: ["{{ ansible_host }}:{{ node_exporter_port }}"]
+    - targets: ["{{ interfaces.lan.ip4.address }}:{{ node_exporter_port }}"]
       labels:
         hostname: "{{ inventory_hostname }}"
   blackbox:
