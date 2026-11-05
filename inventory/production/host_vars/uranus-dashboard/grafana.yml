@@ -1,0 +1,25 @@
+---
+grafana_dashboard_domain: "dashboard.{{ network.domain }}"
+grafana_dashboard_port: 3000
+# grafana_provisioning_synced: true
+grafana_ini:
+  security:
+    admin_user: "{{ vault_grafana_admin_user }}"
+    admin_password: "{{ vault_grafana_admin_password }}"
+    admin_email: "{{ vault_grafana_admin_email }}"
+    allow_embedding: false
+  server:
+    http_port: "{{ grafana_dashboard_port }}"
+    root_path: "https://{{ grafana_dashboard_domain }}"
+  users:
+    allow_sign_up: false
+    allow_org_create: false
+    auto_assign_org_role: "Viewer"
+  metrics:
+    enabled: false
+grafana_dashboards_dir: "files/grafana/dashboards"
+grafana_datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: "http://{{ prometheus_address }}:{{ prometheus_port }}"
