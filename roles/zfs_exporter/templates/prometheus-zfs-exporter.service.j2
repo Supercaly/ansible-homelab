@@ -1,0 +1,28 @@
+[Unit]
+Description=Prometheus ZFS Exporter
+Documentation=https://github.com/pdf/zfs_exporter
+After=network.target zfs.target
+
+[Service]
+User={{ zfs_exporter_user }}
+Group={{ zfs_exporter_group }}
+ExecStart={{ zfs_exporter_binary_install_dir }}/zfs_exporter \
+    --web.listen-address={{ zfs_exporter_web_listen_address }} \
+    --web.telemetry-path={{ zfs_exporter_web_telemetry_path }} \
+    --deadline={{ zfs_exporter_deadline }}
+SyslogIdentifier=zfs_exporter
+Restart=always
+RestartSec=1
+StartLimitBurst=5
+StartLimitInterval=30s
+
+NoNewPrivileges=true
+ProtectHome=true
+ProtectSystem=strict
+PrivateTmp=true
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+---
+# yaml-language-server: $schema=none
+prometheus_port: 9090
+node_exporter_port: 9100
+
+prometheus_file_sd:
+  node:
+    - targets: ["{{ ansible_host }}:{{ node_exporter_port }}"]
+      labels:
+        hostname: "{{ inventory_hostname }}"
