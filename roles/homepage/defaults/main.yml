@@ -1,0 +1,23 @@
+---
+homepage_root: "/opt/homepage"
+
+homepage_version: "latest"
+homepage_restart: "unless-stopped"
+homepage_port: 3000
+homepage_timezone: "UTC"
+
+homepage_docker_socket: false
+
+homepage_user: "root"
+homepage_uid: 0
+homepage_group: "root"
+homepage_gid: 0
+
+homepage_allowed_hosts: ""
+
+homepage_settings: {}
+homepage_services: []
+homepage_widgets: []
+homepage_bookmarks: []
+homepage_docker: {}
+homepage_proxmox: {}
