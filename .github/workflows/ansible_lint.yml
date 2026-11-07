@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout latest version of the project.
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Running Ansible Lint with a vault file configured requires
       # a `.vault-password` file to be present in the repo.
@@ -27,9 +27,20 @@ jobs:
         run: >-
           echo "fake" > .vault-password
 
+      - name: Set up Python.
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      # We install Ansible Lint manually to ensure we use the correct
+      # version of all dependencies as in the control node.
+      - name: Install Python dependencies.
+        run: pip install -r requirements.txt
+
       - name: Run ansible-lint.
         uses: ansible/ansible-lint@main
         with:
+          setup_python: false
           requirements_file: requirements.yml
           args: --exclude .ansible
 

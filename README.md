@@ -10,9 +10,15 @@ Before using this repository, ensure the following prerequisites are met.
 
 ### Control node
 
-The control node (the machine from which you run Ansible) must have:
+The control node (the machine from which you run Ansible) requires Python 3 and a virtual environment with all dependencies installed:
 
-- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) installed.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+The `requirements.txt` file installs `ansible-core`, `ansible-lint`, and all other Python dependencies needed to run and lint the playbooks.
 
 ### Managed hosts
 
