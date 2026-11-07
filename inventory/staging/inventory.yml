@@ -20,6 +20,7 @@ all:
         influxdb:
         grafana:
         jellyfin:
+        prometheus:
     kvm:
       hosts:
         docker:
@@ -54,3 +55,9 @@ all:
     samba-server:
       hosts:
         pve:
+
+    # Monitored hosts
+    exporter:
+      children:
+        hypervisor:
+        guest:

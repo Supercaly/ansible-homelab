@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=none
+prometheus_file_sd:
+  node:
+    - targets: ["{{ interfaces.lan.ip4.address }}:{{ node_exporter_port }}"]
+      labels:
+        hostname: "{{ inventory_hostname }}"
+  docker:
+    - targets: ["{{ interfaces.lan.ip4.address }}:8080"]
+      labels:
+        hostname: "{{ inventory_hostname }}"
