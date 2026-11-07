@@ -1,4 +1,5 @@
 ---
+influxdb2_domain: "influxdb.{{ network.domain }}"
 influxdb2_primary_org: "{{ vault_influxdb_primary_org }}"
 influxdb2_primary_bucket: "{{ vault_influxdb_primary_bucket }}"
 influxdb2_primary_username: "{{ vault_influxdb_primary_username }}"

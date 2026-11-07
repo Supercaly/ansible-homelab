@@ -1,4 +1,5 @@
 ---
 immich_root: /srv/stacks/immich
 immich_port: 2283
+immich_domain: "photo.{{ network.domain }}"
 immich_db_password: "{{ vault_immich_db_password }}"

@@ -1,4 +1,5 @@
 ---
+immich_domain: "photo.{{ network.domain }}"
 immich_version: "v3"
 
 immich_root: "/srv/stacks/immich"
