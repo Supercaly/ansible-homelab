@@ -39,3 +39,6 @@
 
 - name: Configure docker services.
   ansible.builtin.import_playbook: services.yml
+
+- name: Configure UPS management.
+  ansible.builtin.import_playbook: ups.yml

@@ -1,0 +1,14 @@
+---
+_nut_server_packages:
+  - nut
+
+_nut_client_packages:
+  - nut
+
+_nut_all_packages:
+  - nut
+
+_nut_server_service: nut
+_nut_client_service: nut
+_nut_config_owner: root
+_nut_config_group: nut

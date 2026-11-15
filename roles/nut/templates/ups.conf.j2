@@ -1,0 +1,14 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+{% for __ups in nut_ups_list %}
+[{{ __ups.name | ansible.builtin.mandatory }}]
+	driver = {{ __ups.driver | ansible.builtin.mandatory }}
+	port = {{ __ups.port | ansible.builtin.mandatory }}
+{% if __ups.desc is defined %}
+	desc = "{{ __ups.desc }}"
+{% endif %}
+{% for __k, __v in (__ups.options | default({}) ).items() %}
+	{{ __k }} = {{ __v }}
+{% endfor %}
+
+{% endfor %}

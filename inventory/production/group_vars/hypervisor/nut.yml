@@ -1,0 +1,8 @@
+---
+nut_upsmon_pwd: "{{ vault_nut_upsmon_pwd }}"
+nut_upsadm_pwd: "{{ vault_nut_upsadm_pwd }}"
+
+nut_finaldelay: 10
+
+nut_upssched_enabled: true
+nut_upssched_cmdscript_src: "files/nut/upssched-cmd.sh"

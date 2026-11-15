@@ -1,0 +1,101 @@
+---
+- name: Ensure NUT config directory exists.
+  ansible.builtin.file:
+    path: "{{ nut_config_dir }}"
+    state: directory
+    owner: "{{ _nut_config_owner }}"
+    group: "{{ _nut_config_group }}"
+    mode: "0750"
+
+- name: Deploy nut.conf.
+  ansible.builtin.template:
+    src: nut.conf.j2
+    dest: "{{ nut_config_dir }}/nut.conf"
+    owner: "{{ _nut_config_owner }}"
+    group: "{{ _nut_config_group }}"
+    mode: "0640"
+  notify:
+    - nut_restart_upsd
+    - nut_restart_upsmon
+
+- name: Deploy ups.conf.
+  ansible.builtin.template:
+    src: ups.conf.j2
+    dest: "{{ nut_config_dir }}/ups.conf"
+    owner: "{{ _nut_config_owner }}"
+    group: "{{ _nut_config_group }}"
+    mode: "0640"
+  notify: nut_restart_upsd
+  when: nut_mode in ['standalone', 'netserver']
+
+- name: Deploy upsd.conf.
+  ansible.builtin.template:
+    src: upsd.conf.j2
+    dest: "{{ nut_config_dir }}/upsd.conf"
+    owner: "{{ _nut_config_owner }}"
+    group: "{{ _nut_config_group }}"
+    mode: "0640"
+  notify: nut_restart_upsd
+  when: nut_mode == 'netserver'
+
+- name: Deploy upsd.users.
+  ansible.builtin.template:
+    src: upsd.users.j2
+    dest: "{{ nut_config_dir }}/upsd.users"
+    owner: "{{ _nut_config_owner }}"
+    group: "{{ _nut_config_group }}"
+    mode: "0640"
+  notify: nut_restart_upsd
+  when: nut_mode in ['standalone', 'netserver']
+
+- name: Deploy upsmon.conf.
+  ansible.builtin.template:
+    src: upsmon.conf.j2
+    dest: "{{ nut_config_dir }}/upsmon.conf"
+    owner: "{{ _nut_config_owner }}"
+    group: "{{ _nut_config_group }}"
+    mode: "0640"
+  notify: nut_restart_upsmon
+
+- name: Deploy tmpfiles.d entry for upssched state directory.
+  ansible.builtin.template:
+    src: nut-upssched.conf.j2
+    dest: /etc/tmpfiles.d/nut-upssched.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: nut_upssched_enabled | bool
+  notify: nut_create_tmpfiles
+
+- name: Deploy upssched.conf.
+  ansible.builtin.template:
+    src: upssched.conf.j2
+    dest: "{{ nut_config_dir }}/upssched.conf"
+    owner: "{{ _nut_config_owner }}"
+    group: "{{ _nut_config_group }}"
+    mode: "0640"
+  notify: nut_restart_upsmon
+  when: nut_upssched_enabled | bool
+
+- name: Deploy upssched-cmd script.
+  ansible.builtin.copy:
+    src: "{{ nut_upssched_cmdscript_src }}"
+    dest: "{{ nut_upssched_cmdscript }}"
+    owner: "{{ _nut_config_owner }}"
+    group: "{{ _nut_config_group }}"
+    mode: "0750"
+  when:
+    - nut_upssched_enabled | bool
+    - nut_upssched_cmdscript_src | length > 0
+
+- name: Deploy notifycmd script.
+  ansible.builtin.copy:
+    src: "{{ nut_notifycmd_src }}"
+    dest: "{{ nut_notifycmd }}"
+    owner: "{{ _nut_config_owner }}"
+    group: "{{ _nut_config_group }}"
+    mode: "0750"
+  when:
+    - not nut_upssched_enabled | bool
+    - nut_notifycmd | length > 0
+    - nut_notifycmd_src | length > 0

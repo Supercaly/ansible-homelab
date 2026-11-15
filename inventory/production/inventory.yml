@@ -25,6 +25,11 @@ all:
     # --- Functional groups ---
     # Used by playbooks as targets across inventories.
 
+    # NUT hosts
+    ups:
+      children:
+        hypervisor:
+
     # DNS servers
     dns:
       hosts:
