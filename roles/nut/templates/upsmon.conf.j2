@@ -1,0 +1,30 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+{% for __m in nut_monitor_list %}
+MONITOR {{ __m.ups | ansible.builtin.mandatory }} {{ __m.powervalue | default(1) }} {{ __m.username | ansible.builtin.mandatory }} {{ __m.password | ansible.builtin.mandatory }} {{ __m.type | ansible.builtin.mandatory }}
+{% endfor %}
+
+MINSUPPLIES {{ nut_minsupplies }}
+SHUTDOWNCMD "{{ nut_shutdowncmd }}"
+POWERDOWNFLAG {{ nut_powerdownflag }}
+FINALDELAY {{ nut_finaldelay }}
+HOSTSYNC {{ nut_hostsync }}
+POLLFREQ {{ nut_pollfreq }}
+POLLFREQALERT {{ nut_pollfreqalert }}
+DEADTIME {{ nut_deadtime }}
+RBWARNTIME {{ nut_rbwarntime }}
+NOCOMMWARNTIME {{ nut_nocommwarntime }}
+
+{% if nut_upssched_enabled | bool %}
+NOTIFYCMD /usr/sbin/upssched
+{% elif nut_notifycmd | length > 0 %}
+NOTIFYCMD "{{ nut_notifycmd }}"
+{% endif %}
+
+{% for __msg in nut_notifymsg %}
+NOTIFYMSG {{ __msg.event | ansible.builtin.mandatory }} "{{ __msg.msg | ansible.builtin.mandatory }}"
+{% endfor %}
+
+{% for __flag in nut_notifyflags %}
+NOTIFYFLAG {{ __flag.event | ansible.builtin.mandatory }} {{ __flag.flags | ansible.builtin.mandatory | join('+') }}
+{% endfor %}

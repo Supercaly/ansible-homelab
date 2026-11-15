@@ -1,0 +1,8 @@
+---
+- name: Configure UPS management.
+  hosts: ups
+  become: true
+  gather_facts: false
+  roles:
+    - role: nut
+      tags: nut
