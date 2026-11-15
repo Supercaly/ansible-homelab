@@ -1,0 +1,16 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+{% for __user in nut_users %}
+[{{ __user.name | ansible.builtin.mandatory }}]
+	password = {{ __user.password | ansible.builtin.mandatory }}
+{% if __user.actions is defined %}
+	actions = {{ __user.actions | join(' ') }}
+{% endif %}
+{% if __user.instcmds is defined %}
+	instcmds = {{ __user.instcmds | join(' ') }}
+{% endif %}
+{% if __user.upsmon is defined %}
+	upsmon {{ __user.upsmon }}
+{% endif %}
+
+{% endfor %}

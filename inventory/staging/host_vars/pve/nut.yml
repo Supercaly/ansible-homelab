@@ -1,0 +1,55 @@
+---
+nut_mode: standalone
+nut_finaldelay: 10
+nut_ups_list:
+  - name: testups
+    driver: dummy-ups
+    port: dummy.dev
+    desc: "Dummy UPS used for testing"
+    options:
+      mode: dummy-once
+nut_users:
+  - name: admin
+    password: secret
+    actions: [SET, FSD]
+    instcmds: [ALL]
+  - name: upsmon
+    password: secret
+    upsmon: primary
+nut_monitor_list:
+  - ups: testups@localhost
+    username: upsmon
+    password: secret
+    type: primary
+nut_notifyflags:
+  - event: ONBATT
+    flags: [SYSLOG+EXEC]
+  - event: ONLINE
+    flags: [SYSLOG+EXEC]
+  - event: LOWBATT
+    flags: [SYSLOG+EXEC]
+  - event: FSD
+    flags: [SYSLOG+EXEC]
+  - event: SHUTDOWN
+    flags: [SYSLOG+EXEC]
+  - event: COMMBAD
+    flags: [SYSLOG+EXEC]
+  - event: COMMOK
+    flags: [SYSLOG+EXEC]
+nut_upssched_enabled: true
+nut_upssched_cmdscript_src: "files/nut/upssched-cmd.sh"
+nut_upssched_at:
+  # Debounce brief power blips (wait 30s before sending an alert)
+  - AT ONBATT * START-TIMER onbatt_alert 30
+  - AT ONLINE * CANCEL-TIMER onbatt_alert online_restored
+  # Trigger an early, graceful shutdown after 5 minutes (300s) on battery
+  - AT ONBATT * START-TIMER early_shutdown 300
+  - AT ONLINE * CANCEL-TIMER early_shutdown
+  # Immediate forced shutdown if the UPS reports critical low battery
+  - AT LOWBATT * EXECUTE critical_shutdown
+  # Debounce USB communication drops (wait 15s before alerting)
+  - AT COMMBAD * START-TIMER comm_lost 15
+  - AT COMMOK  * CANCEL-TIMER comm_lost comm_restored
+  - AT NOCOMM  * EXECUTE comm_lost
+  # Notify on exausted battery
+  - AT REPLBATT * EXECUTE replace_battery

@@ -1,0 +1,5 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+{% for __listen in nut_upsd_listen %}
+LISTEN {{ __listen.address | ansible.builtin.mandatory }} {{ __listen.port | default(3493) }}
+{% endfor %}

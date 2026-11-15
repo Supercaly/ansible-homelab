@@ -1,0 +1,11 @@
+---
+- name: nut_restart_upsd # noqa: name[casing]
+  ansible.builtin.service:
+    name: "{{ _nut_server_service }}"
+    state: restarted
+  when: nut_mode in ['standalone', 'netserver']
+
+- name: nut_restart_upsmon # noqa: name[casing]
+  ansible.builtin.service:
+    name: "{{ _nut_client_service }}"
+    state: restarted

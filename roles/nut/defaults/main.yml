@@ -1,0 +1,75 @@
+---
+# Operation mode: standalone | netserver | netclient
+nut_mode: standalone
+
+# NUT directories
+nut_config_dir: /etc/nut
+nut_run_dir: /run/nut
+
+nut_service_enabled: true
+
+# List of UPS drivers (only on standalone/netserver)
+# - name: myups # required
+#   driver: usbhid-ups # required
+#   port: auto # required
+#   desc: "My UPS"
+#   options: {} # Additional options
+nut_ups_list: []
+
+# List of interfaces to listen to (only on netserver)
+nut_upsd_listen:
+  - address: 127.0.0.1
+    port: 3493
+
+# List of NUT users (only on standalone/netserver)
+# - name: monmaster # required
+#   password: secret # required
+#   upsmon: primary # optional: primary/secondary
+# - name: admin
+#   password: secret
+#   actions: [SET]
+#   instcmds: [ALL]
+nut_users: []
+
+# List of UPS to monitor
+# - ups: myups@localhost # required
+#   powervalue: 1 # default 1
+#   username: monmaster # required
+#   password: secret # required
+#   type: primary # required
+nut_monitor_list: []
+
+nut_minsupplies: 1
+nut_shutdowncmd: "/sbin/shutdown -h +0"
+nut_powerdownflag: /etc/killpower
+nut_finaldelay: 5
+nut_hostsync: 15
+nut_pollfreq: 5
+nut_pollfreqalert: 5
+nut_deadtime: 15
+nut_rbwarntime: 43200
+nut_nocommwarntime: 300
+
+nut_notifycmd: ""
+# - event: ONBATT
+#   msg: "UPS on battery!"
+nut_notifymsg: []
+# - event: ONBATT
+#   flags: [SYSLOG, WALL]
+nut_notifyflags: []
+
+# Enable upssched
+nut_upssched_enabled: false
+nut_upssched_cmdscript: /etc/nut/upssched-cmd
+nut_upssched_pipefn: /run/nut/upssched.pipe
+nut_upssched_lockfn: /run/nut/upssched.lock
+# - "AT ONBATT * START-TIMER shutdown 300"
+# - "AT ONLINE * CANCEL-TIMER shutdown"
+nut_upssched_at: []
+# Path to a upssched-cmd template on the controller to render and copy to the target.
+# When empty, the script is not managed by the role.
+nut_upssched_cmdscript_src: ""
+
+# Path to a notifycmd template on the controller to render and copy to nut_notifycmd on the target.
+# When empty, the script is not managed by the role. Ignored when nut_upssched_enabled is true.
+nut_notifycmd_src: ""
