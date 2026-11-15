@@ -1,0 +1,19 @@
+---
+- name: Load OS-specific vars.
+  ansible.builtin.include_vars: "{{ lookup('first_found', __params) }}"
+  vars:
+    __params:
+      files:
+        - "{{ ansible_facts['distribution'] }}.yml"
+        - "{{ ansible_facts['os_family'] }}.yml"
+      paths:
+        - vars
+
+- name: Install NUT packages.
+  ansible.builtin.import_tasks: install.yml
+
+- name: Configure NUT.
+  ansible.builtin.import_tasks: configure.yml
+
+- name: Manage NUT services.
+  ansible.builtin.import_tasks: service.yml

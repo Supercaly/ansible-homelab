@@ -1,0 +1,16 @@
+---
+- name: Ensure handlers are flushed before managing services.
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure NUT server service is enabled and started.
+  ansible.builtin.service:
+    name: "{{ _nut_server_service }}"
+    enabled: "{{ nut_service_enabled }}"
+    state: "{{ nut_service_enabled | bool | ternary('started', 'stopped') }}"
+  when: nut_mode in ['standalone', 'netserver']
+
+- name: Ensure NUT client service is enabled and started.
+  ansible.builtin.service:
+    name: "{{ _nut_client_service }}"
+    enabled: "{{ nut_service_enabled }}"
+    state: "{{ nut_service_enabled | bool | ternary('started', 'stopped') }}"

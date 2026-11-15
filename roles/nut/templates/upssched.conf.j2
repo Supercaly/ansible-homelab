@@ -1,0 +1,9 @@
+{{ ansible_managed | comment(decoration='# ') }}
+
+CMDSCRIPT {{ nut_upssched_cmdscript }}
+PIPEFN {{ nut_upssched_pipefn }}
+LOCKFN {{ nut_upssched_lockfn }}
+
+{% for __at in nut_upssched_at %}
+{{ __at }}
+{% endfor %}

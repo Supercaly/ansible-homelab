@@ -1,0 +1,32 @@
+---
+nut_mode: netclient
+
+nut_monitor_list:
+  - ups: "apcups@{{ nut_server_address }}"
+    username: "upsmon"
+    password: "{{ nut_upsmon_pwd }}"
+    type: "primary"
+
+nut_notifyflags:
+  - event: ONBATT
+    flags: [SYSLOG]
+  - event: ONLINE
+    flags: [SYSLOG]
+  - event: LOWBATT
+    flags: [SYSLOG]
+  - event: FSD
+    flags: [SYSLOG]
+  - event: SHUTDOWN
+    flags: [SYSLOG]
+  - event: COMMBAD
+    flags: [SYSLOG+EXEC]
+  - event: COMMOK
+    flags: [SYSLOG+EXEC]
+  - event: NOCOMM
+    flags: [SYSLOG+EXEC]
+
+nut_upssched_at:
+  # Debounce USB communication drops (wait 15s before alerting)
+  - AT COMMBAD * START-TIMER comm_lost 15
+  - AT COMMOK  * CANCEL-TIMER comm_lost comm_restored
+  - AT NOCOMM  * EXECUTE comm_lost

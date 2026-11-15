@@ -1,0 +1,12 @@
+---
+- name: Install NUT server and client packages.
+  ansible.builtin.package:
+    name: "{{ _nut_all_packages }}"
+    state: present
+  when: nut_mode in ['standalone', 'netserver']
+
+- name: Install NUT client package.
+  ansible.builtin.package:
+    name: "{{ _nut_client_packages }}"
+    state: present
+  when: nut_mode == 'netclient'
