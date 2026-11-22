@@ -24,3 +24,7 @@ prometheus_file_sd:
     - targets: ["{{ ansible_host }}:9633"]
       labels:
         hostname: "{{ inventory_hostname }}"
+  blackbox:
+    - targets: ["https://{{ inventory_hostname }}.{{ network.domain }}"]
+      labels:
+        module: http_2xx

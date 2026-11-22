@@ -1,2 +1,3 @@
 ---
+jellyfin_domain: "media.{{ network.domain }}"
 jellyfin_hwaccel: "intel"
