@@ -23,3 +23,8 @@ prometheus_file_sd:
         - "https://{{ immich_domain }}"
       labels:
         module: http_2xx
+  nut:
+    - targets: ["{{ interfaces.lan.ip4.address }}:{{ nut_exporter_port }}"]
+      labels:
+        hostname: "{{ inventory_hostname }}"
+        ups: "apcups"

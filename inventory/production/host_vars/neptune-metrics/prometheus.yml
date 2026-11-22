@@ -85,3 +85,7 @@ prometheus_scrape_configs:
         target_label: __param_module
       - target_label: __address__
         replacement: "localhost:9115"
+  - job_name: "nut"
+    metrics_path: /ups_metrics
+    file_sd_configs:
+      - files: ["{{ prometheus_file_sd_dir }}/nut.yml"]

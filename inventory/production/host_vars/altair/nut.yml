@@ -8,16 +8,6 @@ nut_monitor_list:
     type: "primary"
 
 nut_notifyflags:
-  - event: ONBATT
-    flags: [SYSLOG]
-  - event: ONLINE
-    flags: [SYSLOG]
-  - event: LOWBATT
-    flags: [SYSLOG]
-  - event: FSD
-    flags: [SYSLOG]
-  - event: SHUTDOWN
-    flags: [SYSLOG]
   - event: COMMBAD
     flags: [SYSLOG+EXEC]
   - event: COMMOK

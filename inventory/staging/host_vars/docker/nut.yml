@@ -1,0 +1,3 @@
+---
+nut_exporter_root: /srv/stacks/nut_exporter
+nut_exporter_server: "{{ nut_server_address }}"

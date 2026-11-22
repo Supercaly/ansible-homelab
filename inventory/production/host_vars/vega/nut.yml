@@ -31,17 +31,11 @@ nut_notifyflags:
     flags: [SYSLOG+EXEC]
   - event: LOWBATT
     flags: [SYSLOG+EXEC]
-  - event: FSD
-    flags: [SYSLOG+EXEC]
-  - event: SHUTDOWN
-    flags: [SYSLOG+EXEC]
   - event: COMMBAD
     flags: [SYSLOG+EXEC]
   - event: COMMOK
     flags: [SYSLOG+EXEC]
   - event: NOCOMM
-    flags: [SYSLOG+EXEC]
-  - event: REPLBATT
     flags: [SYSLOG+EXEC]
 
 nut_upssched_at:
@@ -57,5 +51,3 @@ nut_upssched_at:
   - AT COMMBAD * START-TIMER comm_lost 15
   - AT COMMOK  * CANCEL-TIMER comm_lost comm_restored
   - AT NOCOMM  * EXECUTE comm_lost
-  # Notify on exausted battery
-  - AT REPLBATT * EXECUTE replace_battery

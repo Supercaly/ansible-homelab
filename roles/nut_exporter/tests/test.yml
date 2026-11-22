@@ -1,0 +1,6 @@
+---
+- name: Test nut_exporter role.
+  hosts: localhost
+  remote_user: root
+  roles:
+    - nut_exporter

@@ -1,0 +1,11 @@
+---
+- name: Deploy nut_exporter Docker Compose stack.
+  ansible.builtin.include_role:
+    name: docker_compose
+  vars:
+    docker_compose_root: "{{ nut_exporter_root }}"
+    docker_compose_templates:
+      - src: compose.yml.j2
+        dest: compose.yml
+      - src: env.j2
+        dest: .env
