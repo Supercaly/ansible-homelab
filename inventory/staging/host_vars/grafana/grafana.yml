@@ -24,7 +24,11 @@ grafana_ini:
 grafana_dashboards_dir: "files/grafana/dashboards"
 
 # Datasources from https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources
-grafana_datasources: []
+grafana_datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: "http://{{ prometheus_address }}:{{ prometheus_port }}"
 
 # Plugins to install from https://grafana.com/plugins
 grafana_plugins: []
