@@ -1,0 +1,24 @@
+---
+# yaml-language-server: $schema=none
+groups:
+- name: GoogleCadvisor
+  rules:
+    # name!="" filters out system cgroups (id="/", "/init.scope", etc.) — only real Docker containers have a name.
+    # Fires if a container has not been seen for over 5 minutes. Brief restarts are tolerated.
+    - alert: ContainerKilled
+      expr: 'time() - container_last_seen{name!=""} > 60'
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: Container {{ $labels.name }} missing ({{ $labels.hostname }})
+        description: "Container {{ $labels.name }} on {{ $labels.instance }} has disappeared for more than 5 minutes\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    - alert: ContainerVolumeUsage
+      expr: '(1 - (sum(container_fs_inodes_free{name!=""}) BY (instance, name) / sum(container_fs_inodes_total{name!=""}) BY (instance, name))) * 100 > 80 and sum(container_fs_inodes_total{name!=""}) BY (instance, name) > 0'
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: Container Volume usage ({{ $labels.name }} on {{ $labels.hostname }})
+        description: "Container {{ $labels.name }} volume usage is above 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"

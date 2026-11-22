@@ -23,5 +23,9 @@ caddy_sites:
           }
         }
 
+        :{{ prometheus_caddy_port }} {
+          metrics
+        }
+
 caddy_plugins:
   - "github.com/caddy-dns/infomaniak"

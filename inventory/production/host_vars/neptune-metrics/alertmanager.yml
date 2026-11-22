@@ -1,0 +1,107 @@
+---
+# yaml-language-server: $schema=none
+alertmanager_domain: "alerts.{{ network.domain }}"
+alertmanager_web_external_url: "https://{{ alertmanager_domain }}/"
+
+alertmanager_smtp:
+  from: "Alertmanager <{{ smtp_from }}>"
+  smarthost: "{{ smtp_host }}:{{ smtp_port }}"
+  auth_username: "{{ smtp_username }}"
+  auth_password: "{{ smtp_password }}"
+  require_tls: "true"
+
+alertmanager_receivers:
+  - name: "null"
+  - name: healthchecks
+    webhook_configs:
+      - url: "{{ vault_alertmanager_healthchecks_url }}"
+        send_resolved: false
+  - name: email
+    email_configs:
+      - to: "{{ smtp_to }}"
+        send_resolved: true
+
+alertmanager_time_intervals:
+  # Suppress warning/info alerts outside reasonable hours (every day)
+  - name: offhours
+    time_intervals:
+      - times:
+          - start_time: "20:00"
+            end_time: "24:00"
+        location: "{{ system_locale_timezone }}"
+      - times:
+          - start_time: "00:00"
+            end_time: "08:00"
+        location: "{{ system_locale_timezone }}"
+  # Suppress critical alerts during deep night (every day)
+  - name: night
+    time_intervals:
+      - times:
+          - start_time: "23:00"
+            end_time: "24:00"
+        location: "{{ system_locale_timezone }}"
+      - times:
+          - start_time: "00:00"
+            end_time: "07:00"
+        location: "{{ system_locale_timezone }}"
+
+alertmanager_route:
+  receiver: email
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    # Forward watchdog/e2e alerts to healthchecks.io as a dead man's switch
+    - matchers:
+        - alertname=~"Watchdog|PrometheusAlertmanagerE2eDeadManSwitch"
+      receiver: healthchecks
+      group_wait: 0s
+      repeat_interval: 5m
+
+    # Templates have IDs >= 9000 by convention — they are always stopped
+    - matchers:
+        - alertname="PveGuestDown"
+        - id=~"(qemu|lxc)/9[0-9]+"
+      receiver: "null"
+
+    # Critical alerts:
+    #   - notify quickly
+    #   - repeat every hour
+    #   - silent during deep night
+    - matchers:
+        - severity="critical"
+      receiver: email
+      group_wait: 10s
+      repeat_interval: 1h
+      mute_time_intervals:
+        - night
+
+    # Warning alerts:
+    #   - repeat with low priority
+    #   - suppress during off hours to avoid noise
+    - matchers:
+        - severity="warning"
+      receiver: email
+      repeat_interval: 6h
+      mute_time_intervals:
+        - offhours
+
+    # Info alerts:
+    #   - repeat once per day
+    #   - low priority diagnostic signals
+    - matchers:
+        - severity="info"
+      receiver: email
+      repeat_interval: 24h
+      mute_time_intervals:
+        - offhours
+
+alertmanager_inhibit_rules:
+  # If a node is unreachable (node_exporter down), suppress all other alerts from that host
+  - source_matchers:
+      - alertname="PrometheusTargetMissing"
+      - job="node"
+    target_matchers:
+      - alertname!="PrometheusTargetMissing"
+    equal: ['hostname']
