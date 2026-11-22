@@ -1,0 +1,16 @@
+---
+nut_exporter_root: /opt/nut-exporter
+nut_exporter_version: latest
+
+nut_exporter_restart: unless-stopped
+nut_exporter_port: 9199
+
+# NUT server connection
+nut_exporter_server: "127.0.0.1"
+nut_exporter_serverport: 3493
+nut_exporter_username: ""
+nut_exporter_password: ""
+
+# Metrics configuration
+nut_exporter_variables: "battery.charge,battery.voltage,battery.voltage.nominal,input.voltage,input.voltage.nominal,ups.load,ups.status"
+nut_exporter_statuses: "OL,OB,LB,HB,RB,CHRG,DISCHRG,BYPASS,CAL,OFF,OVER,TRIM,BOOST,FSD,SD"

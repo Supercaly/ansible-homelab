@@ -1,6 +1,8 @@
 ---
-nut_mode: standalone
+nut_mode: netserver
 nut_finaldelay: 10
+nut_upsd_listen:
+  - 0.0.0.0
 nut_ups_list:
   - name: testups
     driver: dummy-ups
@@ -28,13 +30,11 @@ nut_notifyflags:
     flags: [SYSLOG+EXEC]
   - event: LOWBATT
     flags: [SYSLOG+EXEC]
-  - event: FSD
-    flags: [SYSLOG+EXEC]
-  - event: SHUTDOWN
-    flags: [SYSLOG+EXEC]
   - event: COMMBAD
     flags: [SYSLOG+EXEC]
   - event: COMMOK
+    flags: [SYSLOG+EXEC]
+  - event: NOCOMM
     flags: [SYSLOG+EXEC]
 nut_upssched_enabled: true
 nut_upssched_cmdscript_src: "files/nut/upssched-cmd.sh"
@@ -51,5 +51,3 @@ nut_upssched_at:
   - AT COMMBAD * START-TIMER comm_lost 15
   - AT COMMOK  * CANCEL-TIMER comm_lost comm_restored
   - AT NOCOMM  * EXECUTE comm_lost
-  # Notify on exausted battery
-  - AT REPLBATT * EXECUTE replace_battery

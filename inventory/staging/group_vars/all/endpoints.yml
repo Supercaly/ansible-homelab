@@ -8,6 +8,7 @@
 # may not be loaded yet — especially when the LXC does not exist yet or
 # gather_facts is disabled. nthhost() depends only on the shared network variable,
 # which is always available, at the cost of duplicating the host number.
+nut_server_address: "{{ network.ip4 | ansible.utils.nthhost(1) }}"
 nfs_server_address: "{{ network.ip4 | ansible.utils.nthhost(1) }}"
 smb_server_address: "{{ network.ip4 | ansible.utils.nthhost(1) }}"
 reverse_proxy_address: "{{ network.ip4 | ansible.utils.nthhost(11) }}"

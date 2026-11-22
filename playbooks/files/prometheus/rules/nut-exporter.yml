@@ -1,0 +1,58 @@
+---
+# yaml-language-server: $schema=none
+groups:
+- name: NutExporter
+  rules:
+    - alert: UpsReplaceBattery
+      expr: 'network_ups_tools_ups_status{flag="RB"} == 1'
+      for: 0m
+      labels:
+        severity: info
+      annotations:
+        summary: UPS replace battery ({{ $labels.instance }})
+        description: "UPS {{ $labels.ups }} signals that the battery should be replaced.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    - alert: UpsOverload
+      expr: 'network_ups_tools_ups_status{flag="OVER"} == 1'
+      for: 0m
+      labels:
+        severity: warning
+      annotations:
+        summary: UPS overload ({{ $labels.instance }})
+        description: "UPS {{ $labels.ups }} is overloaded.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    - alert: UpsOnBypass
+      expr: 'network_ups_tools_ups_status{flag="BYPASS"} == 1'
+      for: 0m
+      labels:
+        severity: critical
+      annotations:
+        summary: UPS on bypass ({{ $labels.instance }})
+        description: "UPS {{ $labels.ups }} is on bypass — battery is not in circuit.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    - alert: UpsOff
+      expr: 'network_ups_tools_ups_status{flag="OFF"} == 1'
+      for: 0m
+      labels:
+        severity: critical
+      annotations:
+        summary: UPS offline ({{ $labels.instance }})
+        description: "UPS {{ $labels.ups }} is off or in sleep mode.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    - alert: UpsVoltageTrim
+      expr: 'network_ups_tools_ups_status{flag="TRIM"} == 1'
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: UPS trimming input voltage ({{ $labels.instance }})
+        description: "UPS {{ $labels.ups }} is bucking (trimming) input voltage — utility power is too high.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    - alert: UpsVoltageBoost
+      expr: 'network_ups_tools_ups_status{flag="BOOST"} == 1'
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: UPS boosting input voltage ({{ $labels.instance }})
+        description: "UPS {{ $labels.ups }} is boosting input voltage — utility power is too low.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"

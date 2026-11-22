@@ -1,0 +1,15 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: nut_exporter
+  author: Lorenzo Calisti
+  description: Deploy nut_exporter as a Docker Compose stack.
+  license: MIT
+  min_ansible_version: "2.1"
+  galaxy_tags:
+    - nut
+    - ups
+    - prometheus
+    - exporter
+    - docker

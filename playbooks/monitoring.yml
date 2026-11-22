@@ -61,6 +61,8 @@
   roles:
     - role: prometheus.prometheus.cadvisor
       tags: cadvisor
+    - role: nut_exporter
+      tags: nut_exporter
 
 - name: Configure Grafana.
   hosts: grafana
