@@ -1,11 +1,17 @@
 ---
-- name: Configure services hosted on Docker.
+- name: Configure Docker hosts.
   hosts: docker
   become: true
   gather_facts: false
   roles:
     - role: geerlingguy.docker
       tags: docker
+
+- name: Configure Docker services.
+  hosts: docker
+  become: true
+  gather_facts: false
+  roles:
     - role: ddns
       tags: ddns
     - role: vaultwarden
@@ -14,3 +20,5 @@
       tags: portfolio
     - role: immich
       tags: immich
+    - role: homepage
+      tags: homepage

@@ -1,0 +1,21 @@
+---
+system_groups_host:
+  - name: "apps"
+    gid: 1010
+
+system_users_host:
+  # Non-root user for docker apps
+  - name: "apps"
+    uid: 1010
+    comment: "non-root user for Docker apps"
+    group: "apps"
+    password_lock: true
+    system: true
+    create_home: false
+    shell: /usr/sbin/nologin
+
+  # Ensure ansible user can call docker commands
+  - name: "ansible"
+    groups:
+      - "docker"
+    append: true

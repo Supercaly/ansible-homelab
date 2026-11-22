@@ -1,0 +1,39 @@
+---
+homepage_root: /srv/stacks/homepage
+homepage_version: latest
+homepage_allowed_hosts: "192.168.1.30:3000"
+
+homepage_user: "apps"
+homepage_uid: 1010
+homepage_group: "apps"
+homepage_gid: 1010
+
+homepage_settings:
+  title: "Test homepage"
+  description: "An instance of Homepage used for testing"
+
+homepage_bookmarks:
+  - Developer:
+      - Github:
+          - abbr: GH
+            href: https://github.com/
+  - Social:
+      - Reddit:
+          - icon: reddit.png
+            href: https://reddit.com/
+            description: The front page of the internet
+  - Entertainment:
+      - YouTube:
+          - abbr: YT
+            href: https://youtube.com/
+homepage_services:
+  - Group A:
+      - Service A:
+          href: http://localhost/
+      - Service B:
+          href: http://localhost/
+      - Service C:
+          href: http://localhost/
+  - Group B:
+      - Service D:
+          href: http://localhost/
